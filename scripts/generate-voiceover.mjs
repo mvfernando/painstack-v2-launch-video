@@ -49,32 +49,32 @@ if (!ELEVENLABS_API_KEY) {
 }
 
 const VIDEO1_SCRIPTS = [
-  { id: 'v1_s1_hook',     text: '90% of startups fail. Stop guessing. Start building.' },
-  { id: 'v1_s2_problem',  text: "Founders waste years building what nobody wants. Not because they're lazy. Because they validated with opinions instead of evidence." },
-  { id: 'v1_s2b_bridge',  text: "We find the pain signals you're missing. Painstack scans real communities for real evidence." },
-  { id: 'v1_s3_input',    text: "With Painstack, you describe your idea or paste a Reddit link. That's it." },
-  { id: 'v1_s4_agents',   text: "Four AI agents find where people are screaming for help — in real communities and real conversations." },
-  { id: 'v1_s5_verdict',  text: "Data-backed verdict: Build with confidence. Or don't." },
-  { id: 'v1_s6_cta',      text: 'Painstack dot A I. Free to start. No card required.' },
+  { id: 'v1_s1_hook', text: '90% of startups fail. Stop guessing. Start building.' },
+  { id: 'v1_s2_problem', text: "Founders waste years building what nobody wants. Not because they're lazy. Because they validated with opinions instead of evidence." },
+  { id: 'v1_s2b_bridge', text: "We find the pain signals you're missing. Painstack scans real communities for real evidence." },
+  { id: 'v1_s3_input', text: "With Painstack, you describe your idea or paste a Reddit link. That's it." },
+  { id: 'v1_s4_agents', text: "Four AI agents find where people are screaming for help — in real communities and real conversations." },
+  { id: 'v1_s5_verdict', text: "Data-backed verdict: Build with confidence. Or don't." },
+  { id: 'v1_s6_cta', text: 'Painstack AI. Free to start. No card required.' },
 ];
 
 const VIDEO2_SCRIPTS = [
-  { id: 'v2_sa_hero',      text: "Stop launching products nobody wants. From idea to evidence-backed product. Your AI team, from day zero." },
-  { id: 'v2_sb_problem',   text: "Ninety percent of startups fail. The number one reason? They built a solution for a problem that didn't exist. Painstack fixes your starting point." },
-  { id: 'v2_sc_input',     text: "Start with a raw idea or a hunch. Describe it, paste a Reddit thread, or upload your research. Our agents take it from there." },
-  { id: 'v2_sd_evidence',  text: "The Evidence Hub scans thousands of conversations for real pain signals. We don't use surveys. we find actual people screaming for help in real communities." },
-  { id: 'v2_se_agents',    text: "Your AI Executive Team: AI CTO, AI CEO, AI CMO, and Market Agent. Four co-founders working your blueprint. Simultaneously." },
+  { id: 'v2_sa_hero', text: "Stop launching products nobody wants. From idea to evidence-backed product. Your AI team, from day zero." },
+  { id: 'v2_sb_problem', text: "Ninety percent of startups fail. The number one reason? They built a solution for a problem that didn't exist. Painstack fixes your starting point." },
+  { id: 'v2_sc_input', text: "Start with a raw idea or a hunch. Describe it, paste a Reddit thread, or upload your research. Our agents take it from there." },
+  { id: 'v2_sd_evidence', text: "The Evidence Hub scans thousands of conversations for real pain signals. We don't use surveys. we find actual people screaming for help in real communities." },
+  { id: 'v2_se_agents', text: "Your AI Executive Team: AI CTO, AI CEO, AI CMO, and Market Agent. Four co-founders working your blueprint. Simultaneously." },
   { id: 'v2_sf_blueprint', text: "The result? A Startup Blueprint. You get a clear go or no-go score, three viable solution directions, and a validated roadmap to your MVP." },
-  { id: 'v2_sh_dataroom',  text: "Finally, everything is organized in your dedicated Dataroom. From market analysis to technical architecture, you're ready to build or pitch." },
-  { id: 'v2_sg_cta',       text: "Real problems. Real data. Clear decisions. Painstack dot A I. Build with confidence." },
+  { id: 'v2_sh_dataroom', text: "Finally, everything is organized in your dedicated Dataroom. From market analysis to technical architecture, you're ready to build or pitch." },
+  { id: 'v2_sg_cta', text: "Real problems. Real data. Clear decisions. Painstack AI. Build with confidence." },
 ];
 
 const VIDEO3_SCRIPTS = [
-  { id: 'v3_s1_hook',     text: 'You have an idea. Is it worth building?' },
-  { id: 'v3_s2_problem',  text: "Ninety percent of startups fail. Number one reason? Wrong product." },
+  { id: 'v3_s1_hook', text: 'You have an idea. Is it worth building?' },
+  { id: 'v3_s2_problem', text: "Ninety percent of startups fail. Number one reason? Wrong product." },
   { id: 'v3_s3_solution', text: "Painstack scans reddit, hacker news, and product hunt for real help signals." },
-  { id: 'v3_s4_result',   text: "Score 87 out of 100. Build with confidence." },
-  { id: 'v3_s5_cta',      text: 'Painstack dot A I. Start building for real today.' },
+  { id: 'v3_s4_result', text: "Score 87 out of 100. Build with confidence." },
+  { id: 'v3_s5_cta', text: 'Painstack AI. Start building for real today.' },
 ];
 
 async function generateAudio(id, text) {

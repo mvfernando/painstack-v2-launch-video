@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { 
   AbsoluteFill, 
   Sequence, 
@@ -19,6 +19,35 @@ const Transition = ({ duration, children }: { duration: number; children: React.
     const opacity = interpolate(frame, [duration - 10, duration], [1, 0], { extrapolateRight: 'clamp' });
     return <AbsoluteFill style={{ opacity }}>{children}</AbsoluteFill>;
 };
+
+const Particle = ({ delay, speed, x, y, size }: { delay: number; speed: number; x: number; y: number; size: number }) => {
+    const frame = useCurrentFrame();
+    const opacity = interpolate(Math.sin((frame - delay) / 20), [-1, 1], [0.1, 0.4]);
+    const translateY = Math.sin((frame - delay) / speed) * 30; // More vertical movement
+    
+    return (
+        <div style={{
+            position: 'absolute',
+            left: `${x}%`,
+            top: `${y}%`,
+            width: size,
+            height: size,
+            borderRadius: '50%',
+            background: colors.blue,
+            opacity,
+            transform: `translateY(${translateY}px)`,
+            filter: 'blur(1px)'
+        }} />
+    );
+};
+
+const Vignette = () => (
+    <AbsoluteFill style={{ 
+        boxShadow: 'inset 0 0 400px rgba(0,0,0,0.85)',
+        pointerEvents: 'none',
+        zIndex: 5
+    }} />
+);
 
 // --- Components ---
 
@@ -41,7 +70,8 @@ const PopLogo = ({
     const { fps } = useVideoConfig();
 
     const entrance = spring({ frame: frame - delay, fps, config: { damping: 12, stiffness: 200 } });
-    const float = Math.sin((frame - delay) / 10) * 5;
+    const float = Math.sin((frame - delay) / 10) * 8;
+    const rotate = interpolate(entrance, [0, 1], [-15, 0]);
 
     if (frame < delay) return null;
 
@@ -50,23 +80,23 @@ const PopLogo = ({
             position: 'absolute',
             left: `${x}%`,
             top: `${y}%`,
-            transform: `translate(-50%, -50%) scale(${entrance}) translateY(${float}px)`,
+            transform: `translate(-50%, -50%) scale(${entrance}) translateY(${float}px) rotate(${rotate}deg)`,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: 10,
+            gap: 12,
             zIndex: 0
         }}>
             <div style={{
-                width: 100,
-                height: 100,
-                borderRadius: 24,
+                width: 120, // Larger for vertical
+                height: 120,
+                borderRadius: 28,
                 background: color,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: 50,
-                boxShadow: `0 20px 40px ${color}44`,
+                fontSize: 60,
+                boxShadow: `0 25px 50px ${color}55`,
                 border: '2px solid rgba(255,255,255,0.2)'
             }}>
                 {icon}
@@ -74,11 +104,11 @@ const PopLogo = ({
             <div style={{
                 color: colors.white,
                 fontFamily: fonts.base,
-                fontSize: 20,
-                fontWeight: 800,
+                fontSize: 22,
+                fontWeight: 900,
                 textTransform: 'uppercase',
-                letterSpacing: 1,
-                textShadow: '0 4px 10px rgba(0,0,0,0.5)'
+                letterSpacing: 1.5,
+                textShadow: '0 4px 15px rgba(0,0,0,0.6)'
             }}>
                 {label}
             </div>
@@ -90,6 +120,16 @@ const Scene1Hook = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
+  const particles = useMemo(() => {
+    return Array.from({ length: 20 }).map((_, i) => ({
+        delay: Math.random() * 100,
+        speed: 30 + Math.random() * 40,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: 2 + Math.random() * 4
+    }));
+  }, []);
+
   const punch1 = spring({ frame, fps, config: { damping: 12, stiffness: 200 } });
   const punch2 = spring({ frame: frame - 15, fps, config: { damping: 12, stiffness: 200 } });
 
@@ -99,29 +139,34 @@ const Scene1Hook = () => {
           background: `radial-gradient(circle at 50% 50%, ${colors.blue}33 0%, transparent 70%)`,
           opacity: punch1
       }} />
-      <div style={{ textAlign: 'center', zIndex: 1 }}>
+      {particles.map((p, i) => <Particle key={i} {...p} />)}
+      <Vignette />
+
+      <div style={{ textAlign: 'center', zIndex: 10, perspective: 1000 }}>
         <div style={{
-          fontSize: 100,
+          fontSize: 110,
           color: colors.white,
           fontWeight: 900,
           fontFamily: fonts.base,
           opacity: punch1,
-          transform: `scale(${interpolate(punch1, [0, 1], [0.5, 1])})`,
+          transform: `scale(${interpolate(punch1, [0, 1], [0.5, 1])}) rotateX(${interpolate(punch1, [0, 1], [15, 0])}deg)`,
           marginBottom: 20,
-          lineHeight: 1
+          lineHeight: 1,
+          letterSpacing: '-4px'
         }}>
           YOU HAVE<br/>AN IDEA.
         </div>
         <div style={{
-          fontSize: 80,
+          fontSize: 90,
           fontWeight: 900,
           fontFamily: fonts.base,
           background: `linear-gradient(135deg, ${colors.orange}, ${colors.blue})`,
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           opacity: punch2,
-          transform: `translateY(${interpolate(punch2, [0, 1], [40, 0])}px)`,
-          lineHeight: 1
+          transform: `translateY(${interpolate(punch2, [0, 1], [40, 0])}px) rotateX(${interpolate(punch2, [0, 1], [15, 0])}deg)`,
+          lineHeight: 1,
+          letterSpacing: '-4px'
         }}>
           IS IT WORTH<br/> BUILDING?
         </div>
@@ -135,35 +180,43 @@ const Scene2Problem = () => {
   const { fps } = useVideoConfig();
 
   const entrance = spring({ frame, fps, config: { damping: 15 } });
+  const shake = spring({ frame: frame - 10, fps, config: { damping: 10, stiffness: 250 } });
+  const shakeOffset = interpolate(shake, [0, 0.1, 1], [0, 12, 0]);
   
   return (
     <AbsoluteFill style={{ justifyContent: 'center', alignItems: 'center', padding: 60, background: colors.bg }}>
-      <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 40%, ${colors.orange}22 0%, transparent 70%)` }} />
+      <AbsoluteFill style={{ 
+          background: `radial-gradient(circle at 50% 40%, ${colors.orange}22 0%, transparent 70%)`,
+          transform: `translate(${Math.random() * shakeOffset}px, ${Math.random() * shakeOffset}px)`
+      }} />
+      <Vignette />
+
       <div style={{ 
         width: '100%',
-        background: 'rgba(45,129,224,0.1)',
+        background: 'rgba(45,129,224,0.15)',
+        backdropFilter: 'blur(20px)',
         border: `2px solid ${colors.blue}`,
-        borderRadius: 32,
-        padding: 40,
+        borderRadius: 40,
+        padding: 50,
         opacity: entrance,
-        transform: `scale(${entrance}) rotate(${interpolate(entrance, [0, 1], [-5, 0])}deg)`,
-        boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
-        zIndex: 1
+        transform: `scale(${entrance}) rotate(${interpolate(entrance, [0, 1], [-8, 0])}deg)`,
+        boxShadow: `0 40px 100px rgba(0,0,0,0.6), 0 0 ${shakeOffset * 10}px ${colors.orange}22`,
+        zIndex: 10
       }}>
-        <div style={{ fontSize: 48, fontWeight: 900, color: colors.white, fontFamily: fonts.base, marginBottom: 20, lineHeight: 1.2 }}>
+        <div style={{ fontSize: 56, fontWeight: 900, color: colors.white, fontFamily: fonts.base, marginBottom: 30, lineHeight: 1.2, letterSpacing: '-2px' }}>
           "Spent $40k.<br/> Got 3 users."
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ fontSize: 28, color: colors.orange, fontWeight: 700, fontFamily: fonts.base }}>
+          <div style={{ fontSize: 32, color: colors.orange, fontWeight: 800, fontFamily: fonts.base }}>
             ▲ 2.4k · r/startups
           </div>
           <div style={{ 
             background: colors.orange, 
             color: 'white', 
-            padding: '6px 16px', 
-            borderRadius: 8, 
-            fontSize: 20, 
-            fontWeight: 800,
+            padding: '8px 20px', 
+            borderRadius: 12, 
+            fontSize: 22, 
+            fontWeight: 900,
             fontFamily: fonts.base
           }}>
             HIGH PAIN
@@ -181,35 +234,38 @@ const Scene3Input = () => {
   const text = "An AI tool that helps founders validate their ideas...";
   const charsShown = Math.floor(interpolate(frame, [20, 70], [0, text.length], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }));
 
-  const pulse = Math.sin(frame / 5) * 0.05 + 1;
+  const pulse = Math.sin(frame / 6) * 0.04 + 1;
 
   return (
     <AbsoluteFill style={{ justifyContent: 'center', alignItems: 'center', padding: 60, background: colors.bg }}>
+       <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 50%, ${colors.blue}11 0%, transparent 70%)` }} />
+       <Vignette />
+
        {/* Background Pops */}
        <PopLogo 
             delay={25} 
-            x={25} y={25} 
+            x={25} y={20} 
             color="#FF4500" 
             label="Reddit" 
             icon={<span style={{ color: 'white', fontSize: 60 }}>👽</span>}
        />
        <PopLogo 
             delay={55} 
-            x={75} y={20} 
+            x={75} y={15} 
             color="#FF6600" 
             label="HN" 
-            icon={<span style={{ color: 'white', fontWeight: 900 }}>Y</span>}
+            icon={<span style={{ color: 'white', fontWeight: 950 }}>Y</span>}
        />
        <PopLogo 
             delay={85} 
-            x={20} y={75} 
+            x={20} y={80} 
             color="#DA552F" 
             label="PH" 
-            icon={<span style={{ color: 'white', fontWeight: 900 }}>P</span>}
+            icon={<span style={{ color: 'white', fontWeight: 950 }}>P</span>}
        />
        <PopLogo 
             delay={115} 
-            x={80} y={80} 
+            x={80} y={85} 
             color="#5865F2" 
             label="Discord" 
             icon={<span style={{ color: 'white', fontSize: 60 }}>🎮</span>}
@@ -218,39 +274,40 @@ const Scene3Input = () => {
        {/* Main Input Card */}
        <div style={{ 
           width: '100%',
-          background: colors.bgCard,
+          background: 'rgba(30, 41, 59, 0.7)',
+          backdropFilter: 'blur(20px)',
           border: `1px solid ${colors.border}`,
-          borderRadius: 24,
-          padding: 30,
-          boxShadow: '0 40px 100px rgba(0,0,0,0.6)',
-          zIndex: 10
+          borderRadius: 32,
+          padding: 40,
+          boxShadow: '0 50px 120px rgba(0,0,0,0.7)',
+          zIndex: 10,
+          transform: `scale(${pulse})`
        }}>
           <div style={{
-            background: "rgba(15, 23, 42, 0.8)",
+            background: "rgba(15, 23, 42, 0.9)",
             border: `1px solid ${colors.border}`,
-            borderRadius: 16,
-            padding: 24,
-            minHeight: 120,
+            borderRadius: 20,
+            padding: 32,
+            minHeight: 180,
             color: colors.white,
-            fontSize: 24,
+            fontSize: 28,
             fontFamily: fonts.base,
-            lineHeight: 1.4,
-            marginBottom: 30
+            lineHeight: 1.5,
+            marginBottom: 40
           }}>
              {text.substring(0, charsShown)}
-             <span style={{ borderRight: `3px solid ${colors.blue}`, marginLeft: 2, opacity: frame % 30 < 15 ? 1 : 0 }} />
+             <span style={{ borderRight: `4px solid ${colors.blue}`, marginLeft: 2, opacity: frame % 30 < 15 ? 1 : 0 }} />
           </div>
           
           <div style={{
             background: colors.blue,
             color: 'white',
-            padding: '16px 40px',
-            borderRadius: 12,
-            fontSize: 24,
-            fontWeight: 800,
+            padding: '20px 50px',
+            borderRadius: 16,
+            fontSize: 32,
+            fontWeight: 900,
             textAlign: 'center',
-            transform: `scale(${pulse})`,
-            boxShadow: `0 10px 30px ${colors.blue}44`
+            boxShadow: `0 15px 40px ${colors.blue}66`
           }}>
             VALIDATE
           </div>
@@ -265,29 +322,42 @@ const Scene4Score = () => {
   
   const score = interpolate(frame, [20, 80], [0, 87], { extrapolateRight: 'clamp' });
   const badgeEntrance = spring({ frame: frame - 85, fps, config: { damping: 10, stiffness: 200 } });
+  
+  // Inherit glint logic from shared but keep it vertical-optimized
+  const bloom = interpolate(frame, [80, 85, 95], [0, 1, 0], { extrapolateRight: 'clamp' });
 
   return (
     <AbsoluteFill style={{ justifyContent: 'center', alignItems: 'center', background: colors.bg }}>
-       <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 50%, ${colors.green}11 0%, transparent 70%)` }} />
-       <div style={{ position: 'relative', width: 450, height: 450, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
-          <div style={{ fontSize: 160, fontWeight: 900, color: colors.white, fontFamily: fonts.base }}>
+       <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 50%, ${colors.green}22 0%, transparent 70%)` }} />
+       <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 50%, ${colors.green}44 0%, transparent 70%)`, opacity: bloom }} />
+       <Vignette />
+       
+       <div style={{ position: 'relative', width: 550, height: 550, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
+          <div style={{ 
+              fontSize: 200, 
+              fontWeight: 900, 
+              color: colors.white, 
+              fontFamily: fonts.base,
+              transform: `scale(${1 + bloom * 0.1})`
+          }}>
             {Math.round(score)}
           </div>
-          <svg style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }} width="450" height="450">
+          <svg style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }} width="550" height="550">
              <circle 
-                cx="225" cy="225" r="200" 
+                cx="275" cy="275" r="230" 
                 fill="none" 
                 stroke="rgba(45, 129, 224, 0.1)" 
-                strokeWidth="24" 
+                strokeWidth="30" 
              />
              <circle 
-                cx="225" cy="225" r="200" 
+                cx="275" cy="275" r="230" 
                 fill="none" 
-                stroke={colors.blue} 
-                strokeWidth="24" 
-                strokeDasharray={2 * Math.PI * 200} 
-                strokeDashoffset={2 * Math.PI * 200 * (1 - (score / 100))}
+                stroke={colors.green} 
+                strokeWidth="30" 
+                strokeDasharray={2 * Math.PI * 230} 
+                strokeDashoffset={2 * Math.PI * 230 * (1 - (score / 100))}
                 strokeLinecap="round"
+                style={{ filter: `drop-shadow(0 0 ${interpolate(frame, [80, 100], [15, 40], { extrapolateRight: 'clamp' })}px ${colors.green}88)` }}
              />
           </svg>
 
@@ -297,16 +367,16 @@ const Scene4Score = () => {
             bottom: 40,
             background: colors.green,
             color: 'white',
-            padding: '12px 30px',
+            padding: '16px 45px',
             borderRadius: 100,
-            fontSize: 28,
+            fontSize: 36,
             fontWeight: 900,
             opacity: badgeEntrance,
             transform: `scale(${badgeEntrance}) translateY(20px)`,
-            boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+            boxShadow: `0 20px 50px ${colors.green}66`,
             display: 'flex',
             alignItems: 'center',
-            gap: 10
+            gap: 15
           }}>
             BUILD ✓
           </div>
@@ -321,20 +391,22 @@ const Scene5CTA = () => {
 
   const entrance = spring({ frame, fps, config: { damping: 20 } });
   const logoEntrance = spring({ frame: frame - 20, fps, config: { damping: 12, stiffness: 100 } });
+  const pulse = Math.sin(frame / 10) * 0.05 + 1;
   
   return (
     <AbsoluteFill style={{ justifyContent: 'center', alignItems: 'center', padding: 60, background: colors.bg }}>
       <AbsoluteFill style={{ 
-          background: `radial-gradient(circle at 50% 50%, ${colors.blue}44 0%, transparent 70%)`,
-          opacity: interpolate(entrance, [0, 1], [0, 1])
+          background: `radial-gradient(circle at 50% 50%, ${colors.blue}55 0%, transparent 70%)`,
+          opacity: 0.8
       }} />
+      <Vignette />
 
-      <div style={{ textAlign: 'center', zIndex: 1, opacity: entrance }}>
+      <div style={{ textAlign: 'center', zIndex: 10, opacity: entrance }}>
         <div style={{ 
             position: 'relative',
-            width: 320,
-            height: 320,
-            margin: '0 auto 50px',
+            width: 380,
+            height: 380,
+            margin: '0 auto 60px',
         }}>
           <img 
             src={staticFile('shared/Painstack.ai_logo2.png')} 
@@ -347,15 +419,21 @@ const Scene5CTA = () => {
             }} 
             alt="Logo"
           />
+          <div style={{
+              position: 'absolute',
+              inset: -60,
+              background: `radial-gradient(circle, ${colors.blue}44 0%, transparent 70%)`,
+              opacity: Math.sin(frame / 6) * 0.3 + 0.4
+          }} />
         </div>
 
         <h2 style={{
             fontFamily: fonts.base,
-            fontSize: 70,
+            fontSize: 84,
             fontWeight: 900,
             color: colors.white,
-            marginBottom: 30,
-            letterSpacing: '-2px',
+            marginBottom: 40,
+            letterSpacing: '-3px',
             lineHeight: 1
         }}>
             Start building<br/>for real.
@@ -364,8 +442,8 @@ const Scene5CTA = () => {
         <div style={{
             display: 'flex',
             flexDirection: 'row',
-            gap: 15,
-            marginBottom: 50,
+            gap: 18,
+            marginBottom: 60,
             alignItems: 'center',
             justifyContent: 'center',
             width: '100%'
@@ -373,41 +451,43 @@ const Scene5CTA = () => {
             {["Free to start", "No card required", "Results in minutes"].map((item, i) => (
                 <React.Fragment key={item}>
                     <div style={{
-                        fontSize: 18,
+                        fontSize: 20,
                         color: colors.muted,
                         fontFamily: fonts.base,
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 4
+                        gap: 6,
+                        fontWeight: 500
                     }}>
                         <span style={{ color: colors.green, fontWeight: 900 }}>✓</span> {item}
                     </div>
-                    {i < 2 && <div style={{ color: colors.muted, fontSize: 18, fontWeight: 300 }}>.</div>}
+                    {i < 2 && <div style={{ color: colors.muted, fontSize: 24, fontWeight: 300 }}>.</div>}
                 </React.Fragment>
             ))}
         </div>
 
         <div style={{
-            padding: '24px 60px',
+            padding: '28px 80px',
             borderRadius: 100,
             background: `linear-gradient(135deg, ${colors.orange}, #ff7e47)`,
             color: colors.white,
-            fontSize: 32,
+            fontSize: 38,
             fontWeight: 900,
             display: 'inline-block',
-            boxShadow: `0 25px 50px ${colors.orange}44`,
-            border: '2px solid rgba(255,255,255,0.1)'
+            boxShadow: `0 35px 70px ${colors.orange}66`,
+            border: '2px solid rgba(255,255,255,0.1)',
+            transform: `scale(${pulse})`
         }}>
             TRY IT FREE →
         </div>
 
         <p style={{ 
             fontFamily: fonts.base, 
-            fontSize: 36, 
+            fontSize: 44, 
             color: colors.blue,
-            fontWeight: 600,
-            marginTop: 40,
-            letterSpacing: '-1px'
+            fontWeight: 800,
+            marginTop: 50,
+            letterSpacing: '-2px'
         }}>
             usepainstackai.com
         </p>
@@ -427,6 +507,7 @@ export const Video3Shorts = () => {
       <Sequence durationInFrames={102}>
         <Scene1Hook />
         <SceneAudio filename="v3_s1_hook" />
+        <Audio src={staticFile('audio/sfx_whoosh_clean.mp3')} volume={0.2} />
       </Sequence>
 
       {/* S2: Problem (102-278) | Audio: 156 + 20 buffer */}
@@ -437,7 +518,7 @@ export const Video3Shorts = () => {
         <SceneAudio filename="v3_s2_problem" />
         <Audio src={staticFile('audio/sfx_whoosh_clean.mp3')} volume={0.1} />
         <Sequence from={10} durationInFrames={30}>
-          <Audio src={staticFile('audio/sfx_glitch.mp3')} volume={0.1} />
+          <Audio src={staticFile('audio/sfx_glitch.mp3')} volume={0.15} />
         </Sequence>
       </Sequence>
 
@@ -447,15 +528,15 @@ export const Video3Shorts = () => {
             <Scene3Input />
         </Transition>
         <SceneAudio filename="v3_s3_solution" />
-        <Audio src={staticFile('audio/sfx_whoosh_clean.mp3')} volume={0.1} />
+        <Audio src={staticFile('audio/sfx_whoosh_clean.mp3')} volume={0.15} />
         <Sequence from={10} durationInFrames={150}>
             {/* POP sounds for logos */}
             {[15, 45, 75, 105].map((d, i) => (
                 <Sequence key={i} from={d} durationInFrames={15}>
-                    <Audio src={staticFile('audio/sfx_pop_soft.mp3')} volume={0.3} />
+                    <Audio src={staticFile('audio/sfx_ui_pop.mp3')} volume={0.4} />
                 </Sequence>
             ))}
-            <Audio src={staticFile('audio/sfx_typing.mp3')} volume={0.15} />
+            <Audio src={staticFile('audio/sfx_typing.mp3')} volume={0.2} />
         </Sequence>
       </Sequence>
 
@@ -466,7 +547,10 @@ export const Video3Shorts = () => {
         </Transition>
         <SceneAudio filename="v3_s4_result" />
         <Sequence from={15} durationInFrames={70}>
-          <Audio src={staticFile('audio/sfx_power_up.mp3')} volume={0.2} />
+          <Audio src={staticFile('audio/sfx_power_up.mp3')} volume={0.25} />
+        </Sequence>
+        <Sequence from={80} durationInFrames={30}>
+          <Audio src={staticFile('audio/sfx_success_chime.mp3')} volume={0.4} />
         </Sequence>
       </Sequence>
 
@@ -474,6 +558,9 @@ export const Video3Shorts = () => {
       <Sequence from={609} durationInFrames={191}>
         <Scene5CTA />
         <SceneAudio filename="v3_s5_cta" />
+        <Sequence from={15} durationInFrames={60}>
+            <Audio src={staticFile('audio/sfx_whoosh_clean.mp3')} volume={0.3} />
+        </Sequence>
       </Sequence>
     </AbsoluteFill>
   );

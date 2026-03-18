@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate, spring } from 'remotion';
 import { colors, fonts } from '../../../shared/brand';
@@ -14,24 +15,25 @@ const RedditCard: React.FC<{ text: string; upvotes: string; delay: number }> = (
   const { fps } = useVideoConfig();
   const prog = spring({ frame: frame - delay, fps, config: { damping: 20, stiffness: 130, mass: 0.8 } });
   const opacity = interpolate(frame, [delay, delay + 15], [0, 1], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' });
+  const glint = interpolate(frame, [delay, delay + 20], [1, 0], { extrapolateRight: 'clamp' });
 
   return (
     <div style={{
-      background: 'rgba(30, 41, 59, 0.4)',
-      backdropFilter: 'blur(8px)',
+      background: 'rgba(30, 41, 59, 0.5)',
+      backdropFilter: 'blur(12px)',
       border: `1px solid ${colors.border}`,
       borderRadius: 12,
       padding: '16px',
       opacity,
-      transform: `translateY(${interpolate(prog, [0, 1], [20, 0])}px)`,
-      boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+      transform: `translateY(${interpolate(prog, [0, 1], [30, 0])}px)`,
+      boxShadow: `0 15px 45px rgba(0,0,0,0.4), 0 0 ${glint * 40}px ${colors.blue}${Math.floor(glint * 255).toString(16).padStart(2, '0')}`,
       position: 'relative',
       overflow: 'hidden'
     }}>
-      <div style={{ fontFamily: fonts.base, fontSize: 13, color: colors.white, lineHeight: 1.4, marginBottom: 8, fontWeight: 400 }}>
+      <div style={{ fontFamily: fonts.base, fontSize: 13, color: colors.white, lineHeight: 1.4, marginBottom: 8, fontWeight: 500 }}>
         "{text}"
       </div>
-      <div style={{ fontFamily: fonts.base, fontSize: 12, color: colors.orange, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
+      <div style={{ fontFamily: fonts.base, fontSize: 12, color: colors.orange, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 6 }}>
         <span style={{ fontSize: 14 }}>▲</span> {upvotes} · r/startups
       </div>
       
@@ -43,6 +45,7 @@ const RedditCard: React.FC<{ text: string; upvotes: string; delay: number }> = (
           width: 4,
           height: '100%',
           background: colors.blue,
+          boxShadow: `0 0 10px ${colors.blue}`
       }} />
     </div>
   );
@@ -58,6 +61,10 @@ export const Scene4Agents: React.FC = () => {
   // Scanning line position
   const scanPos = interpolate(frame % 45, [0, 45], [0, 100]);
 
+  // Identify which step is active for brain pulsing
+  const activeStepIdx = steps.findIndex(s => frame >= s.delay && frame < s.delay + 35);
+  const brainPulse = activeStepIdx !== -1 ? Math.sin(frame / 4) * 0.3 + 0.7 : 0.4;
+
   return (
     <AbsoluteFill style={{
       backgroundColor: '#0F172A',
@@ -65,46 +72,53 @@ export const Scene4Agents: React.FC = () => {
       alignItems: 'center',
       justifyContent: 'center',
     }}>
-      {/* Background radial highlight */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        backgroundImage: `radial-gradient(ellipse at 60% 30%, rgba(45,129,224,0.12) 0%, transparent 60%)`,
+      {/* Cinematic Vignette Background */}
+      <AbsoluteFill style={{ 
+        boxShadow: 'inset 0 0 300px rgba(0,0,0,0.9)',
+        backgroundImage: `radial-gradient(ellipse at 50% 50%, rgba(45,129,224,0.08) 0%, transparent 80%)`,
       }} />
 
-      {/* Data Particles */}
-      {[...Array(15)].map((_, i) => {
-          const particleOpacity = interpolate((frame + i * 20) % 100, [0, 20, 80, 100], [0, 0.3, 0.3, 0]);
+      {/* Directed Data Flux Particles */}
+      {[...Array(20)].map((_, i) => {
+          const delay = (i * 153) % 200;
+          const particleP = (frame + delay) % 150;
+          const particleOpacity = interpolate(particleP, [0, 20, 130, 150], [0, 0.4, 0.4, 0]);
+          const particleX = interpolate(particleP, [0, 150], [120, -20]);
+          const particleY = (i * 123) % 100;
+
           return (
               <div key={i} style={{
                   position: 'absolute',
-                  width: 4,
-                  height: 4,
-                  borderRadius: '50%',
+                  width: 3,
+                  height: 3,
+                  borderRadius: '100%',
                   background: colors.blue,
-                  left: `${(i * 137) % 100}%`,
-                  top: `${(i * 149) % 100}%`,
+                  left: `${particleX}%`,
+                  top: `${particleY}%`,
                   opacity: particleOpacity,
-                  filter: 'blur(1px)'
+                  filter: 'blur(1px)',
+                  boxShadow: `0 0 8px ${colors.blue}`
               }} />
           )
       })}
 
       <div style={{
         display: 'flex',
-        gap: 40,
+        gap: 60,
         opacity: containerOpacity,
         transform: `scale(${containerScale})`,
         zIndex: 1,
-        alignItems: 'flex-start',
+        alignItems: 'center',
       }}>
         {/* Left: Processing steps */}
         <div style={{
-          width: 450,
-          background: colors.bgCard,
+          width: 480,
+          background: "rgba(15, 23, 42, 0.7)",
+          backdropFilter: 'blur(20px)',
           borderRadius: 24,
           border: `1px solid ${colors.border}`,
-          padding: '32px',
-          boxShadow: '0 30px 80px rgba(0,0,0,0.5)',
+          padding: '40px',
+          boxShadow: '0 40px 120px rgba(0,0,0,0.6)',
           position: 'relative',
           overflow: 'hidden'
         }}>
@@ -116,78 +130,80 @@ export const Scene4Agents: React.FC = () => {
               width: '100%',
               height: 2,
               background: `linear-gradient(90deg, transparent, ${colors.blue}, transparent)`,
-              opacity: 0.4,
-              boxShadow: `0 0 15px ${colors.blue}`,
+              opacity: 0.3,
+              boxShadow: `0 0 20px ${colors.blue}`,
               zIndex: 10
           }} />
 
-          {/* Brain icon with Glow */}
+          {/* Brain / Core Section */}
           <div style={{
             position: 'relative',
-            width: 72,
-            height: 72,
-            margin: '0 auto 32px',
+            width: 80,
+            height: 80,
+            margin: '0 auto 40px',
           }}>
             <div style={{
                 position: 'absolute',
-                inset: -20,
-                background: `radial-gradient(circle, ${colors.blue}44 0%, transparent 70%)`,
-                opacity: Math.sin(frame / 6) * 0.2 + 0.5,
+                inset: -30,
+                background: `radial-gradient(circle, ${colors.blue}66 0%, transparent 70%)`,
+                opacity: brainPulse,
             }} />
             <div style={{
                 width: '100%',
                 height: '100%',
                 borderRadius: '50%',
-                background: 'rgba(30, 41, 59, 0.8)',
+                background: 'rgba(30, 41, 59, 1)',
                 border: `2px solid ${colors.blue}`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: 32,
+                fontSize: 36,
                 position: 'relative',
-                boxShadow: `0 0 20px ${colors.blue}33`
+                boxShadow: `0 0 30px ${colors.blue}44`,
+                transform: `scale(${1 + (brainPulse - 0.4) * 0.1})`
             }}>
                 🧠
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {steps.map((step, i) => {
               const isActive = frame >= step.delay && frame < step.delay + 35;
               const isDone = frame >= step.delay + 35;
-              const stepOpacity = interpolate(frame, [step.delay, step.delay + 15], [0.3, 1], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' });
+              const stepOpacity = interpolate(frame, [step.delay, step.delay + 10], [0.2, 1], { extrapolateRight: 'clamp' });
 
               return (
                 <div key={i} style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 16,
-                  padding: '12px 16px',
-                  borderRadius: 12,
-                  background: isActive ? 'rgba(45,129,224,0.12)' : 'transparent',
-                  border: isActive ? `1px solid ${colors.blue}44` : '1px solid transparent',
-                  opacity: frame < step.delay ? 0.25 : stepOpacity,
-                  transform: isActive ? 'translateX(4px)' : 'none',
+                  gap: 18,
+                  padding: '14px 20px',
+                  borderRadius: 14,
+                  background: isActive ? 'rgba(45,129,224,0.15)' : 'transparent',
+                  border: isActive ? `1px solid ${colors.blue}66` : '1px solid transparent',
+                  opacity: frame < step.delay ? 0.2 : stepOpacity,
+                  transform: isActive ? 'translateX(6px)' : 'none',
+                  transition: 'transform 0.2s ease-out, background 0.2s ease'
                 }}>
-                  <div style={{ fontSize: 20 }}>{step.icon}</div>
+                  <div style={{ fontSize: 24 }}>{step.icon}</div>
                   <div style={{
                     fontFamily: fonts.base,
-                    fontSize: 17,
+                    fontSize: 18,
                     color: isDone ? colors.muted : isActive ? colors.white : colors.muted,
-                    fontWeight: isActive ? 600 : 400,
+                    fontWeight: isActive ? 700 : 500,
                     flex: 1,
                   }}>
                     {step.label}
                   </div>
                   {isDone && (
-                    <div style={{ color: colors.green, fontSize: 18, fontWeight: 900 }}>✓</div>
+                    <div style={{ color: colors.green, fontSize: 22, fontWeight: 900 }}>✓</div>
                   )}
                   {isActive && (
                     <div style={{
-                      width: 10, height: 10, borderRadius: '50%',
+                      width: 12, height: 12, borderRadius: '50%',
                       background: colors.blue,
-                      boxShadow: `0 0 10px ${colors.blue}`,
-                      opacity: Math.round(frame / 6) % 2 === 0 ? 1 : 0.4,
+                      boxShadow: `0 0 15px ${colors.blue}`,
+                      opacity: Math.round(frame / 6) % 2 === 0 ? 1 : 0.3,
                     }} />
                   )}
                 </div>
@@ -196,19 +212,19 @@ export const Scene4Agents: React.FC = () => {
           </div>
         </div>
 
-        {/* Right: Reddit evidence cards */}
-        <div style={{ width: 380, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {/* Right: Reddit evidence cards with cinematic cascade */}
+        <div style={{ width: 420, display: 'flex', flexDirection: 'column', gap: 20 }}>
           <div style={{
             fontFamily: fonts.base,
-            fontSize: 13,
-            fontWeight: 800,
+            fontSize: 14,
+            fontWeight: 900,
             color: colors.orange,
             textTransform: 'uppercase',
-            letterSpacing: '0.15em',
-            marginBottom: 4,
-            opacity: interpolate(frame, [20, 40], [0, 1], { extrapolateRight: 'clamp' }),
+            letterSpacing: '0.2em',
+            marginBottom: 8,
+            opacity: interpolate(frame, [20, 35], [0, 1], { extrapolateRight: 'clamp' }),
           }}>
-            Real evidence found
+            Real-time Evidence
           </div>
           <RedditCard
             text="I've been building for 6 months and just realized nobody actually wants this feature."

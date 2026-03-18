@@ -21,8 +21,14 @@ const OUTPUT_DIR = path.join(ROOT, 'public', 'audio');
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 
 const SFX_LIST = [
-  { id: 'sfx_ui_pop', text: 'Subtle clean UI pop sound', duration: 0.5 },
-  { id: 'sfx_sweep', text: 'Fast cinematic sweep whoosh air sound', duration: 1.0 },
+  { id: 'sfx_ui_pop', text: 'Subtle clean UI pop notification sound', duration: 0.5 },
+  { id: 'sfx_whoosh_clean', text: 'Fast cinematic whoosh air sound', duration: 1.0 },
+  { id: 'sfx_glitch', text: 'Short digital glitch static sound', duration: 0.8 },
+  { id: 'sfx_typing', text: 'Mechanical keyboard typing sound sequence', duration: 2.0 },
+  { id: 'sfx_click', text: 'Clean mouse click UI sound', duration: 0.5 },
+  { id: 'sfx_power_up', text: 'Cinematic digital power up charging sound', duration: 2.5 },
+  { id: 'sfx_success_chime', text: 'Triumphant digital success chime notification', duration: 2.0 },
+  { id: 'sfx_ui_glitch', text: 'Quick UI digital glitch sound', duration: 0.5 },
 ];
 
 async function generateSFX(id, text, duration) {

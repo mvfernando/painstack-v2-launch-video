@@ -1,3 +1,4 @@
+
 import { 
   AbsoluteFill, 
   useCurrentFrame, 
@@ -55,9 +56,14 @@ export const BlueprintScoreScene = () => {
 
   const badgeEntrance = spring({ frame: frame - 90, fps, config: { damping: 14, stiffness: 160 } });
 
-  // Success Glint (Visual highlight at 87%)
-  const glintOpacity = interpolate(frame, [90, 95, 110], [0, 0.6, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
-  const glintScale = interpolate(frame, [90, 110], [0.8, 1.2], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  // Cinematic Glint (Visual highlight traveling with the ring)
+  const glintAngle = (ringProgress * 0.87 * 360) - 90;
+  const glintX = 110 + radius * Math.cos((glintAngle * Math.PI) / 180);
+  const glintY = 110 + radius * Math.sin((glintAngle * Math.PI) / 180);
+  const glintOpacity = interpolate(frame, [20, 30, 90, 100], [0, 1, 1, 0]);
+
+  // Bloom pulse at 87
+  const bloom = interpolate(frame, [90, 95, 105], [0, 1, 0], { extrapolateRight: 'clamp' });
 
   const btnEntrance = interpolate(frame, [130, 150], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
   const btnY = interpolate(btnEntrance, [0, 1], [10, 0]);
@@ -85,7 +91,7 @@ export const BlueprintScoreScene = () => {
         width: "100%", 
         height: "100%",
         boxSizing: "border-box",
-        boxShadow: "0 40px 100px rgba(0,0,0,0.5)",
+        boxShadow: "0 40px 100px rgba(0,0,0,0.6)",
         fontFamily: fonts.base,
         display: "flex", 
         gap: 60, 
@@ -93,14 +99,12 @@ export const BlueprintScoreScene = () => {
         position: 'relative',
         overflow: 'hidden'
       }}>
-        {/* Success Glint Overlay */}
-        <div style={{
-            position: 'absolute',
-            inset: 0,
-            background: `radial-gradient(circle at 150px 225px, ${colors.green}44 0%, transparent 70%)`,
-            opacity: glintOpacity,
-            transform: `scale(${glintScale})`,
-            pointerEvents: 'none'
+        {/* Success Bloom Overlay */}
+        <AbsoluteFill style={{
+            background: `radial-gradient(circle at center, ${colors.green}44 0%, transparent 70%)`,
+            opacity: bloom,
+            pointerEvents: 'none',
+            zIndex: 10
         }} />
 
         {/* Ring Section */}
@@ -134,7 +138,20 @@ export const BlueprintScoreScene = () => {
                 strokeDasharray={circumference} 
                 strokeDashoffset={offset} 
                 transform="rotate(-90 110 110)"
-                style={{ filter: `drop-shadow(0 0 ${interpolate(frame, [90, 110], [12, 24], { extrapolateRight: 'clamp' })}px rgba(34,197,94,0.6))` }}
+                style={{ 
+                    filter: `drop-shadow(0 0 ${interpolate(frame, [90, 110], [12, 24], { extrapolateRight: 'clamp' })}px rgba(34,197,94,0.6))`,
+                    transition: 'stroke-dashoffset 0.1s linear'
+                }}
+              />
+              
+              {/* Traveling Success Glint */}
+              <circle 
+                cx={glintX} cy={glintY} r={6} 
+                fill="white" 
+                style={{ 
+                    opacity: glintOpacity,
+                    filter: 'blur(4px) drop-shadow(0 0 10px white)'
+                }}
               />
             </svg>
             <div style={{ 
@@ -149,7 +166,15 @@ export const BlueprintScoreScene = () => {
                 <div style={{ fontSize: 16, color: colors.muted, fontWeight: 600 }}>Calculating...</div>
               ) : (
                 <>
-                  <div style={{ fontSize: 72, fontWeight: 900, color: colors.white, letterSpacing: "-2px", lineHeight: 1 }}>
+                  <div style={{ 
+                      fontSize: 72, 
+                      fontWeight: 900, 
+                      color: colors.white, 
+                      letterSpacing: "-2px", 
+                      lineHeight: 1,
+                      transform: `scale(${1 + bloom * 0.1})`,
+                      transition: 'transform 0.1s ease-out'
+                  }}>
                     {scoreVal}
                   </div>
                   <div style={{ fontSize: 16, color: colors.muted, fontWeight: 500 }}>/100</div>
@@ -171,7 +196,7 @@ export const BlueprintScoreScene = () => {
             display: "inline-block",
             opacity: badgeEntrance,
             transform: `scale(${badgeEntrance})`,
-            boxShadow: `0 10px 30px ${colors.green}33`
+            boxShadow: `0 10px 40px ${colors.green}55`
           }}>
             BUILD ✓
           </div>
@@ -179,25 +204,26 @@ export const BlueprintScoreScene = () => {
 
         {/* Metrics Section */}
         <div style={{ flex: 1, zIndex: 1 }}>
-          <div style={{ fontSize: 22, fontWeight: 900, color: colors.white, marginBottom: 28, letterSpacing: '-1px' }}>Startup Blueprint</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 36 }}>
+          <div style={{ fontSize: 24, fontWeight: 900, color: colors.white, marginBottom: 28, letterSpacing: '-1.2px' }}>Startup Blueprint</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 40 }}>
             {metrics.map((m, i) => (
               <MetricRow key={i} {...m} />
             ))}
           </div>
           <div style={{ 
             background: `linear-gradient(135deg, ${colors.blue}, #1d4ed8)`,
-            borderRadius: 12, 
-            padding: "16px", 
+            borderRadius: 14, 
+            padding: "18px", 
             textAlign: "center", 
-            fontSize: 18, 
-            fontWeight: 800, 
+            fontSize: 20, 
+            fontWeight: 900, 
             color: colors.white,
             opacity: btnEntrance,
             transform: `translateY(${btnY}px)`,
-            boxShadow: `0 10px 25px ${colors.blue}44`
+            boxShadow: `0 15px 35px ${colors.blue}66`,
+            cursor: 'none'
           }}>
-            View Full Blueprint →
+            Explore Full Blueprint →
           </div>
         </div>
       </div>

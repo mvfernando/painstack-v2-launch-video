@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { 
   AbsoluteFill, 
   Sequence, 
@@ -8,7 +8,8 @@ import {
   interpolate, 
   spring,
   Audio,
-  staticFile
+  staticFile,
+  Easing
 } from 'remotion';
 import { colors, fonts } from '../../shared/brand';
 import { SceneAudio, BackgroundMusic } from '../../shared/SceneAudio';
@@ -26,6 +27,35 @@ const Transition = ({ duration, children }: { duration: number; children: React.
     const opacity = interpolate(frame, [duration - 10, duration], [1, 0], { extrapolateRight: 'clamp' });
     return <AbsoluteFill style={{ opacity }}>{children}</AbsoluteFill>;
 };
+
+const Particle = ({ delay, speed, x, y, size }: { delay: number; speed: number; x: number; y: number; size: number }) => {
+    const frame = useCurrentFrame();
+    const opacity = interpolate(Math.sin((frame - delay) / 20), [-1, 1], [0.1, 0.3]);
+    const translateY = Math.sin((frame - delay) / speed) * 15;
+    
+    return (
+        <div style={{
+            position: 'absolute',
+            left: `${x}%`,
+            top: `${y}%`,
+            width: size,
+            height: size,
+            borderRadius: '50%',
+            background: colors.blue,
+            opacity,
+            transform: `translateY(${translateY}px)`,
+            filter: 'blur(1px)'
+        }} />
+    );
+};
+
+const Vignette = () => (
+    <AbsoluteFill style={{ 
+        boxShadow: 'inset 0 0 300px rgba(0,0,0,0.7)',
+        pointerEvents: 'none',
+        zIndex: 5
+    }} />
+);
 
 // --- Components ---
 
@@ -64,7 +94,8 @@ const SceneContainer = ({
     background: bg, 
     display: 'flex', 
     alignItems: 'center', 
-    justifyContent: 'center' 
+    justifyContent: 'center',
+    overflow: 'hidden'
   }}>
     {children}
   </AbsoluteFill>
@@ -72,31 +103,49 @@ const SceneContainer = ({
 
 // --- Individual Scenes ---
 
-const SceneA = () => (
-  <SceneContainer>
-    <FadeSlide style={{ textAlign: 'center' }}>
-      <h1 style={{ 
-        fontFamily: fonts.base, 
-        fontSize: 90, 
-        color: colors.white, 
-        fontWeight: 800,
-        letterSpacing: '-2px',
-        marginBottom: 10
-      }}>
-        From idea to <span style={{ color: colors.blue }}>launched</span>.
-      </h1>
-      <p style={{ 
-        fontFamily: fonts.base, 
-        fontSize: 42, 
-        color: colors.muted,
-        fontWeight: 300,
-        margin: 0
-      }}>
-        Your AI team, from day zero.
-      </p>
-    </FadeSlide>
-  </SceneContainer>
-);
+const SceneA = () => {
+    const particles = useMemo(() => {
+        return Array.from({ length: 12 }).map((_, i) => ({
+            delay: Math.random() * 100,
+            speed: 40 + Math.random() * 30,
+            x: Math.random() * 100,
+            y: Math.random() * 100,
+            size: 2 + Math.random() * 3
+        }));
+    }, []);
+
+    return (
+        <SceneContainer>
+            <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 50%, rgba(45,129,224,0.08) 0%, transparent 80%)` }} />
+            {particles.map((p, i) => <Particle key={i} {...p} />)}
+            <Vignette />
+            
+            <FadeSlide style={{ textAlign: 'center', zIndex: 10 }}>
+                <h1 style={{ 
+                    fontFamily: fonts.base, 
+                    fontSize: 100, 
+                    color: colors.white, 
+                    fontWeight: 900,
+                    letterSpacing: '-4px',
+                    marginBottom: 15,
+                    lineHeight: 1
+                }}>
+                    From idea to <span style={{ color: colors.blue }}>launched</span>.
+                </h1>
+                <p style={{ 
+                    fontFamily: fonts.base, 
+                    fontSize: 42, 
+                    color: colors.muted,
+                    fontWeight: 400,
+                    margin: 0,
+                    letterSpacing: '-1px'
+                }}>
+                    Your AI Executive Team, from day zero.
+                </p>
+            </FadeSlide>
+        </SceneContainer>
+    );
+};
 
 const SceneB = () => {
   const frame = useCurrentFrame();
@@ -111,34 +160,46 @@ const SceneB = () => {
     { label: "High Burn", stat: "12%", delay: 135 }
   ];
 
+  // Screen shake on major stat discovery
+  const shake = spring({ frame: frame - 60, fps, config: { damping: 10, stiffness: 200 } });
+  const shakeOffset = interpolate(shake, [0, 0.1, 1], [0, 6, 0]);
+
   return (
     <SceneContainer>
+      <AbsoluteFill style={{ 
+          background: `radial-gradient(circle at 50% 40%, rgba(249,100,38,0.1) 0%, transparent 70%)`,
+          transform: `translate(${Math.random() * shakeOffset}px, ${Math.random() * shakeOffset}px)`
+      }} />
+      <Vignette />
+
       <FadeSlide style={{ textAlign: 'center', position: 'relative', zIndex: 100, marginTop: -200 }}>
         <h2 style={{ 
           fontFamily: fonts.base, 
-          fontSize: 120, 
+          fontSize: 130, 
           color: colors.orange, 
-          fontWeight: 800,
+          fontWeight: 900,
           marginBottom: 30,
-          textShadow: '0 0 40px rgba(249, 100, 38, 0.4)'
+          letterSpacing: '-6px',
+          textShadow: `0 0 50px ${colors.orange}66, 0 0 30px rgba(0,0,0,0.8)`
         }}>
           90% Fail.
         </h2>
         <div style={{ 
           fontFamily: fonts.base, 
-          fontSize: 48, 
+          fontSize: 52, 
           color: colors.white,
           maxWidth: 900,
           margin: '0 auto',
-          lineHeight: 1.4,
-          fontWeight: 400
+          lineHeight: 1.3,
+          fontWeight: 500,
+          letterSpacing: '-2px'
         }}>
           Most founders build<br/>
           <span style={{ color: colors.muted }}>the wrong product.</span>
         </div>
       </FadeSlide>
       
-      {/* Cards BELOW text */}
+      {/* Cards BELOW text with drift */}
       <AbsoluteFill style={{ pointerEvents: 'none', justifyContent: 'flex-end', paddingBottom: 100 }}>
         <div style={{ 
           display: 'grid', 
@@ -148,19 +209,21 @@ const SceneB = () => {
         }}>
           {reasons.map((r, i) => {
             const entrance = spring({ frame: frame - r.delay, fps, config: { damping: 15 } });
+            const drift = Math.sin((frame - r.delay) / 25) * 8;
             return (
               <div key={i} style={{ 
-                background: colors.bgCard, 
+                background: 'rgba(30, 41, 59, 0.6)', 
+                backdropFilter: 'blur(12px)',
                 border: `1px solid ${colors.border}`, 
                 borderRadius: 20, 
-                padding: '24px',
+                padding: '28px',
                 opacity: entrance,
-                transform: `scale(${entrance}) translateY(${interpolate(entrance, [0, 1], [30, 0])}px)`,
-                boxShadow: '0 15px 45px rgba(0,0,0,0.4)',
+                transform: `scale(${entrance}) translateY(${interpolate(entrance, [0, 1], [40, 0]) + drift}px)`,
+                boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
                 textAlign: 'center'
               }}>
-                <div style={{ fontSize: 36, fontWeight: 900, color: colors.orange, marginBottom: 4 }}>{r.stat}</div>
-                <div style={{ fontSize: 13, color: colors.muted, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>{r.label}</div>
+                <div style={{ fontSize: 40, fontWeight: 900, color: colors.orange, marginBottom: 4 }}>{r.stat}</div>
+                <div style={{ fontSize: 13, color: colors.muted, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px' }}>{r.label}</div>
               </div>
             );
           })}
@@ -194,80 +257,71 @@ const AgentCard = ({
 
     const entrance = spring({ frame: frame - delay, fps, config: { damping: 18, stiffness: 120 } });
     
-    // Content animations relative to card entrance
-    const iconScale = spring({ frame: frame - delay, fps, config: { damping: 14, stiffness: 160 } });
-    const textOpacity = interpolate(frame, [delay + 5, delay + 15], [0, 1], { extrapolateRight: 'clamp' });
-    const btnEntrance = spring({ frame: frame - delay - 20, fps, config: { damping: 18, stiffness: 120 } });
-    const badgeOpacity = interpolate(frame, [delay + 5, delay + 15], [0, 1], { extrapolateRight: 'clamp' });
-
-    // Active state (35 frames duration)
-    const activeStart = delay + 30;
-    const activeProgress = interpolate(frame, [activeStart, activeStart + 35], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
-    
-    const highlightOpacity = interpolate(activeProgress, [0, 1], [0.3, 0.6]);
-    const glowIntensity = interpolate(activeProgress, [0, 1], [0, 24]);
+    // Pulse on active
+    const pulse = Math.sin(frame / 6) * 0.05 + 1;
+    const isActive = frame > delay + 30 && frame < delay + 70;
 
     return (
         <div style={{
             background: colors.bgCard,
-            borderRadius: 16,
-            padding: 28,
-            border: `1px solid ${accent}`,
+            borderRadius: 20,
+            padding: 32,
+            border: `1px solid ${isActive ? accent : colors.border}`,
             opacity: entrance,
-            transform: `translateY(${interpolate(entrance, [0, 1], [30, 0])}px)`,
+            transform: `translateY(${interpolate(entrance, [0, 1], [30, 0])}px) scale(${isActive ? pulse : 1})`,
             position: 'relative',
             overflow: 'hidden',
-            boxShadow: `0 0 ${glowIntensity}px ${accent}${Math.floor(highlightOpacity * 255).toString(16).padStart(2, '0')}`,
+            boxShadow: isActive ? `0 0 40px ${accent}44` : '0 20px 60px rgba(0,0,0,0.3)',
             display: 'flex',
             flexDirection: 'column',
-            gap: 16
+            gap: 20,
+            transition: 'border 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease-out'
         }}>
-            {/* Active Badge */}
             <div style={{
                 position: 'absolute',
                 top: 20,
                 right: 20,
-                opacity: badgeOpacity,
-                background: 'rgba(34,197,94,0.12)',
-                border: '1px solid rgba(34,197,94,0.3)',
+                background: isActive ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.05)',
+                border: `1px solid ${isActive ? '#22c55e' : colors.border}`,
                 borderRadius: 100,
-                padding: '3px 10px',
+                padding: '4px 12px',
                 fontSize: 11,
-                fontWeight: 600,
-                color: '#22c55e'
+                fontWeight: 700,
+                color: isActive ? '#22c55e' : colors.muted
             }}>
-                Active
+                {isActive ? 'Processing...' : 'Ready'}
             </div>
 
             <div style={{
-                width: 48,
-                height: 48,
-                borderRadius: 12,
+                width: 56,
+                height: 56,
+                borderRadius: 14,
                 background: bgIcon,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: 24,
-                transform: `scale(${iconScale})`,
-                color: accent
+                fontSize: 28,
+                color: accent,
+                boxShadow: isActive ? `0 0 20px ${accent}66` : 'none'
             }}>
                 {icon}
             </div>
 
-            <div style={{ opacity: textOpacity }}>
-                <div style={{ fontSize: 20, fontWeight: 700, color: colors.white, marginBottom: 4 }}>{name}</div>
-                <div style={{ fontSize: 13, color: colors.muted, lineHeight: 1.4, height: 40 }}>{desc}</div>
+            <div>
+                <div style={{ fontSize: 22, fontWeight: 800, color: colors.white, marginBottom: 6 }}>{name}</div>
+                <div style={{ fontSize: 14, color: colors.muted, lineHeight: 1.5, height: 42 }}>{desc}</div>
             </div>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, opacity: textOpacity }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
                 {tags.map((t, i) => (
                     <div key={i} style={{
-                        background: 'rgba(255,255,255,0.06)',
-                        border: '1px solid rgba(255,255,255,0.1)',
+                        background: 'rgba(255,255,255,0.05)',
+                        border: `1px solid ${colors.border}`,
                         borderRadius: 100,
-                        fontSize: 10,
+                        fontSize: 11,
                         color: colors.muted,
-                        padding: '4px 12px'
+                        padding: '6px 14px',
+                        fontWeight: 500
                     }}>
                         {t}
                     </div>
@@ -276,28 +330,17 @@ const AgentCard = ({
 
             <div style={{
                 marginTop: 'auto',
-                background: colors.blue,
-                borderRadius: 10,
-                padding: '10px',
+                background: isActive ? accent : colors.blue,
+                borderRadius: 12,
+                padding: '14px',
                 textAlign: 'center',
                 color: colors.white,
-                fontSize: 12,
-                fontWeight: 700,
-                opacity: btnEntrance,
-                transform: `translateY(${interpolate(btnEntrance, [0, 1], [10, 0])}px)`
+                fontSize: 14,
+                fontWeight: 900,
+                boxShadow: `0 10px 20px ${isActive ? accent : colors.blue}44`
             }}>
                 {btnText}
             </div>
-
-            {/* Progress Bar */}
-            <div style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                height: 3,
-                width: `${activeProgress * 100}%`,
-                background: accent
-            }} />
         </div>
     );
 };
@@ -305,100 +348,62 @@ const AgentCard = ({
 const SceneEAgents = () => {
     const frame = useCurrentFrame();
     
-    const titleOpacity = interpolate(frame, [0, 15], [0, 1], { extrapolateRight: 'clamp' });
-    const subOpacity = interpolate(frame, [20, 35], [0, 1], { extrapolateRight: 'clamp' });
-
     return (
         <SceneContainer>
-            {/* Solid background first, then gradient overlay to avoid transparency */}
-            <AbsoluteFill style={{ backgroundColor: colors.bg }} />
-            <AbsoluteFill style={{ background: `radial-gradient(ellipse at 50% 40%, rgba(45,129,224,0.12) 0%, transparent 70%)` }} />
+            <AbsoluteFill style={{ background: `radial-gradient(ellipse at 50% 40%, rgba(45,129,224,0.15) 0%, transparent 80%)` }} />
+            <Vignette />
             
-            <div style={{ width: 1000, display: 'flex', flexDirection: 'column', gap: 40, zIndex: 1 }}>
+            <div style={{ width: 1100, display: 'flex', flexDirection: 'column', gap: 50, zIndex: 10 }}>
                 <div style={{ textAlign: 'center' }}>
                     <h2 style={{
                         fontFamily: fonts.base,
-                        fontSize: 48,
-                        fontWeight: 800,
+                        fontSize: 56,
+                        fontWeight: 900,
                         color: colors.white,
-                        letterSpacing: '-1.5px',
+                        letterSpacing: '-2px',
                         marginBottom: 10,
-                        opacity: titleOpacity
                     }}>
                         Your AI Executive Team
                     </h2>
                     <p style={{
                         fontFamily: fonts.base,
-                        fontSize: 18,
+                        fontSize: 22,
                         color: colors.muted,
-                        opacity: subOpacity
+                        fontWeight: 400
                     }}>
-                        Select a co-founder to start working on your blueprint.
+                        A world-class board specialized in validating and scaling your vision.
                     </p>
                 </div>
 
                 <div style={{
                     display: 'grid',
                     gridTemplateColumns: '1fr 1fr',
-                    gap: 16
+                    gap: 24
                 }}>
                     <AgentCard 
-                        name="AI CTO"
-                        icon="</>"
+                        name="AI CTO" icon="</>" accent="#22c55e" bgIcon="rgba(34,197,94,0.12)"
                         desc="From MVP scope to launch-ready build plan."
                         tags={["Define MVP scope", "Jump to PRPs"]}
-                        btnText="Open AI CTO workspace →"
-                        accent="#22c55e"
-                        bgIcon="rgba(34,197,94,0.12)"
-                        delay={30}
+                        btnText="AI CTO Active →" delay={30}
                     />
                     <AgentCard 
-                        name="AI CEO"
-                        icon="💼"
+                        name="AI CEO" icon="💼" accent="#2d81e0" bgIcon="rgba(45,129,224,0.12)"
                         desc="Strategic roadmap, fundraising, and north-star metrics."
                         tags={["Generate 90-day roadmap", "Define metrics"]}
-                        btnText="Open AI CEO workspace →"
-                        accent="#2d81e0"
-                        bgIcon="rgba(45,129,224,0.12)"
-                        delay={45}
+                        btnText="Open AI CEO workspace →" delay={45}
                     />
                     <AgentCard 
-                        name="AI CMO"
-                        icon="📣"
+                        name="AI CMO" icon="📣" accent="#f96426" bgIcon="rgba(249,100,38,0.12)"
                         desc="Go-to-market strategy, positioning, and launch plan."
                         tags={["Clarify positioning", "Draft launch plan"]}
-                        btnText="Open AI CMO workspace →"
-                        accent="#f96426"
-                        bgIcon="rgba(249,100,38,0.12)"
-                        delay={55}
+                        btnText="Open AI CMO workspace →" delay={60}
                     />
                     <AgentCard 
-                        name="Market Agent"
-                        icon="📈"
+                        name="Market Agent" icon="📈" accent="#a78bfa" bgIcon="rgba(167,139,250,0.12)"
                         desc="Market signals, competitor landscape, and demand validation."
                         tags={["Scan discussion level", "Map solutions"]}
-                        btnText="Open Market Agent workspace →"
-                        accent="#a78bfa"
-                        bgIcon="rgba(167,139,250,0.12)"
-                        delay={65}
+                        btnText="Open Market Agent workspace →" delay={75}
                     />
-                </div>
-
-                <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 12,
-                    opacity: interpolate(frame, [160, 175], [0, 1], { extrapolateRight: 'clamp' })
-                }}>
-                    <div style={{
-                        width: 8, height: 8, borderRadius: '50%',
-                        background: colors.blue,
-                        opacity: Math.round(frame / 15) % 2 === 0 ? 1 : 0.3
-                    }} />
-                    <div style={{ fontSize: 14, color: colors.muted, fontFamily: fonts.base }}>
-                        Analysing 847 community posts across 12 subreddits...
-                    </div>
                 </div>
             </div>
         </SceneContainer>
@@ -414,15 +419,17 @@ const SceneG = () => {
     return (
     <AbsoluteFill style={{ background: colors.bg }}> 
         <AbsoluteFill style={{ 
-            background: `radial-gradient(circle at 50% 50%, ${colors.blue}44 0%, transparent 70%)`,
+            background: `radial-gradient(circle at 50% 50%, ${colors.blue}55 0%, transparent 70%)`,
             opacity: interpolate(entrance, [0, 1], [0, 1])
         }} />
+        <Vignette />
         
         <AbsoluteFill style={{ 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            zIndex: 10
         }}>
             <div style={{ 
                 textAlign: 'center',
@@ -431,30 +438,36 @@ const SceneG = () => {
             }}>
                 <div style={{ 
                     position: 'relative',
-                    width: 260,
-                    height: 260,
-                    margin: '0 auto 40px',
+                    width: 280,
+                    height: 280,
+                    margin: '0 auto 50px',
                 }}>
-                    <img 
-                        src={staticFile('shared/Painstack.ai_logo2.png')} 
-                        style={{ 
-                            width: '100%', 
-                            height: '100%', 
-                            objectFit: 'contain',
-                            position: 'relative',
-                            transform: `scale(${logoEntrance})`,
-                        }} 
-                        alt="Logo"
-                    />
+                  <img 
+                    src={staticFile('shared/Painstack.ai_logo2.png')} 
+                    style={{ 
+                        width: '100%', 
+                        height: '100%', 
+                        objectFit: 'contain',
+                        position: 'relative',
+                        transform: `scale(${logoEntrance})`,
+                    }} 
+                    alt="Logo"
+                  />
+                  <div style={{
+                      position: 'absolute',
+                      inset: -40,
+                      background: `radial-gradient(circle, ${colors.blue}44 0%, transparent 70%)`,
+                      opacity: Math.sin(frame / 10) * 0.3 + 0.4
+                  }} />
                 </div>
                 
                 <h2 style={{
                     fontFamily: fonts.base,
-                    fontSize: 80,
+                    fontSize: 90,
                     fontWeight: 900,
                     color: colors.white,
-                    marginBottom: 20,
-                    letterSpacing: '-3px',
+                    marginBottom: 30,
+                    letterSpacing: '-4px',
                     lineHeight: 1
                 }}>
                     Start building for real.
@@ -463,47 +476,48 @@ const SceneG = () => {
                     display: 'flex',
                     flexDirection: 'row',
                     gap: 20,
-                    marginBottom: 40,
+                    marginBottom: 50,
                     alignItems: 'center',
                     justifyContent: 'center'
                 }}>
                     {["Free to start", "No card required", "Results in minutes"].map((item, i) => (
                         <React.Fragment key={item}>
                             <div style={{
-                                fontSize: 22,
+                                fontSize: 24,
                                 color: colors.muted,
                                 fontFamily: fonts.base,
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: 8
+                                gap: 10,
+                                fontWeight: 500
                             }}>
                                 <span style={{ color: colors.green, fontWeight: 900 }}>✓</span> {item}
                             </div>
-                            {i < 2 && <div style={{ color: colors.muted, fontSize: 24, fontWeight: 300 }}>.</div>}
+                            {i < 2 && <div style={{ color: colors.muted, fontSize: 28, fontWeight: 300 }}>.</div>}
                         </React.Fragment>
                     ))}
                 </div>
 
                 <div style={{
-                    padding: '24px 70px',
+                    padding: '28px 80px',
                     borderRadius: 100,
                     background: `linear-gradient(135deg, ${colors.orange}, #ff7e47)`,
                     color: colors.white,
-                    fontSize: 32,
+                    fontSize: 36,
                     fontWeight: 900,
                     display: 'inline-block',
-                    boxShadow: `0 25px 50px ${colors.orange}44`,
+                    boxShadow: `0 30px 60px ${colors.orange}55`,
                     border: '2px solid rgba(255,255,255,0.1)'
                 }}>
-                    TRY IT FREE →
+                    GET STARTED FREE →
                 </div>
                 <p style={{ 
                     fontFamily: fonts.base, 
-                    fontSize: 32, 
+                    fontSize: 38, 
                     color: colors.blue,
-                    fontWeight: 600,
-                    marginTop: 30,
-                    letterSpacing: '-1px'
+                    fontWeight: 700,
+                    marginTop: 40,
+                    letterSpacing: '-1.5px'
                 }}>
                     usepainstackai.com
                 </p>
@@ -537,7 +551,7 @@ export const Video2Walkthrough = () => {
             {/* POP sounds for reasons */}
             {[0, 15, 30, 45, 60, 75].map((d, i) => (
                 <Sequence key={i} from={d} durationInFrames={15}>
-                    <Audio src={staticFile('audio/sfx_pop_soft.mp3')} volume={0.15} />
+                    <Audio src={staticFile('audio/sfx_ui_pop.mp3')} volume={0.15} />
                 </Sequence>
             ))}
         </Sequence>
@@ -568,7 +582,7 @@ export const Video2Walkthrough = () => {
         </Sequence>
         {[40, 55, 70].map((d, i) => (
           <Sequence key={i} from={d} durationInFrames={30}>
-            <Audio src={staticFile('audio/sfx_pop_soft.mp3')} volume={0.15} />
+            <Audio src={staticFile('audio/sfx_ui_pop.mp3')} volume={0.15} />
           </Sequence>
         ))}
       </Sequence>

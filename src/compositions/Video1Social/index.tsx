@@ -41,7 +41,7 @@ export const Video1Social: React.FC = () => {
             {/* Quote Pops */}
             {[0, 15, 30, 45, 60, 75, 90, 105, 120, 135].map((d, i) => (
                 <Sequence key={i} from={d} durationInFrames={15}>
-                    <Audio src={staticFile('audio/sfx_pop_soft.mp3')} volume={0.15} />
+                    <Audio src={staticFile('audio/sfx_ui_pop.mp3')} volume={0.15} />
                 </Sequence>
             ))}
         </Sequence>
@@ -53,6 +53,14 @@ export const Video1Social: React.FC = () => {
             <Scene2bBridge />
         </Transition>
         <SceneAudio filename="v1_s2b_bridge" />
+        
+        {/* Evidence Popcorn SFX */}
+        {[90, 110, 130, 150].map((d, i) => (
+            <Sequence key={i} from={d} durationInFrames={15}>
+                <Audio src={staticFile('audio/sfx_ui_pop.mp3')} volume={0.2} />
+            </Sequence>
+        ))}
+        <Audio src={staticFile('audio/sfx_whoosh_clean.mp3')} volume={0.1} />
       </Sequence>
 
       {/* S3: Input (565-744) | Audio: 154 + 25 buffer */}
