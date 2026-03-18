@@ -1,116 +1,101 @@
-# Painstack.ai — Remotion Launch Videos V2
+# 🚀 Painstack AI — Cinematic Launch Kit
 
-Dois vídeos de lançamento com narração ElevenLabs integrada.
+Painstack AI is a market validation engine that transforms raw ideas into evidence-backed product blueprints. This repository contains the professional video launch kit, built with **Remotion**, **React**, and **ElevenLabs AI**.
+
+> [!IMPORTANT]
+> This project uses a "Master Producer" design system with unified particles, cinematic vignettes, and physics-based UI animations.
 
 ---
 
-## Setup
+## 🎬 The Launch Suite
 
+We've developed three distinct video compositions tailored for a high-impact product launch:
+
+1.  **Video 1: Social Master (16:9)** — The high-energy engagement "hook" for X and LinkedIn.
+2.  **Video 2: Walkthrough (16:9)** — A deep-dive product demo featuring the "AI Executive Team."
+3.  **Video 3: Vertical Shorts (9:16)** — Mobile-first content with high-intensity "popcorn" effects for Reels and TikTok.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Engine**: [Remotion](https://www.remotion.dev/) (Video as Code)
+- **UI Architecture**: React + Tailwind CSS
+- **Voiceover**: ElevenLabs Multilingual V2 (Adam Voice)
+- **SFX**: ElevenLabs Sound Effects API
+- **Design**: "Dark Slate" Blueprint System (Inter Font)
+
+---
+
+## ⚙️ Setup & Installation
+
+### 1. Requirements
+Ensure you have Node.js installed and an ElevenLabs API key.
+
+### 2. Environment
+Create a `.env` file in the root:
 ```bash
-npm create video@latest painstack-launch
-cd painstack-launch
-# Copia este src/ e scripts/ para dentro do projeto
-npm install
-```
-
-## .env
-
-```
-ELEVENLABS_API_KEY=sk_...
+ELEVENLABS_API_KEY=your_key_here
 ELEVENLABS_VOICE_ID=pNInz6obpgDQGcFmaJgB
 ```
 
-Vozes recomendadas: Adam `pNInz6obpgDQGcFmaJgB` (EN, neutro) · Bella `EXAVITQu4vr4xnSDxMaL` (EN, suave)
-
----
-
-## Gerar áudio
-
+### 3. Install Dependencies
 ```bash
-node --env-file=.env scripts/generate-voiceover.mjs --video all
+npm install
 ```
-
-Ficheiros gerados em `public/audio/v1_*.mp3` e `v2_*.mp3`
 
 ---
 
-## Preview e Render
+## 🤖 AI Audio Workflow
 
+This project automates audio production for frame-perfect synchronization.
+
+### Generate Voiceovers
+Generates 20 distinct voiceover files for all 3 videos:
 ```bash
-npm run dev
-npx remotion render PainstackV2_Social out/v1_social.mp4
-npx remotion render PainstackV2_Walkthrough out/v2_walkthrough.mp4
+node scripts/generate-voiceover.mjs --video all
+```
+
+### Generate Sound Effects
+Generates UI pops, glitches, and atmospheric cinematic sounds:
+```bash
+node scripts/generate-sfx.mjs
 ```
 
 ---
 
-## Ajustar timing
+## 🏗️ Rendering Masters
 
-```tsx
-<SceneAudio filename="v1_s2_problem" endAt={140} />   // cortar áudio longo
-<SceneAudio filename="v1_s3_input" startFrom={5} />   // atrasar entrada
-<SceneAudio filename="v2_sf_blueprint" volume={0.85} /> // ajustar volume
-```
+To export the final videos in high-resolution (CRF 16) for posting:
+
+| Composition | Target Platform | Command |
+| :--- | :--- | :--- |
+| **Social** | X, LinkedIn | `npx remotion render PainstackV2-Social out/social.mp4` |
+| **Walkthrough** | YouTube, Docs | `npx remotion render PainstackV2-Walkthrough out/walkthrough.mp4` |
+| **Shorts** | TikTok, Reels | `npx remotion render PainstackV2-Shorts out/shorts.mp4` |
+
+*Add `--concurrency 8 --crf 16` to the commands for maximum performance and quality.*
 
 ---
 
-## Custo ElevenLabs
+## 📁 Project Structure
 
-Scripts dos 2 vídeos: ~1.400 chars. Free tier (10k chars/mês) cobre ~7 renders completos.
+- `src/shared/`: Brand tokens, `SceneAudio` helper, and shared UI screens (Blueprint Score).
+- `src/compositions/`: Unique logic for each of the 3 videos.
+- `public/audio/`: Master library of AI-generated assets.
+- `scripts/`: Automation tools for the AI audio pipeline.
 
+---
 
+## 💎 Design Standards
 
-# Remotion video
+- **Typography**: Inter (Extra Bold / 900 for headlines).
+- **Colors**: 
+  - Brand Blue: `#2d81e0`
+  - Pain Orange: `#ff4500`
+  - Success Green: `#10b981`
+  - Deep BG: `#0f172a`
 
-<p align="center">
-  <a href="https://github.com/remotion-dev/logo">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/remotion-dev/logo/raw/main/animated-logo-banner-dark.apng">
-      <img alt="Animated Remotion Logo" src="https://github.com/remotion-dev/logo/raw/main/animated-logo-banner-light.gif">
-    </picture>
-  </a>
-</p>
+---
 
-Welcome to your Remotion project!
-
-## Commands
-
-**Install Dependencies**
-
-```console
-npm i
-```
-
-**Start Preview**
-
-```console
-npm run dev
-```
-
-**Render video**
-
-```console
-npx remotion render
-```
-
-**Upgrade Remotion**
-
-```console
-npx remotion upgrade
-```
-
-## Docs
-
-Get started with Remotion by reading the [fundamentals page](https://www.remotion.dev/docs/the-fundamentals).
-
-## Help
-
-We provide help on our [Discord server](https://discord.gg/6VzzNDwUwV).
-
-## Issues
-
-Found an issue with Remotion? [File an issue here](https://github.com/remotion-dev/remotion/issues/new).
-
-## License
-
-Note that for some entities a company license is needed. [Read the terms here](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md).
+Built with ⚡ by the Painstack Team.
