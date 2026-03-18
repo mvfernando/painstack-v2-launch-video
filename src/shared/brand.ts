@@ -9,6 +9,7 @@ export const colors = {
   muted: '#94A3B8',
   green: '#22c55e',
   red: '#ef4444',
+  purple: '#a78bfa',
 };
 
 export const fonts = {

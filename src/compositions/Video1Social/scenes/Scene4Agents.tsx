@@ -17,19 +17,33 @@ const RedditCard: React.FC<{ text: string; upvotes: string; delay: number }> = (
 
   return (
     <div style={{
-      background: 'rgba(45,129,224,0.08)',
-      border: `1px solid rgba(45,129,224,0.2)`,
-      borderRadius: 10,
-      padding: '12px 16px',
+      background: 'rgba(30, 41, 59, 0.4)',
+      backdropFilter: 'blur(8px)',
+      border: `1px solid ${colors.border}`,
+      borderRadius: 12,
+      padding: '16px',
       opacity,
       transform: `translateY(${interpolate(prog, [0, 1], [20, 0])}px)`,
+      boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+      position: 'relative',
+      overflow: 'hidden'
     }}>
-      <div style={{ fontFamily: fonts.base, fontSize: 13, color: colors.white, lineHeight: 1.4, marginBottom: 6 }}>
+      <div style={{ fontFamily: fonts.base, fontSize: 13, color: colors.white, lineHeight: 1.4, marginBottom: 8, fontWeight: 400 }}>
         "{text}"
       </div>
-      <div style={{ fontFamily: fonts.base, fontSize: 12, color: colors.orange }}>
-        ▲ {upvotes} · r/startups
+      <div style={{ fontFamily: fonts.base, fontSize: 12, color: colors.orange, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
+        <span style={{ fontSize: 14 }}>▲</span> {upvotes} · r/startups
       </div>
+      
+      {/* Evidence Highlight */}
+      <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: 4,
+          height: '100%',
+          background: colors.blue,
+      }} />
     </div>
   );
 };
@@ -41,21 +55,43 @@ export const Scene4Agents: React.FC = () => {
   const containerOpacity = interpolate(frame, [0, 15], [0, 1], { extrapolateRight: 'clamp' });
   const containerScale = spring({ frame, fps, config: { damping: 22, stiffness: 140, mass: 0.7 } });
 
+  // Scanning line position
+  const scanPos = interpolate(frame % 45, [0, 45], [0, 100]);
+
   return (
     <AbsoluteFill style={{
-      background: colors.bg,
+      backgroundColor: '#0F172A',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
     }}>
+      {/* Background radial highlight */}
       <div style={{
         position: 'absolute', inset: 0,
-        backgroundImage: `radial-gradient(ellipse at 60% 30%, rgba(45,129,224,0.06) 0%, transparent 60%)`,
+        backgroundImage: `radial-gradient(ellipse at 60% 30%, rgba(45,129,224,0.12) 0%, transparent 60%)`,
       }} />
+
+      {/* Data Particles */}
+      {[...Array(15)].map((_, i) => {
+          const particleOpacity = interpolate((frame + i * 20) % 100, [0, 20, 80, 100], [0, 0.3, 0.3, 0]);
+          return (
+              <div key={i} style={{
+                  position: 'absolute',
+                  width: 4,
+                  height: 4,
+                  borderRadius: '50%',
+                  background: colors.blue,
+                  left: `${(i * 137) % 100}%`,
+                  top: `${(i * 149) % 100}%`,
+                  opacity: particleOpacity,
+                  filter: 'blur(1px)'
+              }} />
+          )
+      })}
 
       <div style={{
         display: 'flex',
-        gap: 32,
+        gap: 40,
         opacity: containerOpacity,
         transform: `scale(${containerScale})`,
         zIndex: 1,
@@ -63,30 +99,59 @@ export const Scene4Agents: React.FC = () => {
       }}>
         {/* Left: Processing steps */}
         <div style={{
-          width: 420,
+          width: 450,
           background: colors.bgCard,
-          borderRadius: 20,
+          borderRadius: 24,
           border: `1px solid ${colors.border}`,
-          padding: '28px 24px',
-          boxShadow: '0 24px 60px rgba(0,0,0,0.4)',
+          padding: '32px',
+          boxShadow: '0 30px 80px rgba(0,0,0,0.5)',
+          position: 'relative',
+          overflow: 'hidden'
         }}>
-          {/* Brain icon */}
+          {/* Scanning Line overlay */}
           <div style={{
-            width: 56,
-            height: 56,
-            borderRadius: '50%',
-            background: 'rgba(45,129,224,0.15)',
-            border: `2px solid rgba(45,129,224,0.3)`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 26,
-            margin: '0 auto 24px',
+              position: 'absolute',
+              top: `${scanPos}%`,
+              left: 0,
+              width: '100%',
+              height: 2,
+              background: `linear-gradient(90deg, transparent, ${colors.blue}, transparent)`,
+              opacity: 0.4,
+              boxShadow: `0 0 15px ${colors.blue}`,
+              zIndex: 10
+          }} />
+
+          {/* Brain icon with Glow */}
+          <div style={{
+            position: 'relative',
+            width: 72,
+            height: 72,
+            margin: '0 auto 32px',
           }}>
-            🧠
+            <div style={{
+                position: 'absolute',
+                inset: -20,
+                background: `radial-gradient(circle, ${colors.blue}44 0%, transparent 70%)`,
+                opacity: Math.sin(frame / 6) * 0.2 + 0.5,
+            }} />
+            <div style={{
+                width: '100%',
+                height: '100%',
+                borderRadius: '50%',
+                background: 'rgba(30, 41, 59, 0.8)',
+                border: `2px solid ${colors.blue}`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 32,
+                position: 'relative',
+                boxShadow: `0 0 20px ${colors.blue}33`
+            }}>
+                🧠
+            </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {steps.map((step, i) => {
               const isActive = frame >= step.delay && frame < step.delay + 35;
               const isDone = frame >= step.delay + 35;
@@ -96,32 +161,33 @@ export const Scene4Agents: React.FC = () => {
                 <div key={i} style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 14,
-                  padding: '10px 14px',
-                  borderRadius: 10,
+                  gap: 16,
+                  padding: '12px 16px',
+                  borderRadius: 12,
                   background: isActive ? 'rgba(45,129,224,0.12)' : 'transparent',
-                  border: isActive ? `1px solid rgba(45,129,224,0.25)` : '1px solid transparent',
+                  border: isActive ? `1px solid ${colors.blue}44` : '1px solid transparent',
                   opacity: frame < step.delay ? 0.25 : stepOpacity,
-                  transition: 'all 0.3s',
+                  transform: isActive ? 'translateX(4px)' : 'none',
                 }}>
-                  <div style={{ fontSize: 18 }}>{step.icon}</div>
+                  <div style={{ fontSize: 20 }}>{step.icon}</div>
                   <div style={{
                     fontFamily: fonts.base,
-                    fontSize: 15,
+                    fontSize: 17,
                     color: isDone ? colors.muted : isActive ? colors.white : colors.muted,
-                    fontWeight: isActive ? 500 : 400,
+                    fontWeight: isActive ? 600 : 400,
                     flex: 1,
                   }}>
                     {step.label}
                   </div>
                   {isDone && (
-                    <div style={{ color: colors.green, fontSize: 14, fontWeight: 700 }}>✓</div>
+                    <div style={{ color: colors.green, fontSize: 18, fontWeight: 900 }}>✓</div>
                   )}
                   {isActive && (
                     <div style={{
-                      width: 8, height: 8, borderRadius: '50%',
+                      width: 10, height: 10, borderRadius: '50%',
                       background: colors.blue,
-                      opacity: Math.round(frame / 8) % 2 === 0 ? 1 : 0.4,
+                      boxShadow: `0 0 10px ${colors.blue}`,
+                      opacity: Math.round(frame / 6) % 2 === 0 ? 1 : 0.4,
                     }} />
                   )}
                 </div>
@@ -131,14 +197,14 @@ export const Scene4Agents: React.FC = () => {
         </div>
 
         {/* Right: Reddit evidence cards */}
-        <div style={{ width: 360, display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ width: 380, display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div style={{
             fontFamily: fonts.base,
-            fontSize: 12,
-            fontWeight: 600,
+            fontSize: 13,
+            fontWeight: 800,
             color: colors.orange,
             textTransform: 'uppercase',
-            letterSpacing: '0.1em',
+            letterSpacing: '0.15em',
             marginBottom: 4,
             opacity: interpolate(frame, [20, 40], [0, 1], { extrapolateRight: 'clamp' }),
           }}>

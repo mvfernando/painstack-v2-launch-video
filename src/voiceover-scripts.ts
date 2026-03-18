@@ -111,3 +111,11 @@ export const VIDEO2_SCRIPTS = [
     pauseAfter: 0,
   },
 ];
+
+export const VIDEO3_SCRIPTS = [
+  { id: 'v3_s1_hook', text: "You have an idea. Is it worth building?" },
+  { id: 'v3_s2_problem', text: "Ninety percent of startups fail. Number one reason: wrong product." },
+  { id: 'v3_s3_solution', text: "Painstack scans real communities for evidence before you write a single line of code." },
+  { id: 'v3_s4_result', text: "In sixty seconds: a Blueprint Score and a clear verdict. Build. Or don't." },
+  { id: 'v3_s5_cta', text: "Painstack dot A I. Free to start." },
+];

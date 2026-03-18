@@ -63,9 +63,18 @@ const VIDEO2_SCRIPTS = [
   { id: 'v2_sb_problem',   text: "Ninety percent of startups fail. The number one reason? They built a solution for a problem that didn't exist. Painstack fixes your starting point." },
   { id: 'v2_sc_input',     text: "Start with a raw idea or a hunch. Describe it, paste a Reddit thread, or upload your research. Our agents take it from there." },
   { id: 'v2_sd_evidence',  text: "The Evidence Hub scans thousands of conversations for real pain signals. We don't use surveys. we find actual people screaming for help in real communities." },
-  { id: 'v2_se_agents',    text: "Four AI agents work your idea 24/7. Analyzing evidence, market gaps, blueprints, and build plans. Simultaneously." },
+  { id: 'v2_se_agents',    text: "Your AI Executive Team: AI CTO, AI CEO, AI CMO, and Market Agent. Four co-founders working your blueprint. Simultaneously." },
   { id: 'v2_sf_blueprint', text: "The result? A Startup Blueprint. You get a clear go or no-go score, three viable solution directions, and a validated roadmap to your MVP." },
+  { id: 'v2_sh_dataroom',  text: "Finally, everything is organized in your dedicated Dataroom. From market analysis to technical architecture, you're ready to build or pitch." },
   { id: 'v2_sg_cta',       text: "Real problems. Real data. Clear decisions. Painstack dot A I. Build with confidence." },
+];
+
+const VIDEO3_SCRIPTS = [
+  { id: 'v3_s1_hook',     text: 'You have an idea. Is it worth building?' },
+  { id: 'v3_s2_problem',  text: "Ninety percent of startups fail. Number one reason? Wrong product." },
+  { id: 'v3_s3_solution', text: "Painstack scans reddit, hacker news, and product hunt for real help signals." },
+  { id: 'v3_s4_result',   text: "Score 87 out of 100. Build with confidence." },
+  { id: 'v3_s5_cta',      text: 'Painstack dot A I. Start building for real today.' },
 ];
 
 async function generateAudio(id, text) {
@@ -120,7 +129,8 @@ async function main() {
   let scripts = [];
   if (videoArg === '1') scripts = VIDEO1_SCRIPTS;
   else if (videoArg === '2') scripts = VIDEO2_SCRIPTS;
-  else scripts = [...VIDEO1_SCRIPTS, ...VIDEO2_SCRIPTS];
+  else if (videoArg === '3') scripts = VIDEO3_SCRIPTS;
+  else scripts = [...VIDEO1_SCRIPTS, ...VIDEO2_SCRIPTS, ...VIDEO3_SCRIPTS];
 
   console.log(`\n🚀 Painstack Voiceover Generator`);
   console.log(`   Vídeo: ${videoArg} | Scripts: ${scripts.length} | Voice: ${VOICE_ID}\n`);

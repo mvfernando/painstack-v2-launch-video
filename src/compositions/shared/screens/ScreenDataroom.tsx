@@ -6,122 +6,127 @@ import {
   useVideoConfig, 
   interpolate, 
   spring, 
-  Easing 
 } from 'remotion';
 import { colors, fonts } from '../../../shared/brand';
 
-const DocCard: React.FC<{ 
-  emoji: string; 
-  name: string; 
-  meta: string; 
-  status: 'Ready' | 'Draft'; 
-  delay: number;
-}> = ({ emoji, name, meta, status, delay }) => {
+const DocRow = ({ doc, delay }: { doc: any; delay: number }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  
+  // 2. Cada linha de documento entra em stagger: translateY 15px→0 + opacity 0→1
+  const entrance = interpolate(frame, [delay, delay + 15], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const y = interpolate(entrance, [0, 1], [15, 0]);
 
-  const entrance = spring({
-    frame: frame - delay,
-    fps,
-    config: { damping: 18, stiffness: 150, mass: 0.7 }
-  });
-
-  const opacity = interpolate(entrance, [0, 1], [0, 1]);
-  const scale = interpolate(entrance, [0, 1], [0.85, 1.0]);
+  // 3. Os badges "AI Generated" (a azul) têm um brilho subtil: opacity pulsa entre 0.8 e 1.0 a cada 20 frames
+  const pulse = interpolate(
+    Math.sin((frame / 20) * Math.PI),
+    [-1, 1],
+    [0.8, 1.0]
+  );
+  
+  const isAiBadge = doc.badge === "AI Generated";
 
   return (
-    <div style={{
-      background: colors.bgCard,
+    <div style={{ 
+      display: "flex", 
+      alignItems: "center", 
+      gap: 16, 
+      padding: "16px 20px", 
+      background: colors.bgCard, 
+      borderRadius: 12, 
       border: `1px solid ${colors.border}`,
-      borderRadius: 10,
-      padding: '18px 20px',
-      display: 'flex',
-      flexDirection: 'column',
-      opacity,
-      transform: `scale(${scale})`
+      opacity: entrance,
+      transform: `translateY(${y}px)`
     }}>
-      <div style={{ fontSize: 24, marginBottom: 10 }}>{emoji}</div>
-      <div style={{ fontSize: 14, fontWeight: 600, color: colors.white, fontFamily: fonts.base, marginBottom: 4 }}>{name}</div>
-      <div style={{ fontSize: 11, color: '#94A3B8', fontFamily: fonts.base, marginBottom: 12 }}>{meta}</div>
-      <div style={{
-        alignSelf: 'flex-start',
-        background: status === 'Ready' ? 'rgba(34,197,94,0.15)' : 'rgba(249,100,38,0.15)',
-        color: status === 'Ready' ? colors.green : colors.orange,
-        fontSize: 10,
-        fontWeight: 700,
-        padding: '2px 8px',
-        borderRadius: 4,
-        fontFamily: fonts.base
-      }}>
-        {status}
+      <div style={{ fontSize: 24, flexShrink: 0 }}>{doc.icon}</div>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontSize: 16, fontWeight: 700, color: colors.white }}>{doc.title}</div>
+        <div style={{ fontSize: 12, color: colors.muted, marginTop: 4 }}>{doc.type} · {doc.size} · {doc.date}</div>
       </div>
+      {doc.badge && (
+        <div style={{ 
+          fontSize: 11, 
+          fontWeight: 700, 
+          color: doc.badgeColor, 
+          border: `1px solid ${doc.badgeColor}44`, 
+          borderRadius: 100, 
+          padding: "4px 12px",
+          opacity: isAiBadge ? pulse : 1
+        }}>
+          {doc.badge}
+        </div>
+      )}
+      <div style={{ fontSize: 18, color: colors.muted, marginLeft: 10 }}>↗</div>
     </div>
   );
 };
 
-export const ScreenDataroom: React.FC = () => {
+export const DataRoomScene = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Phase 1: Entrance (0-20)
-  const entrance = spring({
-    frame,
-    fps,
-    config: { damping: 20, stiffness: 60 }
-  });
-  const entranceScale = interpolate(entrance, [0, 1], [0.9, 1.0]);
-  const entranceOpacity = interpolate(entrance, [0, 1], [0, 1]);
-
-  // Phase 3: Zoom on card 1 (90-130)
-  const zoomProgress = interpolate(frame, [90, 130], [0, 1], {
-    easing: Easing.inOut(Easing.quad),
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp'
-  });
-  const zoomScale = interpolate(zoomProgress, [0, 1], [1.0, 1.5]);
-
-  // Phase 4: Fade out (130-150)
-  const fadeOutOpacity = interpolate(frame, [130, 150], [1, 0], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp'
-  });
-
-  const currentOpacity = frame < 130 ? entranceOpacity : fadeOutOpacity;
-
   const docs = [
-    { emoji: '📋', name: 'Startup Blueprint', meta: 'Generated · 2 min ago', status: 'Ready' as const, delay: 20 },
-    { emoji: '📊', name: 'Market Analysis', meta: 'Generated · 2 min ago', status: 'Ready' as const, delay: 35 },
-    { emoji: '🗺️', name: 'Build Roadmap', meta: 'Generated · 2 min ago', status: 'Ready' as const, delay: 50 },
-    { emoji: '💰', name: 'Revenue Model', meta: 'In progress', status: 'Draft' as const, delay: 65 },
+    { icon: "📊", title: "Market Analysis Report", type: "PDF", size: "2.4 MB", date: "Today", badge: "AI Generated", badgeColor: colors.blue, delay: 20 },
+    { icon: "🎯", title: "Problem Validation", type: "DOC", size: "840 KB", date: "Today", badge: "AI Generated", badgeColor: colors.blue, delay: 32 },
+    { icon: "📈", title: "GTM Strategy", type: "DOC", size: "1.1 MB", date: "Yesterday", badge: "Draft", badgeColor: colors.orange, delay: 44 },
+    { icon: "💰", title: "Financial Projections", type: "XLS", size: "560 KB", date: "2 days ago", badge: "Template", badgeColor: colors.muted, delay: 56 },
+    { icon: "🏗️", title: "Technical Architecture", type: "PDF", size: "3.2 MB", date: "3 days ago", badge: null, badgeColor: null, delay: 68 },
+    { icon: "📋", title: "Pitch Deck v2", type: "PPT", size: "8.7 MB", date: "1 week ago", badge: "Ready", badgeColor: colors.green, delay: 80 },
   ];
 
-  return (
-    <AbsoluteFill style={{ background: '#0a0f1a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{
-        width: 1400,
-        height: 900,
-        background: colors.bg,
-        borderRadius: 12,
-        overflow: 'hidden',
-        border: `1px solid ${colors.border}`,
-        boxShadow: '0 30px 100px rgba(0,0,0,0.8)',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '40px 48px',
-        opacity: currentOpacity,
-        transform: `scale(${entranceScale * zoomScale})`,
-        transformOrigin: '30% 35%'
-      }}>
-        <h2 style={{ fontSize: 24, fontWeight: 800, color: colors.white, fontFamily: fonts.base, marginTop: 0, marginBottom: 4 }}>
-          Dataroom & docs
-        </h2>
-        <p style={{ fontSize: 13, color: '#94A3B8', fontFamily: fonts.base, marginBottom: 32 }}>
-          Auto-generated from your Blueprint
-        </p>
+  // 1. Frame 0–20: header + botão entra (header da esquerda, botão da direita)
+  const headerEntrance = interpolate(frame, [0, 20], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const headerX = interpolate(headerEntrance, [0, 1], [-20, 0]);
+  const btnX = interpolate(headerEntrance, [0, 1], [20, 0]);
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+  // 4. Frame 110–150: fade out geral (opacity 1→0)
+  const fadeOut = interpolate(frame, [110, 150], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+
+  return (
+    <AbsoluteFill style={{ 
+      background: colors.bg, 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      padding: 40,
+      opacity: fadeOut
+    }}>
+      <div style={{ 
+        background: colors.bg, 
+        border: `1px solid ${colors.border}`, 
+        borderRadius: 24, 
+        padding: "48px", 
+        width: "100%", 
+        height: "100%",
+        boxSizing: "border-box",
+        boxShadow: "0 40px 100px rgba(0,0,0,0.5)",
+        fontFamily: fonts.base
+      }}>
+        <div style={{ 
+          display: "flex", 
+          justifyContent: "space-between", 
+          alignItems: "center", 
+          marginBottom: 32,
+          opacity: headerEntrance
+        }}>
+          <div style={{ transform: `translateX(${headerX}px)` }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: colors.muted, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 6 }}>Dataroom & Docs</div>
+            <div style={{ fontSize: 26, fontWeight: 800, color: colors.white, letterSpacing: "-0.5px" }}>Your startup documents</div>
+          </div>
+          <div style={{ 
+            background: colors.blue, 
+            color: colors.white, 
+            fontSize: 14, 
+            fontWeight: 700, 
+            padding: "10px 24px", 
+            borderRadius: 12,
+            transform: `translateX(${btnX}px)`
+          }}>+ New Document</div>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {docs.map((doc, i) => (
-            <DocCard key={i} {...doc} />
+            <DocRow key={i} doc={doc} delay={doc.delay} />
           ))}
         </div>
       </div>

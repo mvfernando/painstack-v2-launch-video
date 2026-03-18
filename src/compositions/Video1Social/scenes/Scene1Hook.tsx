@@ -12,72 +12,88 @@ export const Scene1Hook: React.FC = () => {
   const word1Opacity = interpolate(frame, [0, 12], [0, 1], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' });
   const word2Progress = spring({ frame: frame - 15, fps, config: { damping: 18, stiffness: 100, mass: 1 } });
   const word2Y = interpolate(word2Progress, [0, 1], [60, 0]);
-  const word2Opacity = interpolate(frame, [8, 22], [0, 1], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' });
+  const word2Opacity = interpolate(frame, [15, 30], [0, 1], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' });
 
-  const subtitleOpacity = interpolate(frame, [28, 45], [0, 1], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' });
+  const subtitleOpacity = interpolate(frame, [45, 60], [0, 1], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' });
 
-  // Dot blinking
-  const dotOpacity = Math.round(frame / 15) % 2 === 0 ? 1 : 0.3;
+  // Light sweep effect
+  const sweepPos = interpolate(frame % 60, [0, 60], [-100, 200]);
 
   return (
     <AbsoluteFill style={{ background: colors.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 24 }}>
       {/* Subtle grid background */}
       <div style={{
         position: 'absolute', inset: 0,
-        backgroundImage: `radial-gradient(circle at 50% 50%, rgba(45,129,224,0.06) 0%, transparent 70%)`,
+        backgroundImage: `radial-gradient(circle at 50% 50%, rgba(45,129,224,0.08) 0%, transparent 70%)`,
       }} />
 
       <div style={{ textAlign: 'center', zIndex: 1 }}>
         <div style={{ overflow: 'hidden', marginBottom: 8 }}>
           <div style={{
             fontFamily: fonts.base,
-            fontSize: 96,
-            fontWeight: 800,
+            fontSize: 100,
+            fontWeight: 900,
             color: colors.white,
-            letterSpacing: '-3px',
+            letterSpacing: '-4px',
             opacity: word1Opacity,
             transform: `translateY(${slideY}px)`,
-            lineHeight: 1.05,
+            lineHeight: 1,
           }}>
             Stop guessing.
           </div>
         </div>
 
-        <div style={{ overflow: 'hidden' }}>
+        <div style={{ overflow: 'hidden', position: 'relative' }}>
           <div style={{
             fontFamily: fonts.base,
-            fontSize: 96,
-            fontWeight: 800,
+            fontSize: 100,
+            fontWeight: 900,
             background: `linear-gradient(135deg, ${colors.orange} 0%, ${colors.blue} 100%)`,
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-            letterSpacing: '-3px',
+            letterSpacing: '-4px',
             opacity: word2Opacity,
             transform: `translateY(${word2Y}px)`,
-            lineHeight: 1.05,
+            lineHeight: 1,
+            position: 'relative'
           }}>
             Start building.
+            
+            {/* Light sweep overlay */}
+            <div style={{
+                position: 'absolute',
+                top: 0,
+                left: `${sweepPos}%`,
+                width: '50%',
+                height: '100%',
+                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
+                transform: 'skewX(-20deg)',
+                pointerEvents: 'none',
+                mixBlendMode: 'overlay'
+            }} />
           </div>
         </div>
       </div>
 
       <div style={{
         fontFamily: fonts.base,
-        fontSize: 22,
+        fontSize: 24,
         color: colors.muted,
-        fontWeight: 400,
-        letterSpacing: '0.01em',
+        fontWeight: 500,
+        letterSpacing: '0.1em',
         opacity: subtitleOpacity,
         display: 'flex',
         alignItems: 'center',
-        gap: 10,
+        gap: 12,
+        marginTop: 20
       }}>
         <div style={{
-          width: 8, height: 8, borderRadius: '50%',
+          width: 10, height: 10, borderRadius: '50%',
           background: colors.orange,
-          opacity: dotOpacity,
+          boxShadow: `0 0 10px ${colors.orange}`,
+          animation: 'pulse 1s infinite'
         }} />
-        Painstack.ai — V2
+        PAINSTACK AI
       </div>
     </AbsoluteFill>
   );

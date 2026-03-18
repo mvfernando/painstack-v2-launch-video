@@ -11,12 +11,12 @@ interface SceneAudioProps {
   endAt?: number;         // corta o áudio neste frame
 }
 
-export const SceneAudio: React.FC<SceneAudioProps> = ({
+export const SceneAudio = ({
   filename,
   startFrom = 0,
   volume = 1,
   endAt,
-}) => {
+}: SceneAudioProps) => {
   return (
     <Audio
       src={staticFile(`audio/${filename}.mp3`)}
@@ -33,7 +33,7 @@ interface BackgroundMusicProps {
   volume?: number;
 }
 
-export const BackgroundMusic: React.FC<BackgroundMusicProps> = ({ volume = 0.05 }) => {
+export const BackgroundMusic = ({ volume = 0.05 }: BackgroundMusicProps) => {
   return (
     <Audio
       src={staticFile('audio/percussion.wav')}
