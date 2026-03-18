@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "skills": {
+    "ai-video-generation": {
+      "source": "inferen-sh/skills",
+      "sourceType": "github",
+      "computedHash": "0d7dd7d50ad347bba7a1a157e511b8cac21defa53282570d68d4794b2fbca115"
+    },
+    "audio-producer": {
+      "source": "daffy0208/ai-dev-standards",
+      "sourceType": "github",
+      "computedHash": "efe7d65958fbfa9ddba21000e812ff6a37988ded52eeedcbb3fec831fe7c2b11"
+    },
+    "cmo-advisor": {
+      "source": "borghei/claude-skills",
+      "sourceType": "github",
+      "computedHash": "22b1ec1b96580713cac184232a72478dcf09e22db0552d536bbeaae94dd2ece8"
+    },
+    "design-md": {
+      "source": "google-labs-code/stitch-skills",
+      "sourceType": "github",
+      "computedHash": "44af3e6e89a42a765d9cebf943f1e2ff3cdf43d1958341eb43fb7b74116f6691"
+    },
+    "image-to-video": {
+      "source": "inferen-sh/skills",
+      "sourceType": "github",
+      "computedHash": "01ef9f987eafae948daadcbabd5ff1050c36e8e69cbf36d17e48b2dc237d4b6d"
+    },
+    "marketing-psychology": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "5b8654c4d6db63d9da55f7cd56f2babd92e602b089e96a86ef38c7f547f51d52"
+    },
+    "music": {
+      "source": "elevenlabs/skills",
+      "sourceType": "github",
+      "computedHash": "0e1ac338ccd8c959de00951a1fa3040220c0a0daeb185a6f55983bc611cbea9d"
+    },
+    "sound-effects": {
+      "source": "elevenlabs/skills",
+      "sourceType": "github",
+      "computedHash": "49dba2b616f4a9b3fcd210c6b8019e0a9909994c7b56c8aebbffbecda61b9f93"
+    },
+    "video-producer": {
+      "source": "daffy0208/ai-dev-standards",
+      "sourceType": "github",
+      "computedHash": "9e70d4d59181d5a855dfc53fa70e44ddae666a27ecef7ef2c97d437191f04d9c"
+    }
+  }
+}
