@@ -13,6 +13,13 @@ import {
 import { colors, fonts } from '../../shared/brand';
 import { SceneAudio, BackgroundMusic } from '../../shared/SceneAudio';
 
+// --- Transition Helper ---
+const Transition = ({ duration, children }: { duration: number; children: React.ReactNode }) => {
+    const frame = useCurrentFrame();
+    const opacity = interpolate(frame, [duration - 10, duration], [1, 0], { extrapolateRight: 'clamp' });
+    return <AbsoluteFill style={{ opacity }}>{children}</AbsoluteFill>;
+};
+
 // --- Components ---
 
 const Scene1Hook = () => {
@@ -24,7 +31,11 @@ const Scene1Hook = () => {
 
   return (
     <AbsoluteFill style={{ justifyContent: 'center', alignItems: 'center', padding: 80, background: colors.bg }}>
-      <div style={{ textAlign: 'center' }}>
+      <AbsoluteFill style={{ 
+          background: `radial-gradient(circle at 50% 50%, ${colors.blue}33 0%, transparent 70%)`,
+          opacity: punch1
+      }} />
+      <div style={{ textAlign: 'center', zIndex: 1 }}>
         <div style={{
           fontSize: 100,
           color: colors.white,
@@ -63,6 +74,7 @@ const Scene2Problem = () => {
   
   return (
     <AbsoluteFill style={{ justifyContent: 'center', alignItems: 'center', padding: 60, background: colors.bg }}>
+      <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 40%, ${colors.orange}22 0%, transparent 70%)` }} />
       <div style={{ 
         width: '100%',
         background: 'rgba(45,129,224,0.1)',
@@ -70,8 +82,9 @@ const Scene2Problem = () => {
         borderRadius: 32,
         padding: 40,
         opacity: entrance,
-        transform: `scale(${entrance})`,
-        boxShadow: '0 30px 60px rgba(0,0,0,0.5)'
+        transform: `scale(${entrance}) rotate(${interpolate(entrance, [0, 1], [-5, 0])}deg)`,
+        boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
+        zIndex: 1
       }}>
         <div style={{ fontSize: 48, fontWeight: 900, color: colors.white, fontFamily: fonts.base, marginBottom: 20, lineHeight: 1.2 }}>
           "Spent $40k.<br/> Got 3 users."
@@ -159,7 +172,8 @@ const Scene4Score = () => {
 
   return (
     <AbsoluteFill style={{ justifyContent: 'center', alignItems: 'center', background: colors.bg }}>
-       <div style={{ position: 'relative', width: 450, height: 450, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+       <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 50%, ${colors.green}11 0%, transparent 70%)` }} />
+       <div style={{ position: 'relative', width: 450, height: 450, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
           <div style={{ fontSize: 160, fontWeight: 900, color: colors.white, fontFamily: fonts.base }}>
             {Math.round(score)}
           </div>
@@ -185,7 +199,7 @@ const Scene4Score = () => {
           <div style={{
             position: 'absolute',
             bottom: 40,
-            background: colors.orange,
+            background: colors.green,
             color: 'white',
             padding: '12px 30px',
             borderRadius: 100,
@@ -209,29 +223,98 @@ const Scene5CTA = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const logoEntrance = spring({ frame, fps });
+  const entrance = spring({ frame, fps, config: { damping: 20 } });
+  const logoEntrance = spring({ frame: frame - 20, fps, config: { damping: 12, stiffness: 100 } });
   
   return (
     <AbsoluteFill style={{ justifyContent: 'center', alignItems: 'center', padding: 60, background: colors.bg }}>
-      <img 
-        src={staticFile('shared/Painstack.ai_logo2.png')} 
-        style={{ width: 180, height: 180, borderRadius: 36, marginBottom: 50, opacity: logoEntrance, transform: `scale(${logoEntrance})`, objectFit: 'contain' }} 
-        alt="Logo"
-      />
-      <div style={{ fontSize: 36, color: colors.white, fontWeight: 800, textAlign: 'center', lineHeight: 1.2, marginBottom: 60, fontFamily: fonts.base }}>
-        usepainstackai.com
-      </div>
-      <div style={{
-        background: 'rgba(255,255,255,0.05)',
-        border: `1px solid ${colors.border}`,
-        padding: '20px 40px',
-        borderRadius: 100,
-        color: colors.orange,
-        fontSize: 28,
-        fontWeight: 800,
-        fontFamily: fonts.base
-      }}>
-        Free to start →
+      <AbsoluteFill style={{ 
+          background: `radial-gradient(circle at 50% 50%, ${colors.blue}44 0%, transparent 70%)`,
+          opacity: interpolate(entrance, [0, 1], [0, 1])
+      }} />
+
+      <div style={{ textAlign: 'center', zIndex: 1, opacity: entrance }}>
+        <div style={{ 
+            position: 'relative',
+            width: 320,
+            height: 320,
+            margin: '0 auto 50px',
+        }}>
+          <img 
+            src={staticFile('shared/Painstack.ai_logo2.png')} 
+            style={{ 
+                width: '100%', 
+                height: '100%', 
+                objectFit: 'contain',
+                position: 'relative',
+                transform: `scale(${logoEntrance})`,
+            }} 
+            alt="Logo"
+          />
+        </div>
+
+        <h2 style={{
+            fontFamily: fonts.base,
+            fontSize: 70,
+            fontWeight: 900,
+            color: colors.white,
+            marginBottom: 30,
+            letterSpacing: '-2px',
+            lineHeight: 1
+        }}>
+            Start building<br/>for real.
+        </h2>
+
+        <div style={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 15,
+            marginBottom: 50,
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%'
+        }}>
+            {["Free to start", "No card required", "Results in minutes"].map((item, i) => (
+                <React.Fragment key={item}>
+                    <div style={{
+                        fontSize: 18,
+                        color: colors.muted,
+                        fontFamily: fonts.base,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 4
+                    }}>
+                        <span style={{ color: colors.green, fontWeight: 900 }}>✓</span> {item}
+                    </div>
+                    {i < 2 && <div style={{ color: colors.muted, fontSize: 18, fontWeight: 300 }}>.</div>}
+                </React.Fragment>
+            ))}
+        </div>
+
+        <div style={{
+            padding: '24px 60px',
+            borderRadius: 100,
+            background: `linear-gradient(135deg, ${colors.orange}, #ff7e47)`,
+            color: colors.white,
+            fontSize: 32,
+            fontWeight: 900,
+            display: 'inline-block',
+            boxShadow: `0 25px 50px ${colors.orange}44`,
+            border: '2px solid rgba(255,255,255,0.1)'
+        }}>
+            TRY IT FREE →
+        </div>
+
+        <p style={{ 
+            fontFamily: fonts.base, 
+            fontSize: 36, 
+            color: colors.blue,
+            fontWeight: 600,
+            marginTop: 40,
+            letterSpacing: '-1px'
+        }}>
+            usepainstackai.com
+        </p>
       </div>
     </AbsoluteFill>
   );
@@ -244,15 +327,17 @@ export const Video3Shorts = () => {
     <AbsoluteFill style={{ background: colors.bg }}>
       <BackgroundMusic volume={0.12} />
 
-      {/* S1: 0-110 */}
-      <Sequence durationInFrames={110}>
+      {/* S1: Hook (0-102) | Audio: 87 + 15 buffer */}
+      <Sequence durationInFrames={102}>
         <Scene1Hook />
         <SceneAudio filename="v3_s1_hook" />
       </Sequence>
 
-      {/* S2: 110-220 */}
-      <Sequence from={110} durationInFrames={110}>
-        <Scene2Problem />
+      {/* S2: Problem (102-278) | Audio: 156 + 20 buffer */}
+      <Sequence from={102} durationInFrames={176}>
+        <Transition duration={176}>
+            <Scene2Problem />
+        </Transition>
         <SceneAudio filename="v3_s2_problem" />
         <Audio src={staticFile('audio/sfx_whoosh_clean.mp3')} volume={0.1} />
         <Sequence from={10} durationInFrames={30}>
@@ -260,27 +345,31 @@ export const Video3Shorts = () => {
         </Sequence>
       </Sequence>
 
-      {/* S3: 220-330 */}
-      <Sequence from={220} durationInFrames={110}>
-        <Scene3Input />
+      {/* S3: Solution (278-454) | Audio: 156 + 20 buffer */}
+      <Sequence from={278} durationInFrames={176}>
+        <Transition duration={176}>
+            <Scene3Input />
+        </Transition>
         <SceneAudio filename="v3_s3_solution" />
         <Audio src={staticFile('audio/sfx_whoosh_clean.mp3')} volume={0.1} />
-        <Sequence from={10} durationInFrames={60}>
+        <Sequence from={10} durationInFrames={100}>
           <Audio src={staticFile('audio/sfx_typing.mp3')} volume={0.15} />
         </Sequence>
       </Sequence>
 
-      {/* S4: 330-440 */}
-      <Sequence from={330} durationInFrames={110}>
-        <Scene4Score />
+      {/* S4: Result (454-609) | Audio: 135 + 20 buffer */}
+      <Sequence from={454} durationInFrames={155}>
+        <Transition duration={155}>
+            <Scene4Score />
+        </Transition>
         <SceneAudio filename="v3_s4_result" />
         <Sequence from={15} durationInFrames={70}>
           <Audio src={staticFile('audio/sfx_power_up.mp3')} volume={0.2} />
         </Sequence>
       </Sequence>
 
-      {/* S5: 440-550 */}
-      <Sequence from={440} durationInFrames={110}>
+      {/* S5: CTA (609-800) | Audio: 112 + buffer */}
+      <Sequence from={609} durationInFrames={191}>
         <Scene5CTA />
         <SceneAudio filename="v3_s5_cta" />
       </Sequence>

@@ -30,7 +30,7 @@ export const RemotionRoot = () => {
       <Composition
         id="PainstackV2-Shorts"
         component={Video3Shorts}
-        durationInFrames={550}
+        durationInFrames={800}
         fps={30}
         width={1080}
         height={1920}
