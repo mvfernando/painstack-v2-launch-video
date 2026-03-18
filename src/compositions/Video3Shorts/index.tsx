@@ -22,6 +22,70 @@ const Transition = ({ duration, children }: { duration: number; children: React.
 
 // --- Components ---
 
+const PopLogo = ({ 
+    delay, 
+    x, 
+    y, 
+    color, 
+    label, 
+    icon 
+}: { 
+    delay: number; 
+    x: number; 
+    y: number; 
+    color: string; 
+    label: string;
+    icon: React.ReactNode;
+}) => {
+    const frame = useCurrentFrame();
+    const { fps } = useVideoConfig();
+
+    const entrance = spring({ frame: frame - delay, fps, config: { damping: 12, stiffness: 200 } });
+    const float = Math.sin((frame - delay) / 10) * 5;
+
+    if (frame < delay) return null;
+
+    return (
+        <div style={{
+            position: 'absolute',
+            left: `${x}%`,
+            top: `${y}%`,
+            transform: `translate(-50%, -50%) scale(${entrance}) translateY(${float}px)`,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 10,
+            zIndex: 0
+        }}>
+            <div style={{
+                width: 100,
+                height: 100,
+                borderRadius: 24,
+                background: color,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 50,
+                boxShadow: `0 20px 40px ${color}44`,
+                border: '2px solid rgba(255,255,255,0.2)'
+            }}>
+                {icon}
+            </div>
+            <div style={{
+                color: colors.white,
+                fontFamily: fonts.base,
+                fontSize: 20,
+                fontWeight: 800,
+                textTransform: 'uppercase',
+                letterSpacing: 1,
+                textShadow: '0 4px 10px rgba(0,0,0,0.5)'
+            }}>
+                {label}
+            </div>
+        </div>
+    );
+};
+
 const Scene1Hook = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -121,16 +185,48 @@ const Scene3Input = () => {
 
   return (
     <AbsoluteFill style={{ justifyContent: 'center', alignItems: 'center', padding: 60, background: colors.bg }}>
+       {/* Background Pops */}
+       <PopLogo 
+            delay={25} 
+            x={25} y={25} 
+            color="#FF4500" 
+            label="Reddit" 
+            icon={<span style={{ color: 'white', fontSize: 60 }}>👽</span>}
+       />
+       <PopLogo 
+            delay={55} 
+            x={75} y={20} 
+            color="#FF6600" 
+            label="HN" 
+            icon={<span style={{ color: 'white', fontWeight: 900 }}>Y</span>}
+       />
+       <PopLogo 
+            delay={85} 
+            x={20} y={75} 
+            color="#DA552F" 
+            label="PH" 
+            icon={<span style={{ color: 'white', fontWeight: 900 }}>P</span>}
+       />
+       <PopLogo 
+            delay={115} 
+            x={80} y={80} 
+            color="#5865F2" 
+            label="Discord" 
+            icon={<span style={{ color: 'white', fontSize: 60 }}>🎮</span>}
+       />
+
+       {/* Main Input Card */}
        <div style={{ 
           width: '100%',
           background: colors.bgCard,
           border: `1px solid ${colors.border}`,
           borderRadius: 24,
           padding: 30,
-          boxShadow: '0 20px 50px rgba(0,0,0,0.3)'
+          boxShadow: '0 40px 100px rgba(0,0,0,0.6)',
+          zIndex: 10
        }}>
           <div style={{
-            background: "rgba(15, 23, 42, 0.6)",
+            background: "rgba(15, 23, 42, 0.8)",
             border: `1px solid ${colors.border}`,
             borderRadius: 16,
             padding: 24,
@@ -352,8 +448,14 @@ export const Video3Shorts = () => {
         </Transition>
         <SceneAudio filename="v3_s3_solution" />
         <Audio src={staticFile('audio/sfx_whoosh_clean.mp3')} volume={0.1} />
-        <Sequence from={10} durationInFrames={100}>
-          <Audio src={staticFile('audio/sfx_typing.mp3')} volume={0.15} />
+        <Sequence from={10} durationInFrames={150}>
+            {/* POP sounds for logos */}
+            {[15, 45, 75, 105].map((d, i) => (
+                <Sequence key={i} from={d} durationInFrames={15}>
+                    <Audio src={staticFile('audio/sfx_pop_soft.mp3')} volume={0.3} />
+                </Sequence>
+            ))}
+            <Audio src={staticFile('audio/sfx_typing.mp3')} volume={0.15} />
         </Sequence>
       </Sequence>
 
