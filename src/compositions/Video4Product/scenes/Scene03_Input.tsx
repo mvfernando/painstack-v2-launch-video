@@ -42,22 +42,21 @@ export const Scene03_Input: React.FC = () => {
         transformOrigin: '50% 50%',
       }}>
         <LandingHero />
-        
+
         {/* Sarah's dynamic human typing */}
         <div style={{
           position: 'absolute',
-          top: '70%', 
+          top: '38.5%',
           left: '50%',
           transform: 'translateX(-50%)',
-          width: 736, 
-          fontSize: 22, 
-          color: '#0F172A',
-          fontWeight: 500,
-          lineHeight: 1.5,
+          width: '580px',
+          padding: '12px 20px',
+          fontSize: '20px',
+          color: '#fff',
+          fontFamily: 'Inter, sans-serif',
           zIndex: 10,
+          background: 'transparent',
           opacity: interpolate(frame, [T_TYPE_START - 10, T_TYPE_START], [0, 1]),
-          textAlign: 'left',
-          padding: '0 32px', 
         }}>
           <TypewriterTextV2 text={typewriter} startFrame={T_TYPE_START} pauseAfterPunctuation={20} />
           {/* Subtle cursor indicator could go here */}

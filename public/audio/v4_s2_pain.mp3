@@ -1,1 +1,1 @@
-{"detail":{"type":"not_found","code":"voice_not_found","message":"A voice with voice_id '21m00Tcm4TlvDq8ikKAt' was not found.","status":"voice_not_found","request_id":"48297810a1b45c62fc2089a5a409c83f"}}
+{"detail":{"type":"payment_required","code":"paid_plan_required","message":"Free users cannot use library voices via the API. Please upgrade your subscription to use this voice.","status":"payment_required","request_id":"bfd6bacb9b411385c5e943a9e090105d"}}

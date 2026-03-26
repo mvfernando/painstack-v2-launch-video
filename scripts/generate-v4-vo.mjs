@@ -17,22 +17,22 @@ if (fs.existsSync(envPath)) {
   });
 }
 
-const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
+const ELEVENLABS_API_KEY = 'sk_828137a0c3a05a70d60dd5faf5d1a28598e70c9c9d7dadb1';
 
-// Sarah: Female, Human-like (Compatible Fallback)
-const SARAH_VOICE_ID = '21m00Tcm4TlvDq8ikKAt'; // Rachel
+// Sarah: Podcast voice
+const SARAH_VOICE_ID = 'eXpIbVcVbLo8ZJQDlDnl'; 
 const SARAH_SETTINGS = {
-  stability: 0.45, 
-  similarity_boost: 0.75,
-  style: 0.4,      
+  stability: 0.35, // Lower stability for more human-like 'uff'
+  similarity_boost: 0.8,
+  style: 0.5,      
   use_speaker_boost: true,
 };
 
-// Painstack: Male, Steady/AI-Assistant
-const PAINSTACK_VOICE_ID = 'pNInz6obpgDQGcFmaJgB'; // Adam (Standard Fallback)
+// Adam / Product voice (Standard)
+const PAINSTACK_VOICE_ID = 'pNInz6obpgDQGcFmaJgB'; 
 const PAINSTACK_SETTINGS = {
-  stability: 0.75,
-  similarity_boost: 0.85,
+  stability: 0.65,
+  similarity_boost: 0.75,
   style: 0.05,
   use_speaker_boost: true,
 };
@@ -40,11 +40,11 @@ const PAINSTACK_SETTINGS = {
 const MODEL_ID = 'eleven_multilingual_v2';
 
 const SCRIPTS = [
-  // Scene 1: Brand Open (Painstack)
-  { id: 'v4_s1_open',   voice: 'product', text: 'Painstack. From idea to business.' },
+  // Scene 1: Brand Open - SILENT
+  // { id: 'v4_s1_open',   voice: 'product', text: 'Painstack. From idea to business.' },
   
   // Scene 2: Pain (Sarah) - THE TIRED INTRO
-  { id: 'v4_s2_pain',   voice: 'sarah',   text: 'Uff, ok... friday night panic. Who watches the kids? There has to be a better way.' },
+  { id: 'v4_s2_pain',   voice: 'sarah',   text: 'Uff... [exhaling tiredness]... okay... friday night panic. Who watches the kids? There has to be a better way.' },
   
   // Scene 3: Input (Sarah)
   { id: 'v4_s3_input',  voice: 'sarah',   text: "So I just... describe it. Parents in my neighbourhood waste hours every week trying to find a trusted sitter. There's no easy way to find anyone vetted, especially last minute." },

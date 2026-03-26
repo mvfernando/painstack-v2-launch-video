@@ -1,7 +1,5 @@
 import { AbsoluteFill, interpolate, useCurrentFrame, Img, staticFile, spring, useVideoConfig } from 'remotion';
 import { BrandBackground } from '../components/BrandBackground';
-import { ProductCaption } from '../components/ProductCaption';
-import { SceneAudio } from '../shared/SceneAudio';
 import { COPY } from '../constants/copy';
 
 export const Scene01_BrandOpen: React.FC = () => {
@@ -15,7 +13,6 @@ export const Scene01_BrandOpen: React.FC = () => {
 
   return (
     <AbsoluteFill>
-      <SceneAudio filename="v4_s1_open" />
       <BrandBackground glowOpacity={0.25} />
 
       {/* Main Logo */}
@@ -41,8 +38,6 @@ export const Scene01_BrandOpen: React.FC = () => {
           {badge}
         </div>
       </div>
-
-      <ProductCaption text="from idea to business." startFrame={110} />
     </AbsoluteFill>
   );
 };
