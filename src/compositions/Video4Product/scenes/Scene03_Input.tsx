@@ -41,7 +41,7 @@ export const Scene03_Input: React.FC = () => {
         transform: `scale(${scale}) translateY(${translateY}px)`,
         transformOrigin: '50% 50%',
       }}>
-        <LandingHero />
+        <LandingHero isTyping={frame >= T_TYPE_START} />
 
         {/* Sarah's dynamic human typing */}
         <div style={{
