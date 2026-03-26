@@ -1,72 +1,48 @@
-import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
-import { AuroraBackground } from '../components/AuroraBackground';
+import { AbsoluteFill, interpolate, useCurrentFrame, Img, staticFile, spring, useVideoConfig } from 'remotion';
+import { BrandBackground } from '../components/BrandBackground';
+import { ProductCaption } from '../components/ProductCaption';
+import { SceneAudio } from '../shared/SceneAudio';
 import { COPY } from '../constants/copy';
 
 export const Scene01_BrandOpen: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { badge } = COPY.c01;
 
-  // Logo entrance: F60–F180
-  const logoSpring = spring({
-    frame: frame - 60,
-    fps,
-    config: { stiffness: 80, damping: 12, mass: 1 },
-  });
-  const logoOpacity = interpolate(frame, [60, 80], [0, 1], {
-    extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
-  });
-  const logoScale = interpolate(logoSpring, [0, 1], [0.86, 1.0]);
-
-  // Badge entrance: F100–F220
-  const badgeOpacity = interpolate(frame, [100, 130], [0, 1], {
-    extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
-  });
-  const badgeTranslateX = interpolate(frame, [100, 160], [24, 0], {
-    extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
-  });
+  const logoSpring = spring({ frame: frame - 20, fps, config: { stiffness: 80, damping: 12, mass: 1 } });
+  const logoScale = interpolate(logoSpring, [0, 1], [0.85, 1.0]);
+  const logoOpacity = interpolate(logoSpring, [0, 0.15], [0, 1]);
 
   return (
     <AbsoluteFill>
-      <AuroraBackground />
+      <SceneAudio filename="v4_s1_open" />
+      <BrandBackground glowOpacity={0.25} />
 
-      {/* Logo */}
+      {/* Main Logo */}
       <div style={{
-        position: 'absolute',
-        top: '50%', left: '50%',
-        transform: `translate(-50%, -50%) scale(${logoScale})`,
+        position: 'absolute', top: '46%', left: '50%', transform: 'translate(-50%, -50%) scale(' + logoScale + ')',
         opacity: logoOpacity,
-        display: 'flex', flexDirection: 'column',
-        alignItems: 'center', gap: 20,
+      }}>
+        <Img src={staticFile('shared/Painstack.ai_logo2.png')} style={{ width: 520, height: 'auto' }} />
+      </div>
+
+      {/* Badge Pill: FROM IDEA TO BUSINESS */}
+      <div style={{
+        position: 'absolute', top: '58%', left: '50%', transform: 'translateX(-50%)',
+        opacity: interpolate(frame, [45, 60], [0, 1], { extrapolateLeft: 'clamp' }),
       }}>
         <div style={{
-          fontFamily: 'Inter, sans-serif',
-          fontSize: 72, fontWeight: 700,
-          letterSpacing: '-0.03em',
-          display: 'flex', alignItems: 'baseline',
+           padding: '12px 32px', borderRadius: 99, 
+           border: '1px solid rgba(255,255,255,0.2)',
+           backgroundColor: 'rgba(255,255,255,0.05)',
+           color: 'white', fontSize: 16, fontWeight: 700, letterSpacing: '0.15em',
+           fontFamily: 'Inter, sans-serif'
         }}>
-          <span style={{ color: '#FFFFFF' }}>{COPY.c01.logo}</span>
-          <span style={{
-            background: 'linear-gradient(90deg, #F97316, #FB923C)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}>{COPY.c01.logoDot}</span>
-        </div>
-
-        {/* Badge */}
-        <div style={{
-          opacity: badgeOpacity,
-          transform: `translateX(${badgeTranslateX}px)`,
-          border: '1px solid rgba(255,255,255,0.2)',
-          borderRadius: 999,
-          padding: '8px 24px',
-          fontSize: 12, fontWeight: 500,
-          fontFamily: 'Inter, sans-serif',
-          color: 'rgba(255,255,255,0.7)',
-          letterSpacing: '0.12em',
-        }}>
-          {COPY.c01.badge}
+          {badge}
         </div>
       </div>
+
+      <ProductCaption text="from idea to business." startFrame={110} />
     </AbsoluteFill>
   );
 };

@@ -56,48 +56,48 @@ export const RoadmapBoard: React.FC<RoadmapBoardProps> = ({
       transform: `scale(${boardScale})`,
       opacity: boardOpacity,
       backgroundColor: '#FFFFFF',
-      borderRadius: 16,
-      padding: '32px 36px',
-      boxShadow: '0 50px 100px rgba(0,0,0,0.08)',
+      borderRadius: 24,
+      padding: '48px 52px',
+      boxShadow: '0 50px 120px rgba(0,0,0,0.06)',
       border: `1px solid ${colors.borderLight}`,
-      width: 860,
+      width: 1000,
       fontFamily: 'Inter, sans-serif',
     }}>
       {/* Header */}
       <div style={{
         display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', marginBottom: 20,
+        alignItems: 'center', marginBottom: 32,
       }}>
-        <div style={{ fontSize: 18, fontWeight: 700, color: colors.textDark }}>
+        <div style={{ fontSize: 24, fontWeight: 700, color: colors.textDark, letterSpacing: '-0.02em' }}>
           {header}
         </div>
-        <div style={{ fontSize: 12, color: colors.textDarkMuted }}>
+        <div style={{ fontSize: 14, fontWeight: 500, color: colors.textDarkMuted }}>
           {progress}
         </div>
       </div>
 
       {/* Progress bar */}
       <div style={{
-        height: 6, borderRadius: 3,
+        height: 10, borderRadius: 5,
         backgroundColor: colors.bgLightSurface,
-        marginBottom: 28, overflow: 'hidden',
+        marginBottom: 44, overflow: 'hidden',
       }}>
         <div style={{
           height: '100%',
           width: `${barFill}%`,
-          borderRadius: 3,
+          borderRadius: 5,
           backgroundColor: colors.orange,
         }} />
       </div>
 
       {/* Week columns */}
-      <div style={{ display: 'flex', gap: 16 }}>
+      <div style={{ display: 'flex', gap: 24 }}>
         {weeks.map((week, wi) => {
           const colStart = startFrame + 12 + wi * 12;
           const colOpacity = interpolate(frame, [colStart, colStart + 10], [0, 1], {
             extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
           });
-          const colY = interpolate(frame, [colStart, colStart + 16], [20, 0], {
+          const colY = interpolate(frame, [colStart, colStart + 16], [24, 0], {
             extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
           });
           const isActive = week.status === 'active';
@@ -107,25 +107,25 @@ export const RoadmapBoard: React.FC<RoadmapBoardProps> = ({
               flex: 1, opacity: colOpacity,
               transform: `translateY(${colY}px)`,
               border: isActive
-                ? `1px solid ${colors.cyan}`
+                ? `2px solid ${colors.cyan}`
                 : `1px solid ${colors.borderLight}`,
-              borderRadius: 12,
-              padding: 16,
-              boxShadow: isActive ? '0 0 20px rgba(45,129,224,0.12)' : 'none',
-              backgroundColor: isActive ? 'rgba(56,189,248,0.04)' : 'transparent',
+              borderRadius: 16,
+              padding: 24,
+              boxShadow: isActive ? '0 10px 40px rgba(56,189,248,0.15)' : 'none',
+              backgroundColor: isActive ? 'rgba(56,189,248,0.02)' : 'transparent',
             }}>
               {/* Week label */}
               <div style={{
-                fontSize: 11, fontWeight: 700,
+                fontSize: 12, fontWeight: 700,
                 color: statusColors[week.status],
-                letterSpacing: '0.08em',
+                letterSpacing: '0.1em',
                 textTransform: 'uppercase',
-                marginBottom: 12,
+                marginBottom: 16,
               }}>
                 {week.label}
               </div>
               {/* Tasks */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {week.tasks.map((task, ti) => {
                   const taskStart = colStart + 8 + ti * 8;
                   const taskOpacity = interpolate(frame, [taskStart, taskStart + 8], [0, 1], {
@@ -134,23 +134,24 @@ export const RoadmapBoard: React.FC<RoadmapBoardProps> = ({
                   return (
                     <div key={ti} style={{
                       opacity: taskOpacity,
-                      fontSize: 12, lineHeight: 1.4,
+                      fontSize: 14, lineHeight: 1.5,
                       color: task.done ? colors.textDarkMuted : colors.textDark,
-                      display: 'flex', alignItems: 'center', gap: 6,
+                      display: 'flex', alignItems: 'center', gap: 10,
                     }}>
                       <span style={{
-                        width: 14, height: 14,
-                        borderRadius: 3,
-                        border: `1.5px solid ${task.done ? colors.greenBuild : task.active ? colors.cyan : colors.borderLight}`,
+                        width: 18, height: 18,
+                        borderRadius: 4,
+                        border: `2px solid ${task.done ? colors.greenBuild : task.active ? colors.cyan : colors.borderLight}`,
                         backgroundColor: task.done ? colors.greenBuild : 'transparent',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: 9, color: '#FFFFFF', flexShrink: 0,
+                        fontSize: 11, color: '#FFFFFF', flexShrink: 0,
                       }}>
                         {task.done ? '✓' : ''}
                       </span>
                       <span style={{
                         textDecoration: task.done ? 'line-through' : 'none',
                         opacity: task.done ? 0.6 : 1,
+                        fontWeight: task.active ? 500 : 400,
                       }}>
                         {task.text}
                       </span>

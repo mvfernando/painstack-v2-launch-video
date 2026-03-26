@@ -1,98 +1,56 @@
-import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill } from 'remotion';
 import { AgentCard } from '../components/AgentCard';
 import { BrowserMockup } from '../components/BrowserMockup';
-import { ThoughtCaption } from '../components/ThoughtCaption';
+import { UserCaption } from '../components/UserCaption';
+import { FeatureLabel } from '../components/FeatureLabel';
+import { SceneAudio } from '../shared/SceneAudio';
 import { COPY } from '../constants/copy';
-import { colors } from '../constants/colors';
 
 export const Scene08_CMO: React.FC = () => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const { cmo, landing } = COPY.c08;
-
-  // CMO card from left
-  const cmoSpring = spring({ frame, fps, config: { stiffness: 80, damping: 12, mass: 1 } });
-  const cmoX = interpolate(cmoSpring, [0, 1], [-80, 0]);
-
-  // Landing page scroll
-  const scrollY = interpolate(frame, [40, 190], [0, -30], {
-    extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
-  });
+  const { cmo, landing, userCaption } = COPY.c08;
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#F8FAFC' }}>
-      <div style={{
-        position: 'absolute',
-        top: '50%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-        display: 'flex', gap: 32,
-        alignItems: 'center',
-        width: '85%', maxWidth: 1400,
-      }}>
-        {/* CMO Agent Card */}
-        <div style={{ flex: 1, transform: `translateX(${cmoX}px)` }}>
-          <AgentCard
-            agentLabel={cmo.label}
-            accentColor={cmo.accentColor}
-            lines={cmo.lines}
-            startFrame={0}
-            lightTheme
-          />
-        </div>
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 85% 15%, rgba(129,140,248,0.05), transparent 60%)' }} />
+      <SceneAudio filename="v4_s8_cmo" />
+      <FeatureLabel text="Growth Engine" startFrame={0} position="top-left" dark />
 
-        {/* Browser Mockup with Landing Page */}
-        <BrowserMockup url="babysitterconnect.app" startFrame={12} slideFrom="right">
-          <div style={{
-            padding: '48px 36px',
-            background: 'linear-gradient(180deg, #0F0F1E, #1a1a2e)',
-            minHeight: '100%',
-            transform: `translateY(${scrollY}px)`,
-          }}>
-            <div style={{
-              fontSize: 28, fontWeight: 700,
-              color: '#FFFFFF', lineHeight: 1.2,
-              marginBottom: 12,
-              fontFamily: 'Inter, sans-serif',
-            }}>
-              {landing.headline}
+      <div style={{
+        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+        display: 'flex', gap: 40, width: '90%', justifyContent: 'center', alignItems: 'center'
+      }}>
+        <AgentCard agentLabel={cmo.label} accentColor={cmo.accentColor} lines={cmo.lines} startFrame={0} lightTheme style={{ flex: 1 }} />
+        
+        <div style={{ flex: 1.2 }}>
+          <BrowserMockup url="waitlist.painstack.ai" startFrame={30} width={680} height={420} light>
+            <div style={{ padding: 40, backgroundColor: '#FFFFFF', height: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div style={{ color: '#0F172A', fontSize: 28, fontWeight: 800, lineHeight: 1.2 }}>
+                {landing.headline}
+              </div>
+              <div style={{ color: '#475569', fontSize: 16, fontWeight: 400 }}>
+                {landing.sub}
+              </div>
+              <div style={{ 
+                background: 'linear-gradient(90deg, #F97316, #FB923C)', 
+                color: '#FFFFFF', 
+                padding: '14px 28px', 
+                borderRadius: 100, 
+                alignSelf: 'flex-start', 
+                fontWeight: 700,
+                marginTop: 10,
+                boxShadow: '0 10px 20px rgba(249,115,22,0.2)'
+              }}>
+                {landing.cta}
+              </div>
+              <div style={{ marginTop: 'auto', color: '#94A3B8', fontSize: 13, borderTop: '1px solid #F1F5F9', paddingTop: 16 }}>
+                ✅ {landing.social}
+              </div>
             </div>
-            <div style={{
-              fontSize: 14, color: colors.textSecondary,
-              marginBottom: 28, lineHeight: 1.5,
-              fontFamily: 'Inter, sans-serif',
-            }}>
-              {landing.sub}
-            </div>
-            <div style={{
-              background: colors.gradAccent,
-              borderRadius: 8,
-              padding: '14px 28px',
-              color: '#FFFFFF',
-              fontSize: 15, fontWeight: 600,
-              textAlign: 'center',
-              fontFamily: 'Inter, sans-serif',
-              display: 'inline-block',
-            }}>
-              {landing.cta}
-            </div>
-            <div style={{
-              marginTop: 20,
-              fontSize: 12, color: colors.textMuted,
-              fontFamily: 'Inter, sans-serif',
-            }}>
-              {landing.social}
-            </div>
-          </div>
-        </BrowserMockup>
+          </BrowserMockup>
+        </div>
       </div>
 
-      {/* Thought caption */}
-      <ThoughtCaption
-        text={cmo.userThought}
-        startFrame={80}
-        position="bottom-right"
-        color="#64748B"
-      />
+      <UserCaption text={userCaption} startFrame={120} dark />
     </AbsoluteFill>
   );
 };

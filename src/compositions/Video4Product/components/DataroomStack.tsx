@@ -1,4 +1,4 @@
-import { interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill, interpolate, useCurrentFrame, spring, useVideoConfig } from 'remotion';
 import { colors } from '../constants/colors';
 
 interface DataroomStackProps {
@@ -23,115 +23,136 @@ export const DataroomStack: React.FC<DataroomStackProps> = ({
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Top card entrance
-  const topSpring = spring({
+  const entrance = spring({
     frame: frame - startFrame,
     fps,
-    config: { stiffness: 80, damping: 12, mass: 1 },
+    config: { stiffness: 60, damping: 15 },
   });
-  const topOpacity = interpolate(topSpring, [0, 0.15], [0, 1]);
 
-  // Float animation for top card
-  const floatY = Math.sin((frame - startFrame) / 30) * 3;
-
-  // Footer fade
-  const footerOpacity = interpolate(frame, [startFrame + 40, startFrame + 60], [0, 1], {
-    extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
-  });
+  const listItems = [
+    "Problem Statement",
+    "GTM Overview",
+    "Market Analysis",
+    "SWOT Analysis",
+    "Financial Projections",
+    "Pitch Deck Outline",
+  ];
 
   return (
     <div style={{
-      position: 'relative',
-      width: 520, height: 440,
+      display: 'flex',
+      gap: 60,
+      alignItems: 'center',
+      width: 1100,
+      height: 600,
       fontFamily: 'Inter, sans-serif',
+      opacity: interpolate(entrance, [0, 1], [0, 1]),
+      transform: `scale(${interpolate(entrance, [0, 1], [0.95, 1])})`,
     }}>
-      {/* Stack cards behind — fan effect */}
-      {stackLabels.map((label, i) => {
-        const cardStart = startFrame + i * 5;
-        const cardSpring = spring({
-          frame: frame - cardStart,
-          fps,
-          config: { stiffness: 50, damping: 14, mass: 1.2 },
-        });
-        const cardOpacity = interpolate(cardSpring, [0, 0.3], [0, 0.7]);
-        const maxRotate = (i - 3) * 2; // spread rotation
-        const rotate = interpolate(cardSpring, [0, 1], [0, maxRotate]);
-        const yOffset = i * 2;
-        return (
+      {/* LEFT: Cards Fan */}
+      <div style={{ position: 'relative', flex: 1, height: '100%' }}>
+        {[1, 2, 3].map((i) => (
           <div key={i} style={{
             position: 'absolute',
-            bottom: 60 + yOffset,
-            left: '50%',
-            transform: `translateX(-50%) rotate(${rotate}deg)`,
-            opacity: cardOpacity,
-            width: 460 - i * 5,
-            height: 60,
+            top: 60 - i * 4,
+            left: 60 + i * 20,
+            width: 480,
+            height: 340,
             backgroundColor: colors.bgSurface,
-            borderRadius: 10,
+            borderRadius: 24,
             border: `1px solid ${colors.borderDefault}`,
-            display: 'flex', alignItems: 'center',
-            padding: '0 20px',
-            fontSize: 11, fontWeight: 500,
-            color: colors.textSecondary,
-            letterSpacing: '0.06em',
-            textTransform: 'uppercase',
-          }}>
-            {label}
-          </div>
-        );
-      })}
+            opacity: 0.4 / i,
+            transform: `rotate(${i * 2}deg)`,
+            zIndex: 5 - i,
+          }} />
+        ))}
 
-      {/* Top card — Executive Summary */}
-      <div style={{
-        position: 'absolute',
-        top: 0, left: '50%',
-        transform: `translateX(-50%) translateY(${floatY}px)`,
-        opacity: topOpacity,
-        width: 480,
-        backgroundColor: colors.bgSurface,
-        borderRadius: 14,
-        border: `1px solid ${accentColor}`,
-        padding: '24px 28px',
-        boxShadow: `0 20px 50px rgba(0,0,0,0.5), 0 0 30px ${accentColor}15`,
-        zIndex: 10,
-      }}>
         <div style={{
-          display: 'flex', justifyContent: 'space-between',
-          alignItems: 'center', marginBottom: 12,
+          position: 'absolute',
+          top: 60,
+          left: 40,
+          width: 520,
+          height: 360,
+          backgroundColor: '#FFFFFF',
+          borderRadius: 28,
+          padding: '40px',
+          display: 'flex',
+          flexDirection: 'column',
+          boxShadow: '0 40px 100px rgba(0,0,0,0.3)',
+          zIndex: 10,
+          border: '1px solid #E2E8F0',
         }}>
-          <div style={{
-            fontSize: 11, fontWeight: 700,
-            color: accentColor,
-            letterSpacing: '0.08em',
-          }}>
-            {topLabel}
+          <div style={{ display: 'flex', gap: 20, alignItems: 'center', marginBottom: 24 }}>
+            <div style={{ 
+              width: 56, height: 56, borderRadius: 14, 
+              backgroundColor: '#EFF6FF', color: '#3B82F6',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 22, fontWeight: 700
+            }}>ES</div>
+            <div>
+              <div style={{ fontSize: 24, fontWeight: 700, color: '#0F172A' }}>{topLabel}</div>
+              <div style={{ fontSize: 14, color: '#64748B' }}>{topBadge}</div>
+            </div>
           </div>
-          <div style={{
-            fontSize: 10, color: colors.textMuted,
-            border: `1px solid ${colors.borderDefault}`,
-            borderRadius: 6, padding: '3px 8px',
+          
+          <div style={{ width: '100%', height: 1, backgroundColor: '#F1F5F9', marginBottom: 24 }} />
+
+          <div style={{ 
+            fontSize: 17, color: '#475569', lineHeight: 1.6, 
+            fontStyle: 'italic', marginBottom: 'auto' 
           }}>
-            {topBadge}
+            "{topPreview}"
           </div>
-        </div>
-        <div style={{
-          fontSize: 13, color: colors.textSecondary,
-          lineHeight: 1.6,
-        }}>
-          {topPreview}
+
+          <div style={{ 
+            marginTop: 24,
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            backgroundColor: '#F8FAFC', color: '#64748B',
+            padding: '8px 16px', borderRadius: 99, fontSize: 12, fontWeight: 600,
+            border: '1px solid #E2E8F0'
+          }}>
+             AI Generated · English
+          </div>
         </div>
       </div>
 
-      {/* Footer */}
-      <div style={{
-        position: 'absolute',
-        bottom: 0, left: '50%',
-        transform: 'translateX(-50%)',
-        opacity: footerOpacity,
-        fontSize: 12, color: colors.textMuted,
-        whiteSpace: 'nowrap',
-      }}>
-        {footer}
+      {/* RIGHT: Document List */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div style={{ 
+          fontSize: 11, fontWeight: 700, color: colors.textSecondary, 
+          letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 4,
+          opacity: 0.8
+        }}>
+          Full Document List
+        </div>
+
+        <div style={{ 
+          display: 'flex', flexDirection: 'column', 
+          backgroundColor: 'rgba(15, 23, 42, 0.4)',
+          borderRadius: 20, border: `1px solid ${colors.borderDefault}`,
+          overflow: 'hidden'
+        }}>
+          {listItems.map((item, i) => (
+            <div key={i} style={{
+              padding: '16px 24px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              borderBottom: i === listItems.length - 1 ? 'none' : `1px solid ${colors.borderDefault}`,
+              opacity: interpolate(frame - (startFrame + 20 + i * 4), [0, 15], [0, 1], { extrapolateLeft: 'clamp' }),
+              transform: `translateX(${interpolate(frame - (startFrame + 20 + i * 4), [0, 15], [20, 0], { extrapolateLeft: 'clamp' })}px)`,
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                <span style={{ fontSize: 17, fontWeight: 500, color: '#E2E8F0' }}>{item}</span>
+              </div>
+              <div style={{ 
+                fontSize: 11, fontWeight: 700, color: '#94A3B8', 
+                backgroundColor: 'rgba(255,255,255,0.05)',
+                padding: '4px 8px', borderRadius: 4, border: '1px solid rgba(255,255,255,0.1)'
+              }}>GEN</div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

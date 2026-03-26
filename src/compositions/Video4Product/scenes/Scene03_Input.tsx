@@ -1,119 +1,77 @@
-import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
-import { DotGrid } from '../components/DotGrid';
-import { TypewriterText } from '../components/TypewriterText';
-import { ProductConfirm } from '../components/ProductConfirm';
+import { AbsoluteFill, useCurrentFrame, Audio, staticFile, interpolate, spring, useVideoConfig } from 'remotion';
+import { UserCaption } from '../components/UserCaption';
+import { SceneAudio } from '../shared/SceneAudio';
 import { COPY } from '../constants/copy';
-import { colors } from '../constants/colors';
+import { TypewriterTextV2 } from '../components/TypewriterTextV2';
+import { MouseCursor } from '../components/MouseCursor';
+import { LandingHero } from '../components/LandingHero';
 
 export const Scene03_Input: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const { label, typewriter, pills, productConfirm } = COPY.c03;
+  const { typewriter, userCaption } = COPY.c03;
 
-  // Label: opacity 0→1
-  const labelOpacity = interpolate(frame, [0, 15], [0, 1], {
-    extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
-  });
+  // Timings (Extended for V4.2)
+  const T_ZOOM_START = 60;
+  const T_ZOOM_END = 120;
+  const T_TYPE_START = T_ZOOM_END + 20;
+  // TypewriterV2 uses variable delays, so we estimate end time
+  const T_TYPE_END = T_TYPE_START + 250; 
+  const T_MOUSE_START = T_TYPE_END + 40;
+  const T_CLICK = T_MOUSE_START + 60;
 
-  // Card entrance
-  const cardSpring = spring({
-    frame: frame - 10,
+  // Zoom Animation: Scale 1.0 -> 1.8 (Recalibrated as per user request)
+  const zoomSpring = spring({
+    frame: frame - T_ZOOM_START,
     fps,
-    config: { stiffness: 80, damping: 12, mass: 1 },
+    config: { stiffness: 45, damping: 14 },
   });
-  const cardScale = interpolate(cardSpring, [0, 1], [0.82, 1.0]);
-  const cardOpacity = interpolate(cardSpring, [0, 0.15], [0, 1]);
-
-  // Typewriter timing — how long it takes
-  const typewriterEnd = 20 + Math.ceil(typewriter.length / 2.3);
-
-  // Pills stagger after typewriter
-  const pillStarts = pills.map((_, i) => typewriterEnd + 10 + i * 10);
+  
+  const scale = interpolate(zoomSpring, [0, 1], [1, 1.8]);
+  // Offset to center the input target, but not too aggressively
+  const translateY = interpolate(zoomSpring, [0, 1], [0, -180]);
 
   return (
-    <AbsoluteFill>
-      <DotGrid />
-
-      {/* Label */}
+    <AbsoluteFill style={{ backgroundColor: '#F8FAFC', overflow: 'hidden' }}>
+      <SceneAudio filename="v4_s3_input" />
+      {frame === T_CLICK && <Audio src={staticFile('audio/sfx_click.mp3')} volume={0.6} />}
+      
       <div style={{
-        position: 'absolute',
-        top: '35%', left: '50%',
-        transform: 'translateX(-50%)',
-        opacity: labelOpacity,
-        fontSize: 14, fontWeight: 400,
-        color: colors.textMuted,
-        fontFamily: 'Inter, sans-serif',
-        letterSpacing: '0.04em',
+        width: '100%', height: '100%',
+        transform: `scale(${scale}) translateY(${translateY}px)`,
+        transformOrigin: '50% 50%',
       }}>
-        {label}
+        <LandingHero />
+        
+        {/* Sarah's dynamic human typing */}
+        <div style={{
+          position: 'absolute',
+          top: '70%', 
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: 736, 
+          fontSize: 22, 
+          color: '#0F172A',
+          fontWeight: 500,
+          lineHeight: 1.5,
+          zIndex: 10,
+          opacity: interpolate(frame, [T_TYPE_START - 10, T_TYPE_START], [0, 1]),
+          textAlign: 'left',
+          padding: '0 32px', 
+        }}>
+          <TypewriterTextV2 text={typewriter} startFrame={T_TYPE_START} pauseAfterPunctuation={20} />
+          {/* Subtle cursor indicator could go here */}
+        </div>
       </div>
 
-      {/* Input card */}
-      <div style={{
-        position: 'absolute',
-        top: '40%', left: '50%',
-        transform: `translate(-50%, 0) scale(${cardScale})`,
-        opacity: cardOpacity,
-        width: 680,
-        backgroundColor: colors.bgSurface,
-        borderRadius: 14,
-        border: `1px solid ${colors.borderDefault}`,
-        padding: '28px 32px',
-        boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
-      }}>
-        <TypewriterText
-          text={typewriter}
-          startFrame={20}
-          charsPerFrame={2.3}
-          fontSize={16}
-          color="#E2E8F0"
-          cursorColor={colors.orange}
-        />
-      </div>
-
-      {/* Input type pills */}
-      <div style={{
-        position: 'absolute',
-        top: '62%', left: '50%',
-        transform: 'translateX(-50%)',
-        display: 'flex', gap: 12,
-      }}>
-        {pills.map((pill, i) => {
-          const pOpacity = interpolate(
-            frame,
-            [pillStarts[i], pillStarts[i] + 12],
-            [0, 1],
-            { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' },
-          );
-          const pY = interpolate(
-            frame,
-            [pillStarts[i], pillStarts[i] + 16],
-            [20, 0],
-            { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' },
-          );
-          return (
-            <div key={i} style={{
-              opacity: pOpacity,
-              transform: `translateY(${pY}px)`,
-              border: `1px solid ${colors.borderDefault}`,
-              borderRadius: 999,
-              padding: '8px 18px',
-              fontSize: 12,
-              color: colors.textSecondary,
-              fontFamily: 'Inter, sans-serif',
-              backgroundColor: 'rgba(255,255,255,0.02)',
-            }}>
-              {pill}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Product confirm after pills */}
-      <ProductConfirm
-        text={productConfirm}
-        startFrame={pillStarts[pillStarts.length - 1] + 20}
+      <MouseCursor 
+        startFrame={T_MOUSE_START} 
+        startX={800} startY={800} 
+        endX={1050} endY={780}    
+        clickFrame={T_CLICK}
       />
+
+      <UserCaption text={userCaption} startFrame={T_ZOOM_START} dark />
     </AbsoluteFill>
   );
 };

@@ -1,0 +1,89 @@
+import { AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig, spring, interpolate } from 'remotion';
+import { BackgroundMusic } from './shared/SceneAudio';
+import { Scene01_BrandOpen } from './scenes/Scene01_BrandOpen';
+import { Scene02_Pain } from './scenes/Scene02_Pain';
+import { Scene03_Input } from './scenes/Scene03_Input';
+import { Scene04_Wait } from './scenes/Scene04_Wait';
+import { Scene05_Blueprint } from './scenes/Scene05_Blueprint';
+import { Scene06_Transition1 } from './scenes/Scene06_Transition1';
+import { Scene07_MarketCEO } from './scenes/Scene07_MarketCEO';
+import { Scene08_CMO } from './scenes/Scene08_CMO';
+import { Scene09_CTO } from './scenes/Scene09_CTO';
+import { Scene10_Transition2 } from './scenes/Scene10_Transition2';
+import { Scene11_Roadmap } from './scenes/Scene11_Roadmap';
+import { Scene12_Transition3 } from './scenes/Scene12_Transition3';
+import { Scene13_Dataroom } from './scenes/Scene13_Dataroom';
+import { Scene14_ZoomOut } from './scenes/Scene14_ZoomOut';
+import { Scene15_Stats } from './scenes/Scene15_Stats';
+import { Scene16_HookFinal } from './scenes/Scene16_HookFinal';
+import { Scene17_BrandClose } from './scenes/Scene17_BrandClose';
+import { Scene18_FadeOut } from './scenes/Scene18_FadeOut';
+
+export const PainstackVideo = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  // Pacing DURATIONS (Significantly increased for V4.2)
+  const DURS = {
+    S1: 200, S2: 300, S3: 650, S4: 450, S5: 550, S6: 180, S7: 550, S8: 450, S9: 450, 
+    S10: 240, S11: 550, S12: 240, S13: 650, S14: 450, S15: 450, S16: 450, S17: 500, S18: 180
+  };
+
+  // Sequence offsets
+  const F1 = DURS.S1;
+  const F2 = F1 + DURS.S2;
+  const F3 = F2 + DURS.S3;
+  const F4 = F3 + DURS.S4;
+  const F5 = F4 + DURS.S5;
+  const F6 = F5 + DURS.S6;
+  const F7 = F6 + DURS.S7;
+  const F8 = F7 + DURS.S8;
+  const F9 = F8 + DURS.S9;
+  const F10 = F9 + DURS.S10;
+  const F11 = F10 + DURS.S11;
+  const F12 = F11 + DURS.S12;
+  const F13 = F12 + DURS.S13;
+  const F14 = F13 + DURS.S14;
+  const F15 = F14 + DURS.S15;
+  const F16 = F15 + DURS.S16;
+  const F17 = F16 + DURS.S17;
+
+  // Audio Ducking Intervals
+  const sIntervals = [
+    [20, F1-20], [F1+20, F2-20], [F2+20, F3-20], [F3+20, F4-20],
+    [F4+20, F5-20], [F6+20, F7-20], [F7+20, F8-20], [F8+20, F9-20],
+    [F10+20, F11-20], [F12+20, F13-20], [F13+20, F14-20], [F14+20, F15-20], [F15+20, F16-20]
+  ];
+
+  const isSpeaking = sIntervals.some(([s, e]) => frame >= s && frame <= e);
+  const duckSpring = spring({ 
+    frame: frame - (isSpeaking ? (sIntervals.find(([s]) => frame >= s)?.[0] || 0) : (sIntervals.find(([_, e]) => frame > e)?.[1] || 0)), 
+    fps, 
+    config: { stiffness: 60, damping: 20 } 
+  });
+  const duckVolumeFactor = interpolate(duckSpring, [0, 1], isSpeaking ? [1, 0.4] : [0.4, 1]);
+
+  return (
+    <AbsoluteFill style={{ backgroundColor: '#060609' }}>
+      <BackgroundMusic volume={0.12 * duckVolumeFactor} />
+      <Sequence from={0}    durationInFrames={DURS.S1}><Scene01_BrandOpen /></Sequence>
+      <Sequence from={F1}   durationInFrames={DURS.S2}><Scene02_Pain /></Sequence>
+      <Sequence from={F2}   durationInFrames={DURS.S3}><Scene03_Input /></Sequence>
+      <Sequence from={F3}   durationInFrames={DURS.S4}><Scene04_Wait /></Sequence> 
+      <Sequence from={F4}   durationInFrames={DURS.S5}><Scene05_Blueprint /></Sequence>
+      <Sequence from={F5}   durationInFrames={DURS.S6}><Scene06_Transition1 /></Sequence>
+      <Sequence from={F6}   durationInFrames={DURS.S7}><Scene07_MarketCEO /></Sequence>
+      <Sequence from={F7}   durationInFrames={DURS.S8}><Scene08_CMO /></Sequence>
+      <Sequence from={F8}   durationInFrames={DURS.S9}><Scene09_CTO /></Sequence>
+      <Sequence from={F9}   durationInFrames={DURS.S10}><Scene10_Transition2 /></Sequence>
+      <Sequence from={F10}  durationInFrames={DURS.S11}><Scene11_Roadmap /></Sequence>
+      <Sequence from={F11}  durationInFrames={DURS.S12}><Scene12_Transition3 /></Sequence>
+      <Sequence from={F12}  durationInFrames={DURS.S13}><Scene13_Dataroom /></Sequence>
+      <Sequence from={F13}  durationInFrames={DURS.S14}><Scene14_ZoomOut /></Sequence>
+      <Sequence from={F14}  durationInFrames={DURS.S15}><Scene15_Stats /></Sequence>
+      <Sequence from={F15}  durationInFrames={DURS.S16}><Scene16_HookFinal /></Sequence>
+      <Sequence from={F16}  durationInFrames={DURS.S17}><Scene17_BrandClose /></Sequence>
+      <Sequence from={F17}  durationInFrames={DURS.S18}><Scene18_FadeOut /></Sequence>
+    </AbsoluteFill>
+  );
+};

@@ -64,51 +64,53 @@ export const BlueprintCard: React.FC<BlueprintCardProps> = ({
       transform: `scale(${cardScale})`,
       opacity: cardOpacity,
       backgroundColor: '#FFFFFF',
-      borderRadius: 16,
-      padding: '36px 44px',
-      boxShadow: '0 20px 60px rgba(0,0,0,0.1)',
+      borderRadius: 24,
+      padding: '48px 60px',
+      boxShadow: '0 30px 90px rgba(0,0,0,0.06)',
       border: `1px solid ${colors.borderLight}`,
-      width: 580,
+      width: '80%',
+      maxWidth: 1000,
       fontFamily: 'Inter, sans-serif',
-      display: 'flex', flexDirection: 'column', gap: 20,
+      display: 'flex', flexDirection: 'column', gap: 32,
     }}>
       {/* Label */}
       <div style={{
-        fontSize: 11, fontWeight: 600,
+        fontSize: 13, fontWeight: 600,
         color: colors.textDarkMuted,
-        letterSpacing: '0.1em',
+        letterSpacing: '0.12em',
         textTransform: 'uppercase',
       }}>
         {label}
       </div>
 
       {/* Score + Progress */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 40 }}>
         <div style={{
-          fontSize: 64, fontWeight: 800,
+          fontSize: 92, fontWeight: 800,
           background: colors.gradScore,
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           lineHeight: 1,
+          letterSpacing: '-0.04em',
         }}>
           {displayScore}
         </div>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div style={{
-            height: 8, borderRadius: 4,
+            height: 12, borderRadius: 6,
             backgroundColor: colors.bgLightSurface,
             overflow: 'hidden',
           }}>
             <div style={{
               height: '100%',
               width: `${barWidth}%`,
-              borderRadius: 4,
+              borderRadius: 6,
               background: colors.gradScore,
               transition: 'width 0.1s ease',
             }} />
           </div>
-          <div style={{ fontSize: 12, color: colors.textDarkMuted }}>
-            validation score
+          <div style={{ fontSize: 14, fontWeight: 400, color: colors.textDarkMuted, letterSpacing: '0.02em' }}>
+            validation score based on real evidence
           </div>
         </div>
       </div>
@@ -117,23 +119,24 @@ export const BlueprintCard: React.FC<BlueprintCardProps> = ({
       <div style={{
         opacity: buildOpacity,
         transform: `scale(${buildScale})`,
-        display: 'flex', alignItems: 'center', gap: 12,
+        display: 'flex', alignItems: 'center', gap: 16,
         position: 'relative',
+        height: 60,
       }}>
         {/* Glow behind */}
         <div style={{
           position: 'absolute',
-          width: 120, height: 50,
-          borderRadius: 12,
+          width: 180, height: 70,
+          borderRadius: 16,
           background: colors.greenBuildGlow,
-          filter: 'blur(20px)',
+          filter: 'blur(30px)',
           opacity: buildGlowOpacity,
-          left: -10, top: -10,
+          left: -20, top: -5,
         }} />
         <div style={{
-          fontSize: 28, fontWeight: 800,
+          fontSize: 48, fontWeight: 800,
           color: colors.greenBuild,
-          letterSpacing: '0.15em',
+          letterSpacing: '0.2em',
           position: 'relative',
         }}>
           {verdict}
@@ -141,22 +144,22 @@ export const BlueprintCard: React.FC<BlueprintCardProps> = ({
       </div>
 
       {/* Bullets */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 4 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 10 }}>
         {bullets.map((bullet, i) => {
           const bulletStart = startFrame + 110 + i * 14;
           const bOpacity = interpolate(frame, [bulletStart, bulletStart + 10], [0, 1], {
             extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
           });
-          const bTranslateX = interpolate(frame, [bulletStart, bulletStart + 16], [-18, 0], {
+          const bTranslateX = interpolate(frame, [bulletStart, bulletStart + 16], [-20, 0], {
             extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
           });
           return (
             <div key={i} style={{
               opacity: bOpacity,
               transform: `translateX(${bTranslateX}px)`,
-              fontSize: 13, color: colors.textDark,
-              lineHeight: 1.5, fontWeight: 400,
-              paddingLeft: 12,
+              fontSize: 16, color: colors.textDark,
+              lineHeight: 1.6, fontWeight: 400,
+              paddingLeft: 20,
               borderLeft: `2px solid ${colors.borderLight}`,
             }}>
               {bullet}

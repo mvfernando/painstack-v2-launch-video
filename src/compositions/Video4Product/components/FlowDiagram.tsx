@@ -2,7 +2,7 @@ import { interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
 import { colors } from '../constants/colors';
 
 interface FlowNode {
-  icon: string;
+  icon?: string;
   label: string;
   color: string;
 }
@@ -71,17 +71,16 @@ export const FlowDiagram: React.FC<FlowDiagramProps> = ({
             <div style={{
               opacity: nodeOpacity,
               transform: `scale(${nodeScale * pulseScale})`,
-              display: 'flex', alignItems: 'center', gap: 16,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
               backgroundColor: colors.bgSurface,
               border: `1px solid ${node.color}40`,
               borderRadius: 12,
-              padding: '14px 24px',
+              padding: '16px 32px',
               boxShadow: isLast
                 ? `0 0 30px ${node.color}30`
                 : `0 8px 20px rgba(0,0,0,0.3)`,
               minWidth: 320,
             }}>
-              <span style={{ fontSize: 24 }}>{node.icon}</span>
               <span style={{
                 fontSize: 14, fontWeight: 500,
                 color: colors.textWhite,

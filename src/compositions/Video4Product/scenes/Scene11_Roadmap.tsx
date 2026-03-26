@@ -1,38 +1,31 @@
-import { AbsoluteFill } from 'remotion';
-import { DotGrid } from '../components/DotGrid';
+import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion';
 import { RoadmapBoard } from '../components/RoadmapBoard';
-import { ThoughtCaption } from '../components/ThoughtCaption';
+import { UserCaption } from '../components/UserCaption';
+import { FeatureLabel } from '../components/FeatureLabel';
+import { SceneAudio } from '../shared/SceneAudio';
 import { COPY } from '../constants/copy';
 
 export const Scene11_Roadmap: React.FC = () => {
-  const { header, progress, progressPct, weeks, userThought } = COPY.c11;
+  const frame = useCurrentFrame();
+  const { header, progress, progressPct, weeks, userCaption } = COPY.c11;
+
+  const crossfade = interpolate(frame, [0, 10], [1, 0], { extrapolateLeft: 'clamp' });
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#F8FAFC' }}>
-      <DotGrid opacity={0.1} bgColor="transparent" dotColor="#CBD5E1" />
+      <SceneAudio filename="v4_s11_road" />
+      
+      {/* Visual transition from dark to light */}
+      <div style={{ position: 'absolute', inset: 0, backgroundColor: '#0A0A0F', opacity: crossfade, zIndex: 10 }} />
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 80% 80%, rgba(56,189,248,0.04), transparent 50%)' }} />
 
-      {/* Roadmap board centered */}
-      <div style={{
-        position: 'absolute',
-        top: '52%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-      }}>
-        <RoadmapBoard
-          header={header}
-          progress={progress}
-          progressPct={progressPct}
-          weeks={weeks}
-          startFrame={0}
-        />
+      <FeatureLabel text="Execution Strategy" startFrame={0} position="top-left" dark />
+
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <RoadmapBoard header={header} progress={progress} progressPct={progressPct} weeks={weeks} startFrame={10} />
       </div>
 
-      {/* Thought above board */}
-      <ThoughtCaption
-        text={userThought}
-        startFrame={100}
-        position="top-left"
-        color="#64748B"
-      />
+      <UserCaption text={userCaption} startFrame={140} dark />
     </AbsoluteFill>
   );
 };

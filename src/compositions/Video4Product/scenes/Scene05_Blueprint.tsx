@@ -1,76 +1,30 @@
-import { AbsoluteFill, Audio, interpolate, useCurrentFrame, staticFile } from 'remotion';
+import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion';
 import { BlueprintCard } from '../components/BlueprintCard';
-import { ThoughtCaption } from '../components/ThoughtCaption';
-import { ProductConfirm } from '../components/ProductConfirm';
+import { UserCaption } from '../components/UserCaption';
+import { ProductCaption } from '../components/ProductCaption';
+import { FeatureLabel } from '../components/FeatureLabel';
+import { SceneAudio } from '../shared/SceneAudio';
 import { COPY } from '../constants/copy';
 
 export const Scene05_Blueprint: React.FC = () => {
   const frame = useCurrentFrame();
-  const { label, score, verdict, bullets, userThought, productConfirm } = COPY.c05;
-
-  // Dark→light crossfade (first 15f)
-  const darkOverlay = interpolate(frame, [0, 15], [1, 0], {
-    extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
-  });
+  const { label, score, verdict, bullets, userCaptionPre, userCaptionPost, productCaption } = COPY.c05;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#F8FAFC' }}>
-      {/* Dark overlay fading out */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        backgroundColor: '#060609',
-        opacity: darkOverlay,
-        pointerEvents: 'none',
-        zIndex: 10,
-      }} />
+    <AbsoluteFill style={{ backgroundColor: '#08080F' }}>
+      <SceneAudio filename="v4_s5_blue_s" />
+      <SceneAudio filename="v4_s5_blue_p" startFrom={160} /> // Delayed for breathing
+      
+      <div style={{ position: 'absolute', width: 800, height: 500, background: 'radial-gradient(circle, rgba(249,115,22,0.1), transparent 70%)', top: '10%', right: '5%' }} />
+      <FeatureLabel text="Market Blueprint" startFrame={0} position="top-left" />
 
-      {/* Blueprint card centered */}
-      <div style={{
-        position: 'absolute',
-        top: '50%', left: '55%',
-        transform: 'translate(-50%, -50%)',
-        zIndex: 1,
-      }}>
-        <BlueprintCard
-          label={label}
-          score={score}
-          verdict={verdict}
-          bullets={bullets}
-          startFrame={0}
-        />
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <BlueprintCard label={label} score={score} verdict={verdict} bullets={bullets} startFrame={0} />
       </div>
 
-      {/* Sarah's thought — left side */}
-      <ThoughtCaption
-        text={userThought.pre}
-        startFrame={15}
-        position="bottom-left"
-        color="#94A3B8"
-        fontSize={24}
-        fontWeight={400}
-      />
-
-      {/* Second thought after BUILD */}
-      <ThoughtCaption
-        text={userThought.post}
-        startFrame={100}
-        position="bottom-left"
-        color="#0F172A"
-        fontSize={22}
-        fontWeight={400}
-      />
-
-      {/* Product confirm */}
-      <ProductConfirm text={productConfirm} startFrame={105} />
-
-      {/* SFX on BUILD at F90 */}
-      {frame >= 88 && (
-        <Audio
-          src={staticFile('audio/sfx_success_chime.mp3')}
-          volume={0.45}
-          startFrom={0}
-        />
-      )}
+      <UserCaption text={userCaptionPre} startFrame={20} exitFrame={120} />
+      <UserCaption text={userCaptionPost} startFrame={130} exitFrame={220} />
+      <ProductCaption text={productCaption} startFrame={240} />
     </AbsoluteFill>
   );
 };

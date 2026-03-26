@@ -2,64 +2,34 @@ import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion';
 import { DotGrid } from '../components/DotGrid';
 import { NeonLine } from '../components/NeonLine';
 import { WordReveal } from '../components/WordReveal';
+import { ProductCaption } from '../components/ProductCaption';
+import { SceneAudio } from '../shared/SceneAudio';
 import { COPY } from '../constants/copy';
-import { STAGGER_WORD_SLOW } from '../constants/motion';
+import { STAGGER_SLOW } from '../constants/motion';
 
 export const Scene10_Transition2: React.FC = () => {
   const frame = useCurrentFrame();
-  const { thoughts } = COPY.c10;
+  const { line1, line2, productCaption } = COPY.c10;
 
-  // Light→dark crossfade
-  const crossfade = interpolate(frame, [0, 8], [1, 0], {
-    extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
-  });
+  const crossfade = interpolate(frame, [0, 8], [1, 0], { extrapolateLeft: 'clamp' });
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#060609' }}>
+      <SceneAudio filename="v4_s10_t2" />
       <DotGrid opacity={0.3} bgColor="transparent" />
+      <div style={{ position: 'absolute', inset: 0, backgroundColor: '#F8FAFC', opacity: crossfade }} />
 
-      {/* Light overlay fading out */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        backgroundColor: '#F8FAFC',
-        opacity: crossfade,
-        pointerEvents: 'none',
-      }} />
-
-      {/* NeonLine cyan L-shape */}
       <NeonLine color="#22D3EE" shape="L-right" startFrame={0} durationFrames={27} />
 
-      {/* Thoughts */}
       <div style={{
-        position: 'absolute',
-        top: '45%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-        display: 'flex', flexDirection: 'column',
-        alignItems: 'center', gap: 24,
-        width: '80%',
+        position: 'absolute', top: '45%', left: '50%', transform: 'translate(-50%, -50%)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, width: '80%',
       }}>
-        {thoughts.map((thought, i) => {
-          // "roadmap" pulse on second thought
-          const pulseScale = i === 1
-            ? interpolate(frame, [95, 105, 120], [1.0, 1.05, 1.0], {
-                extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
-              })
-            : 1;
-          return (
-            <div key={i} style={{ transform: `scale(${pulseScale})` }}>
-              <WordReveal
-                text={thought.text}
-                startFrame={i === 0 ? 50 : 90}
-                staggerFrames={STAGGER_WORD_SLOW}
-                fontSize={thought.size}
-                fontWeight={thought.weight}
-                color={thought.color}
-                gradient={thought.gradient}
-              />
-            </div>
-          );
-        })}
+        <WordReveal text={line1} startFrame={50} staggerFrames={STAGGER_SLOW} fontSize={52} fontWeight={600} color="#22D3EE" />
+        <WordReveal text={line2} startFrame={90} staggerFrames={STAGGER_SLOW} fontSize={40} fontWeight={300} color="#FFFFFF" />
       </div>
+
+      <ProductCaption text={productCaption} startFrame={130} />
     </AbsoluteFill>
   );
 };

@@ -1,121 +1,56 @@
-import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill } from 'remotion';
 import { AgentCard } from '../components/AgentCard';
-import { PhoneMockup } from '../components/PhoneMockup';
-import { ThoughtCaption } from '../components/ThoughtCaption';
+import { BrowserMockup } from '../components/BrowserMockup';
+import { UserCaption } from '../components/UserCaption';
+import { FeatureLabel } from '../components/FeatureLabel';
+import { SceneAudio } from '../shared/SceneAudio';
 import { COPY } from '../constants/copy';
 
 export const Scene09_CTO: React.FC = () => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const { cto, app } = COPY.c09;
+  const { cto, userCaption } = COPY.c09;
 
-  // CTO card from left
-  const ctoSpring = spring({ frame, fps, config: { stiffness: 80, damping: 12, mass: 1 } });
-  const ctoX = interpolate(ctoSpring, [0, 1], [-80, 0]);
-
-  const dotColors: Record<string, string> = {
-    green: '#22C55E',
-    amber: '#EAB308',
-    red:   '#EF4444',
-  };
+  const stack = [
+    { name: 'Lovable', status: 'Available', color: '#22C55E' },
+    { name: 'Cursor', status: 'Coming Soon', color: '#94A3B8' },
+    { name: 'Base44', status: 'Coming Soon', color: '#94A3B8' },
+    { name: 'Bolt.new', status: 'Coming Soon', color: '#94A3B8' },
+  ];
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#F8FAFC' }}>
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 15% 85%, rgba(56,189,248,0.05), transparent 60%)' }} />
+      <SceneAudio filename="v4_s9_cto" />
+      <FeatureLabel text="Technical Infrastructure" startFrame={0} position="top-left" dark />
+
       <div style={{
-        position: 'absolute',
-        top: '50%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-        display: 'flex', gap: 40,
-        alignItems: 'center',
-        width: '85%', maxWidth: 1400,
+        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+        display: 'flex', gap: 40, width: '90%', justifyContent: 'center', alignItems: 'center'
       }}>
-        {/* CTO Agent Card */}
-        <div style={{ flex: 1, transform: `translateX(${ctoX}px)` }}>
-          <AgentCard
-            agentLabel={cto.label}
-            accentColor={cto.accentColor}
-            lines={cto.lines}
-            startFrame={0}
-            lightTheme
-          />
-        </div>
-
-        {/* Phone Mockup */}
-        <PhoneMockup startFrame={14} tilt>
-          <div style={{
-            background: 'linear-gradient(180deg, #0F0F1E, #1a1a2e)',
-            padding: '20px 16px',
-            height: '100%',
-            fontFamily: 'Inter, sans-serif',
-          }}>
-            {/* App header */}
-            <div style={{
-              fontSize: 18, fontWeight: 700,
-              color: '#FFFFFF',
-              marginBottom: 20,
-              textAlign: 'center',
-            }}>
-              {app.header}
-            </div>
-
-            {/* App items */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {app.items.map((item, i) => {
-                const itemStart = 30 + i * 15;
-                const itemOpacity = interpolate(frame, [itemStart, itemStart + 12], [0, 1], {
-                  extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
-                });
-                return (
-                  <div key={i} style={{
-                    opacity: itemOpacity,
-                    backgroundColor: 'rgba(255,255,255,0.05)',
-                    borderRadius: 12,
-                    padding: '14px 16px',
-                    display: 'flex', alignItems: 'center', gap: 12,
-                    border: '1px solid rgba(255,255,255,0.08)',
-                  }}>
-                    {/* Avatar circle */}
-                    <div style={{
-                      width: 40, height: 40, borderRadius: '50%',
-                      background: 'linear-gradient(135deg, #818CF8, #38BDF8)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      color: '#FFFFFF', fontSize: 16, fontWeight: 700,
-                    }}>
-                      {item.name.charAt(0)}
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{
-                        fontSize: 14, fontWeight: 600,
-                        color: '#FFFFFF', marginBottom: 3,
-                      }}>
-                        {item.name}
-                      </div>
-                      <div style={{ fontSize: 11, color: '#94A3B8' }}>
-                        {item.sub}
-                      </div>
-                    </div>
-                    {/* Status dot */}
-                    <div style={{
-                      width: 8, height: 8, borderRadius: '50%',
-                      backgroundColor: dotColors[item.dot] ?? '#22C55E',
-                    }} />
+        <AgentCard agentLabel={cto.label} accentColor={cto.accentColor} lines={cto.lines} startFrame={0} lightTheme style={{ flex: 1 }} />
+        
+        <div style={{ flex: 1.2 }}>
+          <BrowserMockup url="lovable.dev" startFrame={30} width={600} height={450} light>
+            <div style={{ padding: 30, backgroundColor: '#FFFFFF', height: '100%', display: 'flex', flexDirection: 'column', gap: 20 }}>
+              <div style={{ fontSize: 20, fontWeight: 800, color: '#0F172A', borderBottom: '1px solid #F1F5F9', paddingBottom: 12 }}>
+                AI Tech Stack
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {stack.map((s, i) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', borderRadius: 10, background: '#F8FAFC', border: '1px solid #F1F5F9' }}>
+                    <span style={{ fontWeight: 600, color: '#1E293B' }}>{s.name}</span>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: s.color, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{s.status}</span>
                   </div>
-                );
-              })}
+                ))}
+              </div>
+              <div style={{ marginTop: 'auto', textAlign: 'center', color: '#94A3B8', fontSize: 12, fontStyle: 'italic' }}>
+                Zero code required. 100% buildable.
+              </div>
             </div>
-          </div>
-        </PhoneMockup>
+          </BrowserMockup>
+        </div>
       </div>
 
-      {/* THE most important ThoughtCaption — 2 lines, bigger, darker */}
-      <ThoughtCaption
-        text={cto.userThought}
-        startFrame={100}
-        position="bottom-right"
-        color="#0F172A"
-        fontSize={20}
-        fontWeight={400}
-      />
+      <UserCaption text={userCaption} startFrame={120} dark />
     </AbsoluteFill>
   );
 };

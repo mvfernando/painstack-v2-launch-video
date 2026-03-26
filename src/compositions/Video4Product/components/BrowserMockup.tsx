@@ -8,6 +8,7 @@ interface BrowserMockupProps {
   width?: number;
   height?: number;
   slideFrom?: 'left' | 'right' | 'bottom';
+  light?: boolean;
 }
 
 export const BrowserMockup: React.FC<BrowserMockupProps> = ({
@@ -17,6 +18,7 @@ export const BrowserMockup: React.FC<BrowserMockupProps> = ({
   width = 640,
   height = 420,
   slideFrom = 'right',
+  light = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -37,18 +39,18 @@ export const BrowserMockup: React.FC<BrowserMockupProps> = ({
       width, height, opacity,
       transform: `translateX(${translateX}px) translateY(${translateY}px)`,
       borderRadius: 12,
-      border: `1px solid ${colors.borderDefault}`,
-      backgroundColor: colors.bgSurface,
+      border: `1px solid ${light ? '#E2E8F0' : colors.borderDefault}`,
+      backgroundColor: light ? '#FFFFFF' : colors.bgSurface,
       overflow: 'hidden',
-      boxShadow: '0 30px 70px rgba(0,0,0,0.6)',
+      boxShadow: light ? '0 20px 50px rgba(0,0,0,0.1)' : '0 30px 70px rgba(0,0,0,0.6)',
       display: 'flex', flexDirection: 'column',
       flexShrink: 0,
     }}>
       {/* Browser bar */}
       <div style={{
         height: 44,
-        backgroundColor: colors.bgSurfaceDeep,
-        borderBottom: `1px solid ${colors.borderDefault}`,
+        backgroundColor: light ? '#F8FAFC' : colors.bgSurfaceDeep,
+        borderBottom: `1px solid ${light ? '#E2E8F0' : colors.borderDefault}`,
         display: 'flex', alignItems: 'center',
         padding: '0 16px', gap: 10,
       }}>
@@ -65,11 +67,11 @@ export const BrowserMockup: React.FC<BrowserMockupProps> = ({
         {/* URL bar */}
         <div style={{
           flex: 1,
-          background: colors.bgSurface,
+          background: light ? '#FFFFFF' : colors.bgSurface,
           borderRadius: 6,
           padding: '4px 10px',
           fontSize: 11,
-          color: colors.textMuted,
+          color: light ? '#64748B' : colors.textMuted,
           display: 'flex', alignItems: 'center', gap: 6,
           fontFamily: 'Inter, sans-serif',
         }}>

@@ -27,9 +27,11 @@ export const AgentCard: React.FC<AgentCardProps> = ({
   style = {},
 }) => {
   const frame = useCurrentFrame();
+
   const opacity = interpolate(frame, [startFrame, startFrame + 10], [0, 1], {
     extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
   });
+  
   const allEnd = startFrame + lines.length * lineDelayFrames + 20;
   const pulse = interpolate(frame, [allEnd, allEnd + 12, allEnd + 24], [1, 1.012, 1], {
     extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
@@ -46,8 +48,9 @@ export const AgentCard: React.FC<AgentCardProps> = ({
       padding: 28,
       display: 'flex', flexDirection: 'column', gap: 16,
       boxShadow: lightTheme
-        ? '0 8px 24px rgba(0,0,0,0.08)'
+        ? '0 20px 50px rgba(0,0,0,0.12)'
         : '0 0 40px rgba(0,0,0,0.4)',
+      minWidth: 420, // Garante que o card preencha espaço suficiente em layouts lado a lado
       ...style,
     }}>
       <div style={{

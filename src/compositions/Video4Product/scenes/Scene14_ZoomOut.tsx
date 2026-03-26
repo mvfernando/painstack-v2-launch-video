@@ -1,33 +1,22 @@
-import { AbsoluteFill } from 'remotion';
+import { AbsoluteFill, useCurrentFrame, interpolate } from 'remotion';
 import { DotGrid } from '../components/DotGrid';
 import { FlowDiagram } from '../components/FlowDiagram';
-import { ThoughtCaption } from '../components/ThoughtCaption';
+import { UserCaption } from '../components/UserCaption';
+import { SceneAudio } from '../shared/SceneAudio';
 import { COPY } from '../constants/copy';
 
 export const Scene14_ZoomOut: React.FC = () => {
-  const { nodes, userThought } = COPY.c14;
+  const { nodes, userCaption } = COPY.c14;
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#0A0A0F' }}>
+      <SceneAudio filename="v4_s14_out" />
       <DotGrid opacity={0.2} bgColor="transparent" />
-
-      {/* Flow diagram centered */}
-      <div style={{
-        position: 'absolute',
-        top: '50%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-      }}>
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <FlowDiagram nodes={nodes} startFrame={0} />
       </div>
-
-      {/* Thought caption */}
-      <ThoughtCaption
-        text={userThought}
-        startFrame={150}
-        position="center"
-        color="#64748B"
-        fontSize={20}
-      />
+      <UserCaption text={userCaption} startFrame={180} />
     </AbsoluteFill>
   );
 };
+// Note: This scene 14 used icons previously, now FlowDiagram hides them.

@@ -1,70 +1,28 @@
-import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill } from 'remotion';
 import { AgentCard } from '../components/AgentCard';
-import { DotGrid } from '../components/DotGrid';
-import { ThoughtCaption } from '../components/ThoughtCaption';
+import { UserCaption } from '../components/UserCaption';
+import { FeatureLabel } from '../components/FeatureLabel';
+import { SceneAudio } from '../shared/SceneAudio';
 import { COPY } from '../constants/copy';
 
 export const Scene07_MarketCEO: React.FC = () => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const { market, ceo } = COPY.c07;
-
-  // Market card slide from left
-  const marketSpring = spring({ frame, fps, config: { stiffness: 80, damping: 12, mass: 1 } });
-  const marketX = interpolate(marketSpring, [0, 1], [-80, 0]);
-
-  // CEO card slide from right (12f delay)
-  const ceoSpring = spring({ frame: frame - 12, fps, config: { stiffness: 80, damping: 12, mass: 1 } });
-  const ceoX = interpolate(ceoSpring, [0, 1], [80, 0]);
+  const data = COPY.c07;
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#F8FAFC' }}>
-      <DotGrid opacity={0.15} bgColor="transparent" dotColor="#CBD5E1" />
+      <SceneAudio filename="v4_s7_market" />
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 15% 15%, rgba(249,115,22,0.05), transparent 60%)' }} />
+      <FeatureLabel text="Strategic Alignment" startFrame={0} position="top-left" />
 
-      {/* Two cards side by side */}
       <div style={{
-        position: 'absolute',
-        top: '50%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-        display: 'flex', gap: 28,
-        width: '85%', maxWidth: 1400,
+        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+        display: 'flex', gap: 40, width: '90%', justifyContent: 'center'
       }}>
-        {/* Market Agent */}
-        <div style={{ flex: 1, transform: `translateX(${marketX}px)` }}>
-          <AgentCard
-            agentLabel={market.label}
-            accentColor={market.accentColor}
-            lines={market.lines}
-            startFrame={0}
-            lightTheme
-          />
-        </div>
-
-        {/* AI CEO */}
-        <div style={{ flex: 1, transform: `translateX(${ceoX}px)` }}>
-          <AgentCard
-            agentLabel={ceo.label}
-            accentColor={ceo.accentColor}
-            lines={ceo.lines}
-            startFrame={12}
-            lightTheme
-          />
-        </div>
+        <AgentCard agentLabel={data.market.label} accentColor={data.market.accentColor} lines={data.market.lines} startFrame={0} lightTheme />
+        <AgentCard agentLabel={data.ceo.label} accentColor={data.ceo.accentColor} lines={data.ceo.lines} startFrame={20} lightTheme />
       </div>
 
-      {/* Thought captions */}
-      <ThoughtCaption
-        text={market.userThought}
-        startFrame={60}
-        position="bottom-right"
-        color="#64748B"
-      />
-      <ThoughtCaption
-        text={ceo.userThought}
-        startFrame={160}
-        position="bottom-right"
-        color="#64748B"
-      />
+      <UserCaption text={data.userCaption} startFrame={130} dark />
     </AbsoluteFill>
   );
 };

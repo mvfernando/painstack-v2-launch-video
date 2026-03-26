@@ -37,11 +37,11 @@ export const RemotionRoot = () => {
         height={1920}
       />
 
-      {/* VIDEO 4: 90s Product — "Thinking Out Loud" */}
+      {/* VIDEO 4: 90s Product — Stitch-Calibrated Dialogue */}
       <Composition
         id="PainstackV3-Product"
         component={PainstackVideo}
-        durationInFrames={5400}
+        durationInFrames={5120}
         fps={60}
         width={1920}
         height={1080}
