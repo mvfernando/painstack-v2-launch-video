@@ -2,6 +2,7 @@ import { Composition } from 'remotion';
 import { Video1Social } from './compositions/Video1Social';
 import { Video2Walkthrough } from './compositions/Video2Walkthrough';
 import { Video3Shorts } from './compositions/Video3Shorts';
+import { PainstackVideo } from './compositions/Video4Product';
 
 export const RemotionRoot = () => {
   return (
@@ -34,6 +35,16 @@ export const RemotionRoot = () => {
         fps={30}
         width={1080}
         height={1920}
+      />
+
+      {/* VIDEO 4: 90s Product — "Thinking Out Loud" */}
+      <Composition
+        id="PainstackV3-Product"
+        component={PainstackVideo}
+        durationInFrames={5400}
+        fps={60}
+        width={1920}
+        height={1080}
       />
     </>
   );

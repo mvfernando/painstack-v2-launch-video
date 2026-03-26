@@ -29,9 +29,8 @@ if (fs.existsSync(envPath)) {
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
-// Recomendado: "Adam" (en) — voz masculina, clara, neutral
-// Alternativa PT: usa "Liam" ou cria uma custom voice no ElevenLabs
-const VOICE_ID = process.env.ELEVENLABS_VOICE_ID || 'pNInz6obpgDQGcFmaJgB'; // Adam
+// Recomendado: "Liam" (en) — voz masculina, clara, autoritária
+const VOICE_ID = process.env.ELEVENLABS_VOICE_ID || 'TX3LPaxL7no93ppTy6fJ'; // Liam
 
 const MODEL_ID = 'eleven_multilingual_v2'; // suporta PT e EN
 
