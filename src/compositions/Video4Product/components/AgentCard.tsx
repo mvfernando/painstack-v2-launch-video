@@ -41,8 +41,9 @@ export const AgentCard: React.FC<AgentCardProps> = ({
     <div style={{
       opacity,
       transform: `scale(${pulse})`,
-      backgroundColor: lightTheme ? '#FFFFFF' : '#0F0F1E',
-      border: `1px solid ${lightTheme ? '#E2E8F0' : '#2D2D50'}`,
+      backgroundColor: lightTheme ? 'rgba(255,255,255,0.8)' : 'rgba(15, 23, 42, 0.4)',
+      backdropFilter: 'blur(16px)',
+      border: `1px solid ${lightTheme ? 'rgba(226,232,240,0.8)' : 'rgba(255,255,255,0.08)'}`,
       borderLeft: `4px solid ${accentColor}`,
       borderRadius: 16,
       padding: 36,

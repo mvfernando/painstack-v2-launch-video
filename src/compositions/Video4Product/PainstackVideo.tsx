@@ -1,4 +1,5 @@
-import { AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig, spring, interpolate } from 'remotion';
+import { AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig, spring, interpolate, Easing } from 'remotion';
+import { DotGridBackground } from './components/DotGridBackground';
 import { BackgroundMusic } from './shared/SceneAudio';
 import { Scene01_BrandOpen } from './scenes/Scene01_BrandOpen';
 import { Scene02_Pain } from './scenes/Scene02_Pain';
@@ -19,14 +20,28 @@ import { Scene16_HookFinal } from './scenes/Scene16_HookFinal';
 import { Scene17_BrandClose } from './scenes/Scene17_BrandClose';
 import { Scene18_FadeOut } from './scenes/Scene18_FadeOut';
 
-const OVERLAP = 15;
+const OVERLAP = 18; // 600ms at 30fps
 
-const FadeSequence: React.FC<{from: number; durationInFrames: number; children: React.ReactNode}> = ({ from, durationInFrames, children }) => {
+const LiquidSequence: React.FC<{from: number; durationInFrames: number; children: React.ReactNode; isFirst?: boolean}> = ({ from, durationInFrames, children, isFirst = false }) => {
   const frame = useCurrentFrame();
   const rel = frame - from;
-  const opacity = interpolate(rel, [0, OVERLAP], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  
+  // Transition IN
+  const opacityIn = isFirst ? 1 : interpolate(rel, [0, OVERLAP], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.inOut(Easing.cubic) });
+  const blurIn = isFirst ? 0 : interpolate(rel, [0, OVERLAP], [8, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.inOut(Easing.cubic) });
+
+  // Transition OUT
+  const isOut = rel >= durationInFrames - OVERLAP;
+  const outRel = rel - (durationInFrames - OVERLAP);
+  
+  const opacityOut = interpolate(outRel, [0, OVERLAP], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.inOut(Easing.cubic) });
+  const blurOut = interpolate(outRel, [0, OVERLAP], [0, 8], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.inOut(Easing.cubic) });
+
+  const finalOpacity = rel < OVERLAP ? opacityIn : (isOut ? opacityOut : 1);
+  const finalBlur = rel < OVERLAP ? blurIn : (isOut ? blurOut : 0);
+
   return (
-    <Sequence from={from} durationInFrames={durationInFrames} style={{ opacity }}>
+    <Sequence from={from} durationInFrames={durationInFrames} style={{ opacity: finalOpacity, filter: `blur(${finalBlur}px)` }}>
       {children}
     </Sequence>
   );
@@ -78,25 +93,26 @@ export const PainstackVideo = () => {
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
+      <DotGridBackground />
       <BackgroundMusic volume={0.12 * duckVolumeFactor} />
-      <Sequence from={0}    durationInFrames={DURS.S1}><Scene01_BrandOpen /></Sequence>
-      <FadeSequence from={F1}   durationInFrames={DURS.S2}><Scene02_Pain /></FadeSequence>
-      <FadeSequence from={F2}   durationInFrames={DURS.S3}><Scene03_Input /></FadeSequence>
-      <FadeSequence from={F3}   durationInFrames={DURS.S4}><Scene04_Wait /></FadeSequence> 
-      <FadeSequence from={F4}   durationInFrames={DURS.S5}><Scene05_Blueprint /></FadeSequence>
-      <FadeSequence from={F5}   durationInFrames={DURS.S6}><Scene06_Transition1 /></FadeSequence>
-      <FadeSequence from={F6}   durationInFrames={DURS.S7}><Scene07_MarketCEO /></FadeSequence>
-      <FadeSequence from={F7}   durationInFrames={DURS.S8}><Scene08_CMO /></FadeSequence>
-      <FadeSequence from={F8}   durationInFrames={DURS.S9}><Scene09_CTO /></FadeSequence>
-      <FadeSequence from={F9}   durationInFrames={DURS.S10}><Scene10_Transition2 /></FadeSequence>
-      <FadeSequence from={F10}  durationInFrames={DURS.S11}><Scene11_Roadmap /></FadeSequence>
-      <FadeSequence from={F11}  durationInFrames={DURS.S12}><Scene12_Transition3 /></FadeSequence>
-      <FadeSequence from={F12}  durationInFrames={DURS.S13}><Scene13_Dataroom /></FadeSequence>
-      <FadeSequence from={F13}  durationInFrames={DURS.S14}><Scene14_ZoomOut /></FadeSequence>
-      <FadeSequence from={F14}  durationInFrames={DURS.S15}><Scene15_Stats /></FadeSequence>
-      <FadeSequence from={F15}  durationInFrames={DURS.S16}><Scene16_HookFinal /></FadeSequence>
-      <FadeSequence from={F16}  durationInFrames={DURS.S17}><Scene17_BrandClose /></FadeSequence>
-      <FadeSequence from={F17}  durationInFrames={DURS.S18}><Scene18_FadeOut /></FadeSequence>
+      <LiquidSequence from={0}    durationInFrames={DURS.S1} isFirst><Scene01_BrandOpen /></LiquidSequence>
+      <LiquidSequence from={F1}   durationInFrames={DURS.S2}><Scene02_Pain /></LiquidSequence>
+      <LiquidSequence from={F2}   durationInFrames={DURS.S3}><Scene03_Input /></LiquidSequence>
+      <LiquidSequence from={F3}   durationInFrames={DURS.S4}><Scene04_Wait /></LiquidSequence> 
+      <LiquidSequence from={F4}   durationInFrames={DURS.S5}><Scene05_Blueprint /></LiquidSequence>
+      <LiquidSequence from={F5}   durationInFrames={DURS.S6}><Scene06_Transition1 /></LiquidSequence>
+      <LiquidSequence from={F6}   durationInFrames={DURS.S7}><Scene07_MarketCEO /></LiquidSequence>
+      <LiquidSequence from={F7}   durationInFrames={DURS.S8}><Scene08_CMO /></LiquidSequence>
+      <LiquidSequence from={F8}   durationInFrames={DURS.S9}><Scene09_CTO /></LiquidSequence>
+      <LiquidSequence from={F9}   durationInFrames={DURS.S10}><Scene10_Transition2 /></LiquidSequence>
+      <LiquidSequence from={F10}  durationInFrames={DURS.S11}><Scene11_Roadmap /></LiquidSequence>
+      <LiquidSequence from={F11}  durationInFrames={DURS.S12}><Scene12_Transition3 /></LiquidSequence>
+      <LiquidSequence from={F12}  durationInFrames={DURS.S13}><Scene13_Dataroom /></LiquidSequence>
+      <LiquidSequence from={F13}  durationInFrames={DURS.S14}><Scene14_ZoomOut /></LiquidSequence>
+      <LiquidSequence from={F14}  durationInFrames={DURS.S15}><Scene15_Stats /></LiquidSequence>
+      <LiquidSequence from={F15}  durationInFrames={DURS.S16}><Scene16_HookFinal /></LiquidSequence>
+      <LiquidSequence from={F16}  durationInFrames={DURS.S17}><Scene17_BrandClose /></LiquidSequence>
+      <LiquidSequence from={F17}  durationInFrames={DURS.S18}><Scene18_FadeOut /></LiquidSequence>
     </AbsoluteFill>
   );
 };

@@ -15,15 +15,15 @@ export const Scene10_Transition2: React.FC = () => {
   const blob2Y = 50 + Math.sin(frame / 50) * 20;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
+    <AbsoluteFill style={{ backgroundColor: 'transparent' }}>
       <Audio src={staticFile('audio/sfx_whoosh_clean.mp3')} volume={0.6} />
       <SceneAudio filename="v4_s10_t2" />
       
       <div style={{
           position: 'absolute', width: '150%', height: '150%', top: '-25%', left: '-25%',
           background: `
-            radial-gradient(circle at ${blobX}% ${blobY}%, rgba(56,189,248,0.35) 0%, transparent 40%),
-            radial-gradient(circle at ${blob2X}% ${blob2Y}%, rgba(139,92,246,0.25) 0%, transparent 40%)
+            radial-gradient(circle at ${blobX}% ${blobY}%, rgba(59,130,246,0.35) 0%, transparent 40%),
+            radial-gradient(circle at ${blob2X}% ${blob2Y}%, rgba(236,117,36,0.25) 0%, transparent 40%)
           `,
           filter: 'blur(80px)',
           opacity: 0.9
@@ -33,8 +33,8 @@ export const Scene10_Transition2: React.FC = () => {
       <div style={{
         position: 'absolute', bottom: 0, left: 0, height: 4,
         width: `${interpolate(frame, [0, 60], [0, 100], { extrapolateRight: 'clamp' })}%`,
-        background: 'linear-gradient(90deg, #3B82F6, #8B5CF6)',
-        boxShadow: '0 0 20px rgba(139,92,246,0.8)', zIndex: 50
+        background: 'linear-gradient(90deg, #3B82F6, #ec7524)',
+        boxShadow: '0 0 20px rgba(59,130,246,0.8)', zIndex: 50
       }} />
 
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, width: '80%', zIndex: 10 }}>

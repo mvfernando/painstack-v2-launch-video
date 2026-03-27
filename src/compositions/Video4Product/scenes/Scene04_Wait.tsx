@@ -41,7 +41,7 @@ export const Scene04_Wait: React.FC = () => {
   const ringScale = (i: number) => interpolate(Math.sin((frame / 20) + i * 0.5), [-1, 1], [1, 1.1]);
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
+    <AbsoluteFill style={{ backgroundColor: 'transparent' }}>
       <SceneAudio filename="v4_s4_wait_s" />
 
       {/* SFX: SEARCH HUM (Looping) */}

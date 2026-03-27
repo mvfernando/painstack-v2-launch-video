@@ -28,7 +28,7 @@ export const Scene09_CTO: React.FC = () => {
   const currentUrl = urls[imageIndex];
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
+    <AbsoluteFill style={{ backgroundColor: 'transparent' }}>
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 15% 85%, rgba(56,189,248,0.1), transparent 60%)' }} />
       <SceneAudio filename="v4_s9_cto" />
       <FeatureLabel text="Technical Infrastructure" startFrame={0} position="top-left" />
@@ -44,7 +44,7 @@ export const Scene09_CTO: React.FC = () => {
             {/* Carousel Container */}
             <div style={{ 
               width: '100%', height: '100%', 
-              backgroundColor: '#0F172A', 
+              backgroundColor: 'transparent', 
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               overflow: 'hidden'
             }}>

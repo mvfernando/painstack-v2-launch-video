@@ -9,7 +9,7 @@ export const Scene07_MarketCEO: React.FC = () => {
   const data = COPY.c07;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
+    <AbsoluteFill style={{ backgroundColor: 'transparent' }}>
       <SceneAudio filename="v4_s7_market" />
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 15% 15%, rgba(249,115,22,0.1), transparent 60%)' }} />
       <FeatureLabel text="Strategic Alignment" startFrame={0} position="top-left" />

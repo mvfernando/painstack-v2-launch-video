@@ -10,7 +10,7 @@ export const Scene08_CMO: React.FC = () => {
   const { cmo, landing, userCaption } = COPY.c08;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
+    <AbsoluteFill style={{ backgroundColor: 'transparent' }}>
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 85% 15%, rgba(129,140,248,0.1), transparent 60%)' }} />
       <SceneAudio filename="v4_s8_cmo" />
       <FeatureLabel text="Growth Engine" startFrame={0} position="top-left" />
@@ -23,7 +23,7 @@ export const Scene08_CMO: React.FC = () => {
         
         <div style={{ flex: 1.2 }}>
           <BrowserMockup url="waitlist.painstack.ai" startFrame={30} width={720} height={460}>
-            <div style={{ padding: 40, backgroundColor: '#0F172A', height: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ padding: 40, backgroundColor: 'transparent', height: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div style={{ color: '#F8FAFC', fontSize: 32, fontWeight: 800, lineHeight: 1.2 }}>
                 {landing.headline}
               </div>

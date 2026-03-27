@@ -15,7 +15,7 @@ export const Scene06_Transition1: React.FC = () => {
   const blob2Y = 50 + Math.sin(frame / 50) * 15;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
+    <AbsoluteFill style={{ backgroundColor: 'transparent' }}>
       <Audio src={staticFile('audio/sfx_whoosh_clean.mp3')} volume={0.6} />
       <SceneAudio filename="v4_s6_t1" />
       

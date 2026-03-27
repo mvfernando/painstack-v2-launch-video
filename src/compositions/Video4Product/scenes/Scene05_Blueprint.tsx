@@ -11,7 +11,7 @@ export const Scene05_Blueprint: React.FC = () => {
   const { label, score, verdict, bullets, userCaptionPre, userCaptionPost, productCaption } = COPY.c05;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
+    <AbsoluteFill style={{ backgroundColor: 'transparent' }}>
       <Sequence from={60}>
         <Audio src={staticFile('audio/sfx_success_chime.mp3')} volume={0.6} />
       </Sequence>

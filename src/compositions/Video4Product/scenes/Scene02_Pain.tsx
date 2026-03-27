@@ -9,7 +9,7 @@ export const Scene02_Pain: React.FC = () => {
   const { memories, decision, userCaption } = COPY.c02;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
+    <AbsoluteFill style={{ backgroundColor: 'transparent' }}>
       <SceneAudio filename="v4_s2_pain" />
       <div style={{ position: 'absolute', inset: 0, opacity: 0.15, background: 'radial-gradient(circle at 70% 30%, #F97316 0%, transparent 70%)' }} />
 
