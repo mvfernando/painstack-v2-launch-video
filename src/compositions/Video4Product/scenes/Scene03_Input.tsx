@@ -1,4 +1,5 @@
 import { AbsoluteFill, useCurrentFrame, Audio, staticFile, interpolate, spring, useVideoConfig } from 'remotion';
+import React from 'react';
 import { SceneAudio } from '../shared/SceneAudio';
 import { MouseCursor } from '../components/MouseCursor';
 import { LandingHero } from '../components/LandingHero';
@@ -7,13 +8,16 @@ export const Scene03_Input: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Timings matching LandingHero
+  // Timings matching LandingHero logic
   const T_ZOOM_START = 60;
-  const T_ZOOM_END = 120;
-  const T_TYPE_START = T_ZOOM_END + 20; // 140
-  const T_TYPE_END = T_TYPE_START + 250; 
-  const T_MOUSE_START = T_TYPE_END + 40;
-  const T_CLICK = T_MOUSE_START + 60;
+  // const T_ZOOM_END = 120; // Unused but kept for reference
+  
+  const T_TYPE_START = 140; 
+  const T_TYPE_END = T_TYPE_START + 280; 
+  
+  const T_MOUSE_START = T_TYPE_END + 20;
+  const T_MOUSE_MOVE_DUR = 90;
+  const T_CLICK = T_MOUSE_START + T_MOUSE_MOVE_DUR;
 
   const zoomSpring = spring({
     frame: frame - T_ZOOM_START,
@@ -24,10 +28,17 @@ export const Scene03_Input: React.FC = () => {
   const scale = interpolate(zoomSpring, [0, 1], [1, 1.8]);
   const translateY = interpolate(zoomSpring, [0, 1], [0, -180]);
 
+  // Click Sound - MORE NOTORIOUS
+  const isClickFrame = frame === T_CLICK;
+
   return (
     <AbsoluteFill style={{ backgroundColor: '#F8FAFC', overflow: 'hidden' }}>
+      {/* Sarah Voiceover for this scene */}
       <SceneAudio filename="v4_s3_input" />
-      {frame === T_CLICK && <Audio src={staticFile('audio/sfx_click.mp3')} volume={0.6} />}
+      
+      {/* NOTORIOUS CLICK SFX */}
+      {isClickFrame && <Audio src={staticFile('audio/sfx_click.mp3')} volume={1.0} />}
+      {isClickFrame && <Audio src={staticFile('audio/sfx_ding.mp3')} volume={0.4} />}
       
       <div style={{
         width: '100%', height: '100%',
@@ -36,12 +47,14 @@ export const Scene03_Input: React.FC = () => {
       }}>
         <LandingHero isTyping={frame >= T_TYPE_START} />
         
-        {/* Mouse for Click */}
+        {/* Mouse for Click - Targets the "Validate" button at bottom right of the 860px box */}
         <MouseCursor 
           startFrame={T_MOUSE_START} 
+          startX={1500} 
+          startY={1000}
+          endX={1180} 
+          endY={820} 
           clickFrame={T_CLICK}
-          targetX={100} 
-          targetY={300}
         />
       </div>
     </AbsoluteFill>

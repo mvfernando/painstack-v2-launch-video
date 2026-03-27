@@ -1,173 +1,182 @@
-import { AbsoluteFill, interpolate, useCurrentFrame, spring, useVideoConfig } from 'remotion';
-import { colors } from '../constants/colors';
+import React from 'react';
+import { interpolate, useCurrentFrame, useVideoConfig, Audio, staticFile } from 'remotion';
 
-interface DataroomStackProps {
-  topLabel: string;
-  topPreview: string;
-  topBadge: string;
-  stackLabels: string[];
-  footer: string;
-  accentColor?: string;
-  startFrame?: number;
-}
-
-const DataroomItem: React.FC<{
-  textLabel: string;
-  color?: string;
-  textColor?: string;
-  startFrame?: number;
-}> = ({
-  textLabel,
-  color,
-  textColor,
-  startFrame = 0,
-}) => {
+const DocumentRow: React.FC<{ label: string; delay: number }> = ({ label, delay }) => {
   const frame = useCurrentFrame();
+  const opacity = interpolate(frame, [delay, delay + 10], [0, 1], { extrapolateLeft: 'clamp' });
+  const translateY = interpolate(frame, [delay, delay + 10], [10, 0], { extrapolateLeft: 'clamp' });
+
   return (
     <div style={{
-      padding: '16px 24px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      borderBottom: '1px solid #F1F5F9',
-      opacity: interpolate(frame - startFrame, [0, 10], [0, 1], { extrapolateLeft: 'clamp' }),
-      backgroundColor: 'white'
+      padding: '14px 20px',
+      borderBottom: '1px solid rgba(59, 130, 246, 0.1)',
+      opacity,
+      transform: `translateY(${translateY}px)`,
+      width: '100%',
+      backgroundColor: 'rgba(15, 23, 42, 0.4)',
+      backdropFilter: 'blur(8px)',
+      transition: 'background-color 0.2s ease'
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
         <div style={{ 
-          width: 32, height: 32, borderRadius: 8, 
-          backgroundColor: color || '#F1F5F9', 
-          display: 'flex', alignItems: 'center', justifyContent: 'center' 
-        }}>
-           <div style={{ width: 16, height: 2, backgroundColor: '#CBD5E1' }} />
-        </div>
-        <span style={{ fontSize: 16, fontWeight: 500, color: textColor || '#1E293B' }}>{textLabel}</span>
+          width: 20, height: 20, 
+          backgroundColor: 'rgba(148, 163, 184, 0.2)', 
+          border: '1px solid rgba(148, 163, 184, 0.4)',
+          borderRadius: 4 
+        }} />
+        <span style={{ color: '#F1F5F9', fontSize: 16, fontWeight: 500, letterSpacing: '-0.01em' }}>{label}</span>
       </div>
-      <div style={{ 
-        fontSize: 10, fontWeight: 700, color: '#94A3B8', 
-        backgroundColor: '#F8FAFC', padding: '4px 8px', borderRadius: 4, 
-        border: '1px solid #E2E8F0' 
-      }}>GEN</div>
+      <div style={{
+        backgroundColor: 'rgba(30, 58, 138, 0.4)',
+        border: '1px solid rgba(59, 130, 246, 0.5)',
+        color: '#60A5FA',
+        padding: '3px 10px',
+        borderRadius: 8,
+        fontSize: 12,
+        fontWeight: 700,
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em',
+        boxShadow: '0 0 10px rgba(59, 130, 246, 0.15)'
+      }}>Gen</div>
     </div>
   );
-}
+};
 
-export const DataroomStack: React.FC<DataroomStackProps> = ({
-  topLabel,
-  topPreview,
-  topBadge,
-  stackLabels,
-  footer,
-  accentColor = '#818CF8',
-  startFrame = 0,
-}) => {
+export const DataroomStack: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
 
-  const entrance = spring({
-    frame: frame - startFrame,
-    fps,
-    config: { stiffness: 60, damping: 15 },
-  });
-
-  const listItems = [
-    "Problem Statement",
-    "GTM Overview",
-    "Market Analysis",
-    "SWOT Analysis",
-    "Financial Projections",
-    "Pitch Deck Outline",
+  const labels = [
+    'Executive Summary',
+    'Problem Statement',
+    'GTM Overview',
+    'Market Analysis',
+    'SWOT Analysis',
+    'Financial Projections',
+    'Pitch Deck'
   ];
 
   return (
     <div style={{
+      width: '100%',
+      height: '100%',
+      backgroundColor: '#020617', // Deeper Dark Navy
+      backgroundImage: 'radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(30, 58, 138, 0.05) 0%, transparent 40%)',
       display: 'flex',
-      justifyContent: 'center',
+      flexDirection: 'column',
       alignItems: 'center',
-      width: 1100,
-      height: 600,
+      justifyContent: 'center',
       fontFamily: 'Inter, sans-serif',
-      opacity: interpolate(entrance, [0, 1], [0, 1]),
+      padding: 60,
+      color: 'white',
+      overflow: 'hidden'
     }}>
-      <div style={{ position: 'relative', width: 800, height: 500 }}>
-         
-         {/* Background List (Fully Visible as soon as the scene opens) */}
-         <div style={{
-           position: 'absolute',
-           top: 60,
-           right: 0,
-           width: 500,
-           backgroundColor: '#FFFFFF',
-           borderRadius: 20,
-           boxShadow: '0 4px 32px rgba(0,0,0,0.06)',
-           border: '1px solid #E2E8F0',
-           overflow: 'hidden',
-           zIndex: 1,
-           transform: `scale(${interpolate(entrance, [0, 1], [0.98, 1])}) translateX(40px)`,
-         }}>
-           <div style={{ 
-             padding: '16px 24px', 
-             fontSize: 11, 
-             fontWeight: 700, 
-             color: '#94A3B8', 
-             borderBottom: '1px solid #F1F5F9', 
-             letterSpacing: '0.1em',
-             backgroundColor: '#F8FAFC'
-           }}>FULL DOCUMENT LIST</div>
-           {listItems.map((item, i) => (
-             <DataroomItem key={i} textLabel={item} startFrame={0} />
-           ))}
-         </div>
+      {/* SFX: PAPER SWEEP / RUSTLE */}
+      {frame === 10 && <Audio src={staticFile('audio/sfx_sweep.mp3')} volume={0.5} />}
+      {frame === 60 && <Audio src={staticFile('audio/sfx_ding.mp3')} volume={0.2} />}
 
-         {/* Executive Summary Hero Card (In Front) */}
-         <div style={{
-           position: 'absolute',
-           top: 0,
-           left: 0,
-           width: 480,
-           height: 380,
-           backgroundColor: '#FFFFFF',
-           borderRadius: 28,
-           padding: '40px',
-           display: 'flex',
-           flexDirection: 'column',
-           boxShadow: '0 40px 100px rgba(0,0,0,0.1)',
-           zIndex: 10,
-           border: '1px solid #E1E7EF',
-           transform: `scale(${interpolate(entrance, [0, 1], [0.95, 1])}) translateY(-20px)`,
-         }}>
-           <div style={{ display: 'flex', gap: 20, alignItems: 'center', marginBottom: 24 }}>
-             <div style={{ 
-               width: 56, height: 56, borderRadius: 14, 
-               backgroundColor: '#EBF3FF', color: '#3B82F6',
-               display: 'flex', alignItems: 'center', justifyContent: 'center',
-               fontSize: 22, fontWeight: 700
-             }}>ES</div>
-             <div>
-               <div style={{ fontSize: 24, fontWeight: 700, color: '#0F172A' }}>{topLabel}</div>
-               <div style={{ fontSize: 14, color: '#64748B' }}>{topBadge}</div>
-             </div>
-           </div>
-           
-           <div style={{ width: '100%', height: 1, backgroundColor: '#F1F5F9', marginBottom: 24 }} />
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 100,
+        width: '100%',
+        maxWidth: 1300
+      }}>
 
-           <div style={{ 
-             fontSize: 17, color: '#334155', lineHeight: 1.6, 
-             fontWeight: 400, marginBottom: 'auto' 
-           }}>
-             {topPreview}
-           </div>
+        {/* LEFT: Document Stack */}
+        <div style={{ position: 'relative', width: 520, height: 420 }}>
+          {/* Background Cards for Stack effect */}
+          {[3, 2, 1].map((i) => (
+            <div key={i} style={{
+              position: 'absolute',
+              top: i * 20,
+              left: i * 30,
+              width: 460,
+              height: 340,
+              backgroundColor: 'rgba(15, 23, 42, 0.8)',
+              border: '1px solid rgba(255, 255, 255, 0.05)',
+              borderRadius: 28,
+              zIndex: 5 - i,
+              boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+              opacity: 0.6 / i
+            }} />
+          ))}
 
-           <div style={{ 
-             marginTop: 24,
-             display: 'inline-flex', alignItems: 'center', gap: 8,
-             backgroundColor: '#F3F4F6', color: '#4B5563',
-             padding: '8px 16px', borderRadius: 99, fontSize: 12, fontWeight: 600,
-             border: '1px solid #E5E7EB'
-           }}>
-              AI Generated · English
-           </div>
-         </div>
+          {/* Front Card: Executive Summary */}
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: 460,
+            height: 340,
+            backgroundColor: 'white',
+            borderRadius: 28,
+            padding: 40,
+            color: '#0F172A',
+            boxShadow: '0 30px 60px rgba(0,0,0,0.6)',
+            zIndex: 10,
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 32 }}>
+              <div style={{
+                width: 56, height: 56, 
+                backgroundColor: '#EFF6FF', 
+                borderRadius: 14,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#2563EB', fontWeight: 900, fontSize: 22,
+                boxShadow: '0 4px 12px rgba(37, 99, 235, 0.1)'
+              }}>ES</div>
+              <div>
+                <h2 style={{ fontWeight: 900, fontSize: 26, margin: 0, letterSpacing: '-0.02em', color: '#1E293B' }}>Executive Summary</h2>
+                <div style={{ color: '#64748B', fontSize: 15, fontWeight: 500 }}>1 page · Ready to share</div>
+              </div>
+            </div>
+
+            <div style={{
+              color: '#475569', fontSize: 18, lineHeight: 1.6,
+              borderTop: '1px solid #F1F5F9', paddingTop: 28, marginBottom: 'auto',
+              fontWeight: 500, letterSpacing: '-0.01em'
+            }}>
+              "Parents in Portugal & Spain spend 3+ hours per week searching for trusted babysitters. No mobile-first solution exists for neighborhood-based vetting..."
+            </div>
+
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              color: '#2563EB', backgroundColor: '#EFF6FF',
+              padding: '8px 16px', borderRadius: 24, alignSelf: 'flex-start',
+              fontSize: 14, fontWeight: 700
+            }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              AI Generated - English
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT: Document List */}
+        <div style={{ width: 440 }}>
+          <div style={{
+            fontSize: 15, fontWeight: 800, letterSpacing: '0.15em',
+            marginBottom: 20, color: '#64748B', textAlign: 'left',
+            paddingLeft: 4, textTransform: 'uppercase'
+          }}>Full Document List</div>
+          <div style={{
+            backgroundColor: 'rgba(15, 23, 42, 0.4)',
+            border: '1px solid rgba(59, 130, 246, 0.2)',
+            borderRadius: 24,
+            overflow: 'hidden',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
+          }}>
+            {labels.map((label, i) => (
+              <DocumentRow key={label} label={label} delay={i * 3} />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ import { COPY } from '../constants/copy';
 
 export const Scene13_Dataroom: React.FC = () => {
   const frame = useCurrentFrame();
-  const { topLabel, topPreview, topBadge, stackLabels, footer, userCaption } = COPY.c13;
+  const { userCaption } = COPY.c13;
 
   const crossfade = interpolate(frame, [0, 12], [1, 0], { extrapolateLeft: 'clamp' });
 
@@ -19,7 +19,7 @@ export const Scene13_Dataroom: React.FC = () => {
       <FeatureLabel text="Investor Dataroom" startFrame={0} position="top-left" />
 
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-        <DataroomStack topLabel={topLabel} topPreview={topPreview} topBadge={topBadge} stackLabels={stackLabels} footer={footer} startFrame={10} />
+        <DataroomStack />
       </div>
 
       <UserCaption text={userCaption} startFrame={160} />

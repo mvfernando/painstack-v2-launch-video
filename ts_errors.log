@@ -1,0 +1,29 @@
+﻿skills/remotion-best-practices/rules/assets/charts-bar-chart.tsx(1,24): error TS2307: Cannot find module '@remotion/google-fonts/Inter' or its corresponding type declarations.
+skills/remotion-best-practices/rules/assets/text-animations-word-highlight.tsx(1,24): error TS2307: Cannot find module '@remotion/google-fonts/Inter' or its corresponding type declarations.
+src/compositions/shared/screens/ScreenDataroom.tsx(2,1): error TS6133: 'React' is declared but its value is never read.
+src/compositions/shared/screens/ScreenDataroom.tsx(8,3): error TS6133: 'spring' is declared but its value is never read.
+src/compositions/shared/screens/ScreenDataroom.tsx(14,9): error TS6133: 'fps' is declared but its value is never read.
+src/compositions/shared/screens/ScreenDataroom.tsx(66,9): error TS6133: 'fps' is declared but its value is never read.
+src/compositions/shared/screens/ScreenEvidence.tsx(2,1): error TS6133: 'React' is declared but its value is never read.
+src/compositions/shared/screens/ScreenEvidence.tsx(106,9): error TS6133: 'fps' is declared but its value is never read.
+src/compositions/shared/screens/ScreenRoadmap.tsx(2,1): error TS6133: 'React' is declared but its value is never read.
+src/compositions/shared/screens/ScreenRoadmap.tsx(106,9): error TS6133: 'fps' is declared but its value is never read.
+src/compositions/Video2Walkthrough/index.tsx(12,3): error TS6133: 'Easing' is declared but its value is never read.
+src/compositions/Video2Walkthrough/index.tsx(21,1): error TS6133: 'RoadmapScene' is declared but its value is never read.
+src/compositions/Video2Walkthrough/index.tsx(349,11): error TS6133: 'frame' is declared but its value is never read.
+src/compositions/Video3Shorts/index.tsx(232,9): error TS6133: 'fps' is declared but its value is never read.
+src/compositions/Video4Product/components/DataroomStack.tsx(2,40): error TS6133: 'useVideoConfig' is declared but its value is never read.
+src/compositions/Video4Product/components/LandingHero.tsx(2,44): error TS6133: 'interpolate' is declared but its value is never read.
+src/compositions/Video4Product/components/LandingHero.tsx(10,9): error TS6133: 'frame' is declared but its value is never read.
+src/compositions/Video4Product/components/TypewriterTextV2.tsx(45,9): error TS6133: 'cursorOpacity' is declared but its value is never read.
+src/compositions/Video4Product/scenes/Scene02_Pain.tsx(2,1): error TS6133: 'DotGrid' is declared but its value is never read.
+src/compositions/Video4Product/scenes/Scene02_Pain.tsx(7,1): error TS6133: 'STAGGER_SLOW' is declared but its value is never read.
+src/compositions/Video4Product/scenes/Scene02_Pain.tsx(32,111): error TS2339: Property 'gradient' does not exist on type '{ text: string; size: number; weight: number; color: string; holdFrames: number; }'.
+src/compositions/Video4Product/scenes/Scene04_Wait.tsx(2,70): error TS6133: 'spring' is declared but its value is never read.
+src/compositions/Video4Product/scenes/Scene04_Wait.tsx(34,9): error TS6133: 'fps' is declared but its value is never read.
+src/compositions/Video4Product/scenes/Scene12_Transition3.tsx(7,10): error TS2305: Module '"../constants/motion"' has no exported member 'STAGGER_FAST'.
+src/compositions/Video4Product/scenes/Scene13_Dataroom.tsx(22,24): error TS2322: Type '{ topLabel: string; topPreview: string; topBadge: string; stackLabels: string[]; footer: string; startFrame: number; }' is not assignable to type 'IntrinsicAttributes'.
+  Property 'topLabel' does not exist on type 'IntrinsicAttributes'.
+src/compositions/Video4Product/scenes/Scene14_ZoomOut.tsx(1,24): error TS6133: 'useCurrentFrame' is declared but its value is never read.
+src/compositions/Video4Product/scenes/Scene14_ZoomOut.tsx(1,41): error TS6133: 'interpolate' is declared but its value is never read.
+src/shared/SceneAudio.tsx(1,1): error TS6133: 'React' is declared but its value is never read.

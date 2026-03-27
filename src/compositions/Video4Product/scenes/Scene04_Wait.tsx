@@ -1,6 +1,8 @@
 import React from 'react';
-import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig, spring } from 'remotion';
+import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig, spring, Audio, staticFile, Sequence } from 'remotion';
 import { SceneAudio } from '../shared/SceneAudio';
+import { COPY } from '../constants/copy';
+import { ProductCaption } from '../components/ProductCaption';
 
 const StatusItem: React.FC<{
   icon: React.ReactNode;
@@ -33,32 +35,19 @@ export const Scene04_Wait: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
+  // SFX Timing
+  const T_SWEEP = 30;
+
   // Animations
   const ringScale = (i: number) => interpolate(Math.sin((frame / 20) + i * 0.5), [-1, 1], [1, 1.1]);
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#FFFFFF' }}>
       <SceneAudio filename="v4_s4_wait_s" />
-      <SceneAudio filename="v4_s4_wait_p" startFrom={150} />
 
-      {/* 1. Header: Back Button */}
-      <div style={{
-        position: 'absolute',
-        top: 40,
-        left: 40,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 12,
-        fontSize: 18,
-        fontWeight: 600,
-        color: '#0F172A',
-        fontFamily: 'Inter, sans-serif'
-      }}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-          <path d="m15 18-6-6 6-6"/>
-        </svg>
-        Back to New Analysis
-      </div>
+      {/* SFX: SEARCH HUM (Looping) */}
+      <Audio src={staticFile('audio/sfx_hum.mp3')} volume={0.2} loop />
+      {frame === T_SWEEP && <Audio src={staticFile('audio/sfx_sweep.mp3')} volume={0.4} />}
 
       <div style={{
           position: 'absolute',
@@ -81,8 +70,8 @@ export const Scene04_Wait: React.FC = () => {
               zIndex: 2
             }}>
                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                 <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
-                 <path d="M12 6a6 6 0 1 0 6 6 6 6 0 0 0-6-6z"/>
+                 <path d="M11 2a10 10 0 1 0 10 10A10 10 0 0 0 11 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+                 <path d="M11 6a6 6 0 1 0 6 6 6 6 0 0 0-6-6z"/>
                </svg>
             </div>
         </div>
@@ -113,7 +102,7 @@ export const Scene04_Wait: React.FC = () => {
           }} />
         </div>
 
-        {/*  status items */}
+        {/* status items */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%', paddingLeft: 120 }}>
            <StatusItem 
              delay={30} active={frame < 100}
@@ -138,7 +127,6 @@ export const Scene04_Wait: React.FC = () => {
         </div>
       </div>
 
-      {/* 4. Footer Text */}
       <div style={{
         position: 'absolute',
         bottom: 60,
@@ -151,6 +139,11 @@ export const Scene04_Wait: React.FC = () => {
       }}>
         This takes 30-60 seconds — real evidence takes time to gather.
       </div>
+      
+      <Sequence from={155}>
+        <SceneAudio filename="v4_s4_wait_p" />
+      </Sequence>
+      <ProductCaption text={COPY.c04.productCaption} startFrame={155} />
     </AbsoluteFill>
   );
 };

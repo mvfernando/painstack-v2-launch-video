@@ -75,7 +75,7 @@ export const VIDEO2_SCRIPTS = [
     startFrame: 270,
     durationFrames: 180,
     startSeconds: 9,
-    text: 'Start with a problem or an idea. Describe it in your own words, paste a Reddit link, or upload research you already have.',
+    text: 'Start with a problem or an idea. Describe it in your own words, paste a Reddit link, or upload a docs you already have.',
     pauseAfter: 0.2,
   },
   {

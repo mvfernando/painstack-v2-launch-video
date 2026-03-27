@@ -1,4 +1,5 @@
-import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion';
+import { AbsoluteFill, interpolate, useCurrentFrame, Sequence } from 'remotion';
+import React from 'react';
 import { WordReveal } from '../components/WordReveal';
 import { UserCaption } from '../components/UserCaption';
 import { ProductCaption } from '../components/ProductCaption';
@@ -16,7 +17,6 @@ export const Scene16_HookFinal: React.FC = () => {
   return (
     <AbsoluteFill style={{ backgroundColor: '#060609' }}>
       <SceneAudio filename="v4_s16_hook_s" />
-      <SceneAudio filename="v4_s16_hook_p" startFrom={240} />
       
       {/* Background glow - darkened slightly for contrast */}
       <div style={{ position: 'absolute', width: 1000, height: 1000, borderRadius: '50%', background: `radial-gradient(circle, rgba(249,115,22,${glowOpacity}), transparent 70%)`, top: '50%', left: '50%', transform: 'translate(-50%, -50%)', filter: 'blur(150px)', opacity: 0.8 }} />
@@ -33,6 +33,9 @@ export const Scene16_HookFinal: React.FC = () => {
       </div>
 
       <UserCaption text={userCaption} startFrame={40} exitFrame={220} />
+      <Sequence from={240}>
+        <SceneAudio filename="v4_s16_hook_p" />
+      </Sequence>
       <ProductCaption text={productCaption} startFrame={240} />
     </AbsoluteFill>
   );

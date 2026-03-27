@@ -1,20 +1,19 @@
 import { useCurrentFrame } from 'remotion';
+import React from 'react';
 
 interface TypewriterTextV2Props {
   text: string;
   startFrame: number;
   pauseAfterPunctuation?: number; // frames to pause after . , ? !
+  cursorColor?: string;
 }
 
 export const TypewriterTextV2: React.FC<TypewriterTextV2Props> = ({
   text,
   startFrame,
   pauseAfterPunctuation = 15,
+  cursorColor = '#3B82F6',
 }) => {
-  // The original line `const { typewriter, startFrame, pauseAfterPunctuation = 15 } = props;` was incorrect
-  // as `props` was not defined and it was trying to destructure props that were already destructured from the component arguments.
-  // The instruction to "Remove unused fps" is not applicable as 'fps' is not present in this component.
-  // The instruction to "Add dark prop to captions" refers to components (UserCaption, ProductCaption) not present in this file.
   const frame = useCurrentFrame();
   
   const currentFrame = frame - startFrame;
@@ -29,8 +28,8 @@ export const TypewriterTextV2: React.FC<TypewriterTextV2Props> = ({
     const char = text[charIndex];
     currentText += char;
     
-    // Default 1 frame per char (fast Typing)
-    let delay = 1.5; // slow down slightly for human feel
+    // Default frames per char (fast Typing)
+    let delay = 1.2; // slow down slightly for human feel
     
     if (char === '.' || char === '?' || char === '!') {
       delay = pauseAfterPunctuation;
@@ -42,5 +41,24 @@ export const TypewriterTextV2: React.FC<TypewriterTextV2Props> = ({
     charIndex++;
   }
 
-  return <span>{currentText}</span>;
+  // Blinking cursor logic
+  const cursorOpacity = Math.floor(frame / 6) % 2 === 0 ? 1 : 0;
+  const isFinished = charIndex >= text.length;
+
+  return (
+    <span>
+      {currentText}
+      {(!isFinished || frame % 60 < 30) && (
+        <span style={{ 
+          display: 'inline-block', 
+          width: 3, 
+          height: '1.2em', 
+          backgroundColor: cursorColor, 
+          marginLeft: 2,
+          verticalAlign: 'middle',
+          opacity: isFinished ? (frame % 30 < 15 ? 1 : 0) : 1
+        }} />
+      )}
+    </span>
+  );
 };

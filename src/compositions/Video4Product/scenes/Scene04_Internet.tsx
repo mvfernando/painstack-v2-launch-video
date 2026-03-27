@@ -1,12 +1,12 @@
-import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion';
+import React from 'react';
 import { UserCaption } from '../components/UserCaption';
 import { ProductCaption } from '../components/ProductCaption';
-import { colors } from '../constants/colors';
+import { SceneAudio } from '../shared/SceneAudio';
 import { COPY } from '../constants/copy';
 
 export const Scene04_Internet: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
   const { steps, sources, userCaption, productCaption } = COPY.c04;
 
   const brainScale = 1 + Math.sin(frame / 15) * 0.08;
@@ -14,6 +14,8 @@ export const Scene04_Internet: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#0A0A0F' }}>
+      <SceneAudio filename="v4_s4_wait_s" />
+
       <div style={{
         position: 'absolute', width: 600, height: 600, borderRadius: '50%',
         background: 'linear-gradient(135deg, rgba(129,140,248,0.12), rgba(56,189,248,0.1))',
@@ -42,7 +44,7 @@ export const Scene04_Internet: React.FC = () => {
               fontFamily: 'Inter, sans-serif', fontSize: 18, color: '#FFFFFF',
               fontWeight: 300,
             }}>
-              <span>{step.icon}</span>
+              <span style={{ fontSize: 20 }}>{step.active ? '●' : '○'}</span>
               <span style={{ opacity: step.active ? 1 : 0.4 }}>{step.text}</span>
             </div>
           );
@@ -55,27 +57,27 @@ export const Scene04_Internet: React.FC = () => {
       }}>
         {sources.map((source, i) => {
           const pillStart = 70 + source.delay;
-          const s = spring({ frame: frame - pillStart, fps, config: { stiffness: 80, damping: 12, mass: 1 } });
-          const opacity = interpolate(s, [0, 0.15], [0, 1]);
-          const translateY = interpolate(s, [0, 1], [20, 0]);
+          const opacity = interpolate(frame, [pillStart, pillStart + 20], [0, 1], { extrapolateLeft: 'clamp' });
+          const translateY = interpolate(frame, [pillStart, pillStart + 20], [20, 0], { extrapolateLeft: 'clamp' });
           return (
             <div key={i} style={{
               opacity, transform: `translateY(${translateY}px)`,
-              backgroundColor: colors.bgSurface, border: `1px solid ${colors.borderDefault}`,
+              backgroundColor: 'rgba(255, 255, 255, 0.05)', 
+              border: `1px solid rgba(255, 255, 255, 0.1)`,
               borderRadius: 12, padding: '16px 24px', display: 'flex', alignItems: 'center', gap: 12,
               fontFamily: 'Inter, sans-serif', boxShadow: '0 10px 30px rgba(0,0,0,0.4)',
             }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: colors.cyan, opacity: (frame % 40 < 20 ? 1 : 0.4) }} />
+              <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#3B82F6', opacity: (frame % 40 < 20 ? 1 : 0.4) }} />
               <div>
                 <div style={{ fontSize: 14, fontWeight: 600, color: '#FFFFFF' }}>{source.label}</div>
-                <div style={{ fontSize: 12, color: colors.textMuted }}>{source.count}</div>
+                <div style={{ fontSize: 12, color: '#94A3B8' }}>{source.count}</div>
               </div>
             </div>
           );
         })}
       </div>
 
-      <UserCaption text={userCaption} startFrame={50} exitFrame={130} />
+      <UserCaption text={userCaption} startFrame={50} exitFrame={220} />
       <ProductCaption text={productCaption} startFrame={155} />
     </AbsoluteFill>
   );

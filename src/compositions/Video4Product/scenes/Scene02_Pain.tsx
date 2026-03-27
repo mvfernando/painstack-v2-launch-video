@@ -1,10 +1,8 @@
 import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion';
-import { DotGrid } from '../components/DotGrid';
 import { WordReveal } from '../components/WordReveal';
 import { UserCaption } from '../components/UserCaption';
 import { SceneAudio } from '../shared/SceneAudio';
 import { COPY } from '../constants/copy';
-import { STAGGER_SLOW } from '../constants/motion';
 
 export const Scene02_Pain: React.FC = () => {
   const frame = useCurrentFrame();
@@ -29,7 +27,7 @@ export const Scene02_Pain: React.FC = () => {
         })}
 
         <div style={{ marginTop: 50 }}>
-          <WordReveal text={decision.text} startFrame={220} fontSize={64} fontWeight={800} gradient={decision.gradient} />
+          <WordReveal text={decision.text} startFrame={220} fontSize={64} fontWeight={800} color={decision.color} />
         </div>
       </div>
 
