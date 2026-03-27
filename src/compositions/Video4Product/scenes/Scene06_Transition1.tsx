@@ -4,7 +4,6 @@ import { WordReveal } from '../components/WordReveal';
 import { ProductCaption } from '../components/ProductCaption';
 import { SceneAudio } from '../shared/SceneAudio';
 import { COPY } from '../constants/copy';
-import { STAGGER_SLOW } from '../constants/motion';
 
 export const Scene06_Transition1: React.FC = () => {
   const { line1, line2, productCaption } = COPY.c06;
@@ -38,10 +37,10 @@ export const Scene06_Transition1: React.FC = () => {
       }} />
 
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, width: '80%', zIndex: 10 }}>
-            <WordReveal text={line1} startFrame={0} staggerFrames={STAGGER_SLOW} fontSize={56} fontWeight={600} color="#FFFFFF" highlights={{ "build.": "#22C55E", "build": "#22C55E" }} />
-            <WordReveal text={line2} startFrame={60} staggerFrames={STAGGER_SLOW} fontSize={56} fontWeight={600} color="#FFFFFF" />
+            <WordReveal text={line1} startFrame={10} staggerFrames={2} fontSize={56} fontWeight={600} color="#FFFFFF" mode="pop" />
+            <WordReveal text={line2} startFrame={35} staggerFrames={2} fontSize={56} fontWeight={600} color="#FFFFFF" mode="pop" />
       </div>
-      <ProductCaption text={productCaption} startFrame={130} />
+      <ProductCaption text={productCaption} startFrame={40} />
     </AbsoluteFill>
   );
 };

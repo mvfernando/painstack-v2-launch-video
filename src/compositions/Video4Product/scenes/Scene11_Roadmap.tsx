@@ -22,10 +22,10 @@ export const Scene11_Roadmap: React.FC = () => {
       <FeatureLabel text="Execution Strategy" startFrame={0} position="top-left" dark />
 
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-        <RoadmapBoard header={header} progress={progress} progressPct={progressPct} weeks={weeks} startFrame={10} />
+        <RoadmapBoard header={header} progress={progress} progressPct={progressPct} weeks={weeks} startFrame={15} />
       </div>
 
-      <UserCaption text={userCaption} startFrame={140} dark />
+      <UserCaption text={userCaption} startFrame={110} exitFrame={215} dark />
     </AbsoluteFill>
   );
 };

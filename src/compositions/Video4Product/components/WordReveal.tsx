@@ -12,12 +12,13 @@ interface WordRevealProps {
   textAlign?: 'left' | 'center' | 'right';
   style?: React.CSSProperties;
   highlights?: Record<string, string>;
+  mode?: 'fade' | 'pop';
 }
 
 export const WordReveal: React.FC<WordRevealProps> = ({
   text,
   startFrame = 0,
-  staggerFrames = 12,
+  staggerFrames = 10,
   fontSize = 64,
   fontWeight = 400,
   gradient,
@@ -26,6 +27,7 @@ export const WordReveal: React.FC<WordRevealProps> = ({
   textAlign = 'center',
   style = {},
   highlights,
+  mode = 'pop',
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -39,15 +41,31 @@ export const WordReveal: React.FC<WordRevealProps> = ({
     }}>
       {words.map((word, i) => {
         const wordStart = startFrame + i * staggerFrames;
-        const prog = spring({
+        
+        // Pop Animation Config
+        const popSpring = spring({
           frame: frame - wordStart,
           fps,
-          config: { stiffness: 80, damping: 12, mass: 1 },
+          config: { stiffness: 180, damping: 18, mass: 0.8 },
         });
-        const opacity = interpolate(frame, [wordStart, wordStart + 10], [0, 1], {
+
+        const opacity = interpolate(frame, [wordStart, wordStart + 5], [0, 1], {
           extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
         });
-        const translateY = interpolate(prog, [0, 1], [-15, 0]);
+
+        // Stitch-style Focus/Bloom logic
+        const blur = mode === 'pop' 
+          ? interpolate(frame, [wordStart, wordStart + 10], [15, 0], { extrapolateRight: 'clamp' })
+          : 0;
+        
+        const scale = mode === 'pop'
+          ? interpolate(popSpring, [0, 1], [0.85, 1.0])
+          : 1;
+
+        const translateY = mode === 'pop'
+          ? 0
+          : interpolate(popSpring, [0, 1], [-15, 0]);
+
         let finalColor = color;
         if (highlights) {
           const match = Object.keys(highlights).find(k => word.toLowerCase().includes(k.toLowerCase()));
@@ -65,7 +83,8 @@ export const WordReveal: React.FC<WordRevealProps> = ({
         return (
           <span key={i} style={{
             opacity,
-            transform: `translateY(${translateY}px)`,
+            transform: `scale(${scale}) translateY(${translateY}px)`,
+            filter: `blur(${blur}px)`,
             fontSize, fontWeight,
             fontStyle: italic ? 'italic' : 'normal',
             fontFamily: 'Inter, sans-serif',

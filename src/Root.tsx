@@ -41,8 +41,8 @@ export const RemotionRoot = () => {
       <Composition
         id="PainstackV3-Product"
         component={PainstackVideo}
-        durationInFrames={5120}
-        fps={60}
+        durationInFrames={4800}
+        fps={30}
         width={1920}
         height={1080}
       />

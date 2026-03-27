@@ -18,20 +18,21 @@ export const Scene02_Pain: React.FC = () => {
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 28, width: '85%',
       }}>
         {memories.map((memo, i) => {
-          const startFrame = i === 0 ? 0 : memories[i - 1].holdFrames + (i === 1 ? 60 : 120); 
+          // Compressed offsets: 15f, 50f, 85f
+          const startFrame = i === 0 ? 15 : i === 1 ? 50 : 85; 
           return (
-            <div key={i} style={{ opacity: interpolate(frame, [startFrame + 200, startFrame + 220], [1, 0.3], { extrapolateLeft: 'clamp' }) }}>
-              <WordReveal text={memo.text} startFrame={startFrame} fontSize={memo.size + 4} fontWeight={memo.weight} color={memo.color} gradient={memo.gradient} italic={memo.italic} />
+            <div key={i} style={{ opacity: interpolate(frame, [startFrame + 50, startFrame + 70], [1, 0.4], { extrapolateLeft: 'clamp' }) }}>
+              <WordReveal text={memo.text} startFrame={startFrame} fontSize={memo.size + 4} fontWeight={memo.weight} color={memo.color} gradient={memo.gradient} italic={memo.italic} mode="pop" />
             </div>
           );
         })}
 
         <div style={{ marginTop: 50 }}>
-          <WordReveal text={decision.text} startFrame={220} fontSize={64} fontWeight={800} color={decision.color} />
+          <WordReveal text={decision.text} startFrame={130} fontSize={64} fontWeight={800} color={decision.color} mode="pop" />
         </div>
       </div>
 
-      <UserCaption text={userCaption} startFrame={20} />
+      <UserCaption text={userCaption} startFrame={15} exitFrame={165} />
     </AbsoluteFill>
   );
 };

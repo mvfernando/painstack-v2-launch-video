@@ -19,8 +19,8 @@ export const Scene09_CTO: React.FC = () => {
     'images/tools/media__1774625675353.png'
   ];
   
-  // Fast carousel: 20 frames per image (approx 0.6 seconds at 30 fps)
-  const imageIndex = Math.floor(frame / 20) % images.length;
+  // Fast carousel: 12 frames per image
+  const imageIndex = Math.floor(frame / 12) % images.length;
   const currentImage = images[imageIndex];
 
   // Cycing URLs to match mockup feeling
@@ -37,10 +37,10 @@ export const Scene09_CTO: React.FC = () => {
         position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
         display: 'flex', gap: 40, width: '100%', justifyContent: 'center', alignItems: 'center'
       }}>
-        <AgentCard agentLabel={cto.label} accentColor={cto.accentColor} lines={cto.lines} startFrame={0} style={{ flex: 1 }} />
+        <AgentCard agentLabel={cto.label} accentColor={cto.accentColor} lines={cto.lines} startFrame={20} style={{ flex: 1 }} />
         
         <div style={{ flex: 1.2 }}>
-          <BrowserMockup url={currentUrl} startFrame={30} width={720} height={460}>
+          <BrowserMockup url={currentUrl} startFrame={100} width={720} height={460}>
             {/* Carousel Container */}
             <div style={{ 
               width: '100%', height: '100%', 
@@ -61,7 +61,7 @@ export const Scene09_CTO: React.FC = () => {
         </div>
       </div>
 
-      <UserCaption text={userCaption} startFrame={120} />
+      <UserCaption text={userCaption} startFrame={220} exitFrame={235} />
     </AbsoluteFill>
   );
 };

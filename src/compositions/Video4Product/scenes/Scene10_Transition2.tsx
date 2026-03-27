@@ -38,10 +38,10 @@ export const Scene10_Transition2: React.FC = () => {
       }} />
 
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, width: '80%', zIndex: 10 }}>
-            <WordReveal text={line1} startFrame={0} staggerFrames={STAGGER_SLOW} fontSize={56} fontWeight={600} color="#FFFFFF" />
-            <WordReveal text={line2} startFrame={60} staggerFrames={STAGGER_SLOW} fontSize={56} fontWeight={600} color="#FFFFFF" />
+            <WordReveal text={line1} startFrame={20} staggerFrames={STAGGER_SLOW} fontSize={56} fontWeight={600} color="#FFFFFF" mode="pop" />
+            <WordReveal text={line2} startFrame={90} staggerFrames={STAGGER_SLOW} fontSize={56} fontWeight={600} color="#FFFFFF" mode="pop" />
       </div>
-      <ProductCaption text={productCaption} startFrame={130} />
+      <ProductCaption text={productCaption} startFrame={40} />
     </AbsoluteFill>
   );
 };

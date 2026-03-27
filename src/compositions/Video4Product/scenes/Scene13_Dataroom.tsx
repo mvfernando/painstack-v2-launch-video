@@ -22,7 +22,7 @@ export const Scene13_Dataroom: React.FC = () => {
         <DataroomStack />
       </div>
 
-      <UserCaption text={userCaption} startFrame={160} />
+      <UserCaption text={userCaption} startFrame={50} exitFrame={190} />
     </AbsoluteFill>
   );
 };

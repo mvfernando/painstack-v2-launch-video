@@ -7,23 +7,22 @@ export const Scene01_BrandOpen: React.FC = () => {
   const { fps } = useVideoConfig();
   const { badge } = COPY.c01;
 
-  // 2.8s Blackout Build-up (84 frames at 30fps)
-  const START_FRAME = 84;
+  // 1.5s Blackout Build-up (45 frames at 30fps) - Compressed for 92s Master
+  const START_FRAME = 45;
   
-  // Aurora Pillars Logic (Subtle vertical glows behind the logo)
-  const auroraOpacity = interpolate(frame, [START_FRAME, START_FRAME + 30], [0, 0.6], { extrapolateLeft: 'clamp' });
+  // Aurora Pillars Logic
+  const auroraOpacity = interpolate(frame, [START_FRAME, START_FRAME + 20], [0, 0.6], { extrapolateLeft: 'clamp' });
   const auroraSway = Math.sin(frame / 60) * 10;
 
   // The 'Bloom Pop-In' (Rapid focus and scale)
-  // Occurs exactly at the end of blackout
   const popSpring = spring({ 
     frame: frame - START_FRAME, 
     fps, 
-    config: { stiffness: 200, damping: 20, mass: 0.5 } 
+    config: { stiffness: 300, damping: 25, mass: 0.5 } 
   });
   
-  const logoBlur = interpolate(frame, [START_FRAME, START_FRAME + 8], [40, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
-  const logoScale = interpolate(popSpring, [0, 1], [0.8, 1.0]);
+  const logoBlur = interpolate(frame, [START_FRAME, START_FRAME + 6], [60, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const logoScale = interpolate(popSpring, [0, 1], [1.3, 1.0]);
   const logoOpacity = interpolate(frame, [START_FRAME, START_FRAME + 4], [0, 1], { extrapolateLeft: 'clamp' });
 
   return (

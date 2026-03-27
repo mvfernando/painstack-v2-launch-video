@@ -38,13 +38,13 @@ export const Scene12_Transition3: React.FC = () => {
       }} />
 
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, width: '80%', zIndex: 10 }}>
-            <WordReveal text={line1} startFrame={0} staggerFrames={STAGGER_WORD} fontSize={42} fontWeight={200} color="#94A3B8" />
-            <WordReveal text={line2} startFrame={40} staggerFrames={STAGGER_WORD} fontSize={42} fontWeight={200} color="#94A3B8" />
+            <WordReveal text={line1} startFrame={20} staggerFrames={STAGGER_WORD} fontSize={42} fontWeight={200} color="#94A3B8" mode="pop" />
+            <WordReveal text={line2} startFrame={80} staggerFrames={STAGGER_WORD} fontSize={42} fontWeight={200} color="#94A3B8" mode="pop" />
             <div style={{ marginTop: 20 }}>
-               <WordReveal text={line3} startFrame={90} staggerFrames={STAGGER_WORD} fontSize={72} fontWeight={900} color="#FFFFFF" highlights={{ "ready.": "#3B82F6", "ready": "#3B82F6" }} />
+               <WordReveal text={line3} startFrame={140} staggerFrames={STAGGER_WORD} fontSize={72} fontWeight={900} color="#FFFFFF" highlights={{ "ready.": "#3B82F6", "ready": "#3B82F6" }} mode="pop" />
             </div>
       </div>
-      <ProductCaption text={productCaption} startFrame={140} />
+      <ProductCaption text={productCaption} startFrame={40} />
     </AbsoluteFill>
   );
 };

@@ -15,7 +15,7 @@ export const Scene15_Stats: React.FC = () => {
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', gap: 32 }}>
         {stats.map((stat, i) => <StatCard key={i} value={stat.value} label={stat.label} accentColor={stat.color} startFrame={i * 15} />)}
       </div>
-      <UserCaption text={userCaption} startFrame={80} />
+      <UserCaption text={userCaption} startFrame={10} exitFrame={110} />
     </AbsoluteFill>
   );
 };

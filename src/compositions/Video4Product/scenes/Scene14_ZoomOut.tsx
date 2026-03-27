@@ -1,4 +1,4 @@
-import { AbsoluteFill, useCurrentFrame, interpolate } from 'remotion';
+import { AbsoluteFill } from 'remotion';
 import { DotGrid } from '../components/DotGrid';
 import { FlowDiagram } from '../components/FlowDiagram';
 import { UserCaption } from '../components/UserCaption';
@@ -15,7 +15,7 @@ export const Scene14_ZoomOut: React.FC = () => {
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <FlowDiagram nodes={nodes} startFrame={0} />
       </div>
-      <UserCaption text={userCaption} startFrame={180} />
+      <UserCaption text={userCaption} startFrame={160} exitFrame={420} />
     </AbsoluteFill>
   );
 };

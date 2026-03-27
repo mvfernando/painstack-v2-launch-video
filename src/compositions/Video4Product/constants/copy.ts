@@ -2,7 +2,7 @@ export const COPY = {
 
   c01: {
     logoSuffix: '.ai',
-    badge: 'FROM IDEA TO BUSINESS',
+    badge: 'FROM IDEA TO REVALIDATED BUSINESS',
   },
 
   c02: {
@@ -24,11 +24,11 @@ export const COPY = {
   },
 
   c03: {
-    label: 'describe your problem →',
+    label: 'Describe, Link or Upload →',
     typewriter: "Parents in my neighbourhood waste hours every week trying to find a trusted babysitter. There's no easy way to find vetted, available sitters nearby — especially last minute.",
     pills: ['📝 Free text', '🔗 Reddit link', '📄 Document'],
     badge: 'Painstack Pro',
-    userCaption: '"so I just... describe it. parents waste hours finding a sitter."',
+    userCaption: '"I can describe it, paste a Reddit link, or upload notes. It just works."',
   },
 
   c04: {
@@ -49,17 +49,17 @@ export const COPY = {
   },
 
   c05: {
-    label: 'BLUEPRINT GENERATED IN 52 SECONDS',
+    label: 'NOT MOTIVATIONAL. JUST THE TRUTH.',
     score: 81,
     verdict: 'BUILD' as const,
-    userCaptionPre: '"81."',
-    userCaptionPost: '"this is real."',
-    productCaption: 'the market wants this. move forward.',
+    userCaptionPre: '"81. Most ideas score 30."',
+    userCaptionPost: '"This isn\'t hype. It\'s actual market data."',
+    productCaption: 'validation score calibrated with real evidence.',
     bullets: [
-      'real problem: 74% of parents struggle to find trusted sitters on short notice',
-      'market: $4.8B globally, growing 22%/year',
-      'no neighbourhood-first mobile solution exists',
-      'validated model: subscription €19/month + booking fee',
+      'Real problem: 74% of parents struggle with short-notice care',
+      'Honest Truth: The market is $4.8B but fragmented',
+      'Risk: Background check trust is the #1 killer of competitors',
+      'Advantage: Neighbourhood-first model has 0 direct rivals',
     ],
   },
 
@@ -195,16 +195,21 @@ export const COPY = {
   },
 
   c13: {
-    topLabel: 'EXECUTIVE SUMMARY',
+    topLabel: 'PROFESSIONAL DATAROOM',
     topPreview: 'Problem: Parents in PT/ES spend 3+ hours per week searching for trusted babysitters. No neighbourhood-first mobile solution exists. 74% report this as a weekly frustration...',
-    topBadge: '1 page · Ready to share',
+    topBadge: '8 docs · Ready to share',
     stackLabels: [
-      'PITCH DECK OUTLINE', 'MARKET ANALYSIS',
-      'FINANCIAL PROJECTIONS 3 YEARS', 'BUSINESS MODEL CANVAS',
-      'SWOT ANALYSIS', 'GO-TO-MARKET OVERVIEW', 'PROBLEM STATEMENT',
+      'PITCH DECK OUTLINE',
+      'FINANCIAL PROJECTIONS (3Y)',
+      'GO-TO-MARKET OVERVIEW',
+      'BUSINESS MODEL CANVAS',
+      'MARKET ANALYSIS (TAM/SAM)',
+      'SWOT ANALYSIS',
+      'PROBLEM STATEMENT',
+      'EXECUTIVE SUMMARY (1-PAGE)',
     ],
-    footer: '8 documents · Auto-generated · Any language',
-    userCaption: '"eight documents. i didn\'t write a single one."',
+    footer: 'Everything a professional founder needs — auto-generated.',
+    userCaption: '"The executive summary, the pitch deck... it built the whole dataroom."',
   },
 
   c14: {

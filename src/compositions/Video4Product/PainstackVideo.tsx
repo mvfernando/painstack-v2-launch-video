@@ -2,6 +2,7 @@ import { AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig, spring, interp
 import { DotGridBackground } from './components/DotGridBackground';
 import { BackgroundMusic } from './shared/SceneAudio';
 import { Scene01_BrandOpen } from './scenes/Scene01_BrandOpen';
+import { Scene01B_Teaser } from './scenes/Scene01B_Teaser';
 import { Scene02_Pain } from './scenes/Scene02_Pain';
 import { Scene03_Input } from './scenes/Scene03_Input';
 import { Scene04_Wait } from './scenes/Scene04_Wait';
@@ -20,7 +21,7 @@ import { Scene16_HookFinal } from './scenes/Scene16_HookFinal';
 import { Scene17_BrandClose } from './scenes/Scene17_BrandClose';
 import { Scene18_FadeOut } from './scenes/Scene18_FadeOut';
 
-const OVERLAP = 18; // 600ms at 30fps
+const OVERLAP = 12; // 400ms at 30fps
 
 const LiquidSequence: React.FC<{from: number; durationInFrames: number; children: React.ReactNode; isFirst?: boolean}> = ({ from, durationInFrames, children, isFirst = false }) => {
   const frame = useCurrentFrame();
@@ -51,30 +52,31 @@ export const PainstackVideo = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Pacing DURATIONS (Increased by ~25% to guarantee narrator completes without cutoff)
+  // HIGH-ENERGY 92s TIMELINE (2760 frames total)
   const DURS = {
-    S1: 260, S2: 380, S3: 800, S4: 560, S5: 680, S6: 220, S7: 680, S8: 560, S9: 560, 
-    S10: 300, S11: 680, S12: 300, S13: 800, S14: 560, S15: 560, S16: 560, S17: 600, S18: 240
+    S1: 150, S1B: 160, S2: 180, S3: 200, S4: 180, S5: 220, S6: 60, S7: 240, S8: 180, S9: 240, 
+    S10: 60, S11: 220, S12: 60, S13: 200, S14: 120, S15: 120, S16: 180, S17: 280, S18: 100
   };
 
   // Sequence offsets with CROSSFADE overlaps
-  const F1 = DURS.S1 - OVERLAP;
-  const F2 = F1 + DURS.S2 - OVERLAP;
-  const F3 = F2 + DURS.S3 - OVERLAP;
-  const F4 = F3 + DURS.S4 - OVERLAP;
-  const F5 = F4 + DURS.S5 - OVERLAP;
-  const F6 = F5 + DURS.S6 - OVERLAP;
-  const F7 = F6 + DURS.S7 - OVERLAP;
-  const F8 = F7 + DURS.S8 - OVERLAP;
-  const F9 = F8 + DURS.S9 - OVERLAP;
-  const F10 = F9 + DURS.S10 - OVERLAP;
-  const F11 = F10 + DURS.S11 - OVERLAP;
-  const F12 = F11 + DURS.S12 - OVERLAP;
-  const F13 = F12 + DURS.S13 - OVERLAP;
-  const F14 = F13 + DURS.S14 - OVERLAP;
-  const F15 = F14 + DURS.S15 - OVERLAP;
-  const F16 = F15 + DURS.S16 - OVERLAP;
-  const F17 = F16 + DURS.S17 - OVERLAP;
+  const F1   = DURS.S1 - OVERLAP;
+  const F1B  = F1 + DURS.S1B - OVERLAP;
+  const F2   = F1B + DURS.S2 - OVERLAP;
+  const F3   = F2 + DURS.S3 - OVERLAP;
+  const F4   = F3 + DURS.S4 - OVERLAP;
+  const F5   = F4 + DURS.S5 - OVERLAP;
+  const F6   = F5 + DURS.S6 - OVERLAP;
+  const F7   = F6 + DURS.S7 - OVERLAP;
+  const F8   = F7 + DURS.S8 - OVERLAP;
+  const F9   = F8 + DURS.S9 - OVERLAP;
+  const F10  = F9 + DURS.S10 - OVERLAP;
+  const F11  = F10 + DURS.S11 - OVERLAP;
+  const F12  = F11 + DURS.S12 - OVERLAP;
+  const F13  = F12 + DURS.S13 - OVERLAP;
+  const F14  = F13 + DURS.S14 - OVERLAP;
+  const F15  = F14 + DURS.S15 - OVERLAP;
+  const F16  = F15 + DURS.S16 - OVERLAP;
+  const F17  = F16 + DURS.S17 - OVERLAP;
 
   // Audio Ducking Intervals
   const sIntervals = [
@@ -96,7 +98,8 @@ export const PainstackVideo = () => {
       <DotGridBackground />
       <BackgroundMusic volume={0.12 * duckVolumeFactor} />
       <LiquidSequence from={0}    durationInFrames={DURS.S1} isFirst><Scene01_BrandOpen /></LiquidSequence>
-      <LiquidSequence from={F1}   durationInFrames={DURS.S2}><Scene02_Pain /></LiquidSequence>
+      <LiquidSequence from={F1}   durationInFrames={DURS.S1B}><Scene01B_Teaser /></LiquidSequence>
+      <LiquidSequence from={F1B}  durationInFrames={DURS.S2}><Scene02_Pain /></LiquidSequence>
       <LiquidSequence from={F2}   durationInFrames={DURS.S3}><Scene03_Input /></LiquidSequence>
       <LiquidSequence from={F3}   durationInFrames={DURS.S4}><Scene04_Wait /></LiquidSequence> 
       <LiquidSequence from={F4}   durationInFrames={DURS.S5}><Scene05_Blueprint /></LiquidSequence>

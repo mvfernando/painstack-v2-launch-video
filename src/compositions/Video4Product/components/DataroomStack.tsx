@@ -49,13 +49,14 @@ export const DataroomStack: React.FC = () => {
   const frame = useCurrentFrame();
 
   const labels = [
-    'Executive Summary',
+    'Executive Summary (1-Page)',
     'Problem Statement',
-    'GTM Overview',
-    'Market Analysis',
+    'Go-to-Market Overview',
+    'Market Analysis (TAM/SAM)',
+    'Business Model Canvas',
     'SWOT Analysis',
-    'Financial Projections',
-    'Pitch Deck'
+    'Financial Projections (3Y)',
+    'Pitch Deck Outline'
   ];
 
   return (

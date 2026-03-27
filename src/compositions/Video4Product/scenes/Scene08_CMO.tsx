@@ -3,6 +3,7 @@ import { AgentCard } from '../components/AgentCard';
 import { BrowserMockup } from '../components/BrowserMockup';
 import { UserCaption } from '../components/UserCaption';
 import { FeatureLabel } from '../components/FeatureLabel';
+import { WordReveal } from '../components/WordReveal';
 import { SceneAudio } from '../shared/SceneAudio';
 import { COPY } from '../constants/copy';
 
@@ -19,13 +20,13 @@ export const Scene08_CMO: React.FC = () => {
         position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
         display: 'flex', gap: 40, width: '100%', justifyContent: 'center', alignItems: 'center'
       }}>
-        <AgentCard agentLabel={cmo.label} accentColor={cmo.accentColor} lines={cmo.lines} startFrame={0} style={{ flex: 1 }} />
+        <AgentCard agentLabel={cmo.label} accentColor={cmo.accentColor} lines={cmo.lines} startFrame={10} style={{ flex: 1 }} />
         
         <div style={{ flex: 1.2 }}>
-          <BrowserMockup url="waitlist.painstack.ai" startFrame={30} width={720} height={460}>
+          <BrowserMockup url="waitlist.painstack.ai" startFrame={70} width={720} height={460}>
             <div style={{ padding: 40, backgroundColor: 'transparent', height: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div style={{ color: '#F8FAFC', fontSize: 32, fontWeight: 800, lineHeight: 1.2 }}>
-                {landing.headline}
+                <WordReveal text={landing.headline} startFrame={75} staggerFrames={1} fontSize={32} fontWeight={800} mode="pop" />
               </div>
               <div style={{ color: '#94A3B8', fontSize: 18, fontWeight: 400 }}>
                 {landing.sub}
@@ -50,7 +51,7 @@ export const Scene08_CMO: React.FC = () => {
         </div>
       </div>
 
-      <UserCaption text={userCaption} startFrame={120} />
+      <UserCaption text={userCaption} startFrame={165} exitFrame={175} />
     </AbsoluteFill>
   );
 };

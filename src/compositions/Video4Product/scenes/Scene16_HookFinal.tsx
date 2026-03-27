@@ -12,7 +12,7 @@ export const Scene16_HookFinal: React.FC = () => {
   const { line1, line2, line3, punchline, userCaption, productCaption } = COPY.c16;
 
   const glowOpacity = interpolate(frame, [200, 240, 300], [0.2, 0.5, 0.3], { extrapolateLeft: 'clamp' });
-  const lineStarts = [0, 80, 160];
+  const lineStarts = [10, 45, 80];
 
   return (
     <AbsoluteFill style={{ backgroundColor: 'transparent' }}>
@@ -23,20 +23,20 @@ export const Scene16_HookFinal: React.FC = () => {
 
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, width: '80%', zIndex: 10 }}>
         {[line1, line2, line3].map((line, i) => (
-          <div key={i} style={{ opacity: interpolate(frame, [lineStarts[i+1] || 240, (lineStarts[i+1] || 240) + 20], [1, 0.3], { extrapolateLeft: 'clamp' }) }}>
-            <WordReveal text={line} startFrame={lineStarts[i]} staggerFrames={STAGGER_SLOW} fontSize={i === 2 ? 46 : 38} fontWeight={i === 2 ? 700 : 300} color="#FFFFFF" />
+          <div key={i} style={{ opacity: interpolate(frame, [lineStarts[i+1] || 280, (lineStarts[i+1] || 280) + 20], [1, 0.3], { extrapolateLeft: 'clamp' }) }}>
+            <WordReveal text={line} startFrame={lineStarts[i]} staggerFrames={STAGGER_SLOW} fontSize={i === 2 ? 46 : 38} fontWeight={i === 2 ? 700 : 300} color="#FFFFFF" mode="pop" />
           </div>
         ))}
         <div style={{ marginTop: 40, filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.4))' }}>
-          <WordReveal text={punchline.text} startFrame={240} staggerFrames={STAGGER_SLOW} fontSize={68} fontWeight={800} gradient={punchline.gradient} />
+          <WordReveal text={punchline.text} startFrame={120} staggerFrames={2} fontSize={68} fontWeight={800} gradient={punchline.gradient} mode="pop" />
         </div>
       </div>
 
-      <UserCaption text={userCaption} startFrame={40} exitFrame={220} />
-      <Sequence from={240}>
+      <UserCaption text={userCaption} startFrame={10} exitFrame={115} />
+      <Sequence from={120}>
         <SceneAudio filename="v4_s16_hook_p" />
       </Sequence>
-      <ProductCaption text={productCaption} startFrame={240} />
+      <ProductCaption text={productCaption} startFrame={120} />
     </AbsoluteFill>
   );
 };

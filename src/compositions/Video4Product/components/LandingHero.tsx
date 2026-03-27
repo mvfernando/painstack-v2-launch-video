@@ -116,19 +116,20 @@ export const LandingHero: React.FC<LandingHeroProps> = ({ isTyping }) => {
 
           <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 2 }}>
             <div style={{ display: 'flex', gap: 20 }}>
-              <div style={{ border: '1px solid rgba(255,255,255,0.1)', padding: '10px 20px', borderRadius: 12, fontSize: 14, color: '#94A3B8', backgroundColor: 'rgba(255,255,255,0.03)', fontWeight: 500 }}>Upload docs</div>
-              <div style={{ border: '1px solid rgba(236,117,36,0.3)', padding: '10px 20px', borderRadius: 12, fontSize: 14, color: '#ec7524', backgroundColor: 'rgba(236,117,36,0.05)', fontWeight: 500 }}>I have a Reddit post</div>
-              <div style={{ border: '1px solid rgba(255,255,255,0.1)', padding: '10px 20px', borderRadius: 12, fontSize: 14, color: '#94A3B8', backgroundColor: 'rgba(255,255,255,0.03)', fontWeight: 500 }}>✨ 3.1 Pro </div>
+              <div style={{ border: '1px solid rgba(255,255,255,0.15)', padding: '10px 24px', borderRadius: 12, fontSize: 14, color: '#FFFFFF', backgroundColor: 'rgba(255,255,255,0.06)', fontWeight: 600 }}>📄 Document</div>
+              <div style={{ border: '1px solid rgba(59,130,246,0.3)', padding: '10px 24px', borderRadius: 12, fontSize: 14, color: '#3B82F6', backgroundColor: 'rgba(59,130,246,0.08)', fontWeight: 600 }}>🔗 Reddit Link</div>
+              <div style={{ border: '1px solid rgba(255,255,255,0.1)', padding: '10px 20px', borderRadius: 12, fontSize: 14, color: '#94A3B8', backgroundColor: 'rgba(255,255,255,0.03)', fontWeight: 500 }}>✨ Pro </div>
             </div>
             <div style={{
               backgroundColor: clickedColor, color: 'white',
               padding: '16px 40px', borderRadius: 14,
               fontWeight: 800, fontSize: 18,
-              boxShadow: frame > T_CLICK ? '0 0px 0px transparent' : '0 8px 24px rgba(59, 130, 246, 0.4)',
+              boxShadow: frame > T_CLICK ? '0 0px 0px transparent' : '0 8px 32px rgba(59, 130, 246, 0.5)',
               transform: frame > T_CLICK ? 'scale(0.95)' : 'scale(1)',
               transition: 'transform 0.1s, background-color 0.1s',
-              cursor: 'pointer'
-            }}>Validate →</div>
+              cursor: 'pointer',
+              letterSpacing: 0.5
+            }}>VALIDATE</div>
           </div>
           
           {/* Animated Mouse Cursor */}

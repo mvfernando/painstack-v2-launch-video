@@ -24,10 +24,10 @@ export const Scene17_BrandClose: React.FC = () => {
   const logoScale = interpolate(popSpring, [0, 1], [0.85, 1.0]);
   const logoOpacity = interpolate(frame, [START_FOCUS, START_FOCUS + 4], [0, 1], { extrapolateLeft: 'clamp' });
 
-  // CTA Button animation
-  const buttonSpring = spring({ frame: frame - 60, fps, config: { stiffness: 100, damping: 10 } });
+  // CTA Button animation - Compressed
+  const buttonSpring = spring({ frame: frame - 40, fps, config: { stiffness: 100, damping: 10 } });
   const buttonScale = interpolate(buttonSpring, [0, 1], [0, 1], { extrapolateLeft: 'clamp' });
-  const pulse = interpolate(Math.sin(frame / 10), [-1, 1], [1, 1.02]);
+  const pulse = interpolate(Math.sin(frame / 8), [-1, 1], [1, 1.02]);
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
@@ -47,7 +47,8 @@ export const Scene17_BrandClose: React.FC = () => {
       }} />
       
       {/* FINAL DING SFX */}
-      {frame === 65 && <Audio src={staticFile('audio/sfx_ding.mp3')} volume={0.6} />}
+      {/* FINAL DING SFX - Sync to button pop */}
+      {frame === 45 && <Audio src={staticFile('audio/sfx_ding.mp3')} volume={0.6} />}
       
       <div style={{ 
         position: 'absolute', top: '50%', left: '50%', 
@@ -77,7 +78,7 @@ export const Scene17_BrandClose: React.FC = () => {
         {/* NOTORIOUS CTA BUTTON */}
         <div style={{
           marginTop: 40,
-          opacity: interpolate(frame, [60, 80], [0, 1], { extrapolateLeft: 'clamp' }),
+          opacity: interpolate(frame, [40, 60], [0, 1], { extrapolateLeft: 'clamp' }),
           transform: `scale(${buttonScale * pulse})`,
           backgroundColor: '#3B82F6',
           padding: '20px 48px',
@@ -85,7 +86,7 @@ export const Scene17_BrandClose: React.FC = () => {
           color: 'white',
           fontSize: 24,
           fontWeight: 800,
-          boxShadow: '0 0 30px rgba(59,130,246,0.5)',
+          boxShadow: '0 0 40px rgba(59,130,246,0.6)',
           letterSpacing: 1
         }}>
           {url || 'painstack.ai'}

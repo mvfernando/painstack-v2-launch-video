@@ -15,6 +15,10 @@ export const Scene05_Blueprint: React.FC = () => {
       <Sequence from={60}>
         <Audio src={staticFile('audio/sfx_success_chime.mp3')} volume={0.6} />
       </Sequence>
+      {/* THE STITCH DING - Exactly on BUILD verdict */}
+      <Sequence from={90}>
+        <Audio src={staticFile('audio/sfx_ding.mp3')} volume={0.15} />
+      </Sequence>
       <SceneAudio filename="v4_s5_blue_s" />
 
       <div style={{ position: 'absolute', width: 800, height: 500, background: 'radial-gradient(circle, rgba(249,115,22,0.1), transparent 70%)', top: '10%', right: '5%' }} />
@@ -24,12 +28,12 @@ export const Scene05_Blueprint: React.FC = () => {
         <BlueprintCard label={label} score={score} verdict={verdict} bullets={bullets} startFrame={0} />
       </div>
 
-      <UserCaption text={userCaptionPre} startFrame={20} exitFrame={120} />
-      <UserCaption text={userCaptionPost} startFrame={130} exitFrame={190} />
-      <Sequence from={200}>
+      <UserCaption text={userCaptionPre} startFrame={10} exitFrame={80} />
+      <UserCaption text={userCaptionPost} startFrame={95} exitFrame={160} />
+      <Sequence from={175}>
         <SceneAudio filename="v4_s5_blue_p" />
+        <ProductCaption text={productCaption} startFrame={0} />
       </Sequence>
-      <ProductCaption text={productCaption} startFrame={200} />
     </AbsoluteFill>
   );
 };

@@ -110,7 +110,7 @@ export const BlueprintCard: React.FC<BlueprintCardProps> = ({
             }} />
           </div>
           <div style={{ fontSize: 14, fontWeight: 400, color: colors.textDarkMuted, letterSpacing: '0.02em' }}>
-            validation score based on real evidence
+            validation score calibrated with real evidence — not an opinion
           </div>
         </div>
       </div>
