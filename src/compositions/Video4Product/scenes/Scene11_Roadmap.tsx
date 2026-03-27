@@ -16,7 +16,7 @@ export const Scene11_Roadmap: React.FC = () => {
       <SceneAudio filename="v4_s11_road" />
       
       {/* Visual transition from dark to light */}
-      <div style={{ position: 'absolute', inset: 0, backgroundColor: '#0A0A0F', opacity: crossfade, zIndex: 10 }} />
+      <div style={{ position: 'absolute', inset: 0, backgroundColor: '#0F172A', opacity: crossfade, zIndex: 10 }} />
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 80% 80%, rgba(56,189,248,0.04), transparent 50%)' }} />
 
       <FeatureLabel text="Execution Strategy" startFrame={0} position="top-left" dark />

@@ -15,7 +15,7 @@ export const Scene16_HookFinal: React.FC = () => {
   const lineStarts = [0, 80, 160];
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#060609' }}>
+    <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
       <SceneAudio filename="v4_s16_hook_s" />
       
       {/* Background glow - darkened slightly for contrast */}

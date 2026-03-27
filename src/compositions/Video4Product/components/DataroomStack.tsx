@@ -1,5 +1,5 @@
 import React from 'react';
-import { interpolate, useCurrentFrame, useVideoConfig, Audio, staticFile } from 'remotion';
+import { interpolate, useCurrentFrame, Audio, staticFile } from 'remotion';
 
 const DocumentRow: React.FC<{ label: string; delay: number }> = ({ label, delay }) => {
   const frame = useCurrentFrame();
@@ -62,8 +62,7 @@ export const DataroomStack: React.FC = () => {
     <div style={{
       width: '100%',
       height: '100%',
-      backgroundColor: '#020617', // Deeper Dark Navy
-      backgroundImage: 'radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(30, 58, 138, 0.05) 0%, transparent 40%)',
+      backgroundColor: 'transparent',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',

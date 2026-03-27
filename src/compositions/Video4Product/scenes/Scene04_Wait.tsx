@@ -1,5 +1,5 @@
 import React from 'react';
-import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig, spring, Audio, staticFile, Sequence } from 'remotion';
+import { AbsoluteFill, interpolate, useCurrentFrame, Audio, staticFile, Sequence } from 'remotion';
 import { SceneAudio } from '../shared/SceneAudio';
 import { COPY } from '../constants/copy';
 import { ProductCaption } from '../components/ProductCaption';
@@ -33,7 +33,6 @@ const StatusItem: React.FC<{
 
 export const Scene04_Wait: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
 
   // SFX Timing
   const T_SWEEP = 30;
@@ -42,7 +41,7 @@ export const Scene04_Wait: React.FC = () => {
   const ringScale = (i: number) => interpolate(Math.sin((frame / 20) + i * 0.5), [-1, 1], [1, 1.1]);
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#FFFFFF' }}>
+    <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
       <SceneAudio filename="v4_s4_wait_s" />
 
       {/* SFX: SEARCH HUM (Looping) */}

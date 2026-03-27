@@ -19,34 +19,47 @@ import { Scene16_HookFinal } from './scenes/Scene16_HookFinal';
 import { Scene17_BrandClose } from './scenes/Scene17_BrandClose';
 import { Scene18_FadeOut } from './scenes/Scene18_FadeOut';
 
+const OVERLAP = 15;
+
+const FadeSequence: React.FC<{from: number; durationInFrames: number; children: React.ReactNode}> = ({ from, durationInFrames, children }) => {
+  const frame = useCurrentFrame();
+  const rel = frame - from;
+  const opacity = interpolate(rel, [0, OVERLAP], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  return (
+    <Sequence from={from} durationInFrames={durationInFrames} style={{ opacity }}>
+      {children}
+    </Sequence>
+  );
+};
+
 export const PainstackVideo = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Pacing DURATIONS (Significantly increased for V4.2)
+  // Pacing DURATIONS (Increased by ~25% to guarantee narrator completes without cutoff)
   const DURS = {
-    S1: 200, S2: 300, S3: 650, S4: 450, S5: 550, S6: 180, S7: 550, S8: 450, S9: 450, 
-    S10: 240, S11: 550, S12: 240, S13: 650, S14: 450, S15: 450, S16: 450, S17: 500, S18: 180
+    S1: 260, S2: 380, S3: 800, S4: 560, S5: 680, S6: 220, S7: 680, S8: 560, S9: 560, 
+    S10: 300, S11: 680, S12: 300, S13: 800, S14: 560, S15: 560, S16: 560, S17: 600, S18: 240
   };
 
-  // Sequence offsets
-  const F1 = DURS.S1;
-  const F2 = F1 + DURS.S2;
-  const F3 = F2 + DURS.S3;
-  const F4 = F3 + DURS.S4;
-  const F5 = F4 + DURS.S5;
-  const F6 = F5 + DURS.S6;
-  const F7 = F6 + DURS.S7;
-  const F8 = F7 + DURS.S8;
-  const F9 = F8 + DURS.S9;
-  const F10 = F9 + DURS.S10;
-  const F11 = F10 + DURS.S11;
-  const F12 = F11 + DURS.S12;
-  const F13 = F12 + DURS.S13;
-  const F14 = F13 + DURS.S14;
-  const F15 = F14 + DURS.S15;
-  const F16 = F15 + DURS.S16;
-  const F17 = F16 + DURS.S17;
+  // Sequence offsets with CROSSFADE overlaps
+  const F1 = DURS.S1 - OVERLAP;
+  const F2 = F1 + DURS.S2 - OVERLAP;
+  const F3 = F2 + DURS.S3 - OVERLAP;
+  const F4 = F3 + DURS.S4 - OVERLAP;
+  const F5 = F4 + DURS.S5 - OVERLAP;
+  const F6 = F5 + DURS.S6 - OVERLAP;
+  const F7 = F6 + DURS.S7 - OVERLAP;
+  const F8 = F7 + DURS.S8 - OVERLAP;
+  const F9 = F8 + DURS.S9 - OVERLAP;
+  const F10 = F9 + DURS.S10 - OVERLAP;
+  const F11 = F10 + DURS.S11 - OVERLAP;
+  const F12 = F11 + DURS.S12 - OVERLAP;
+  const F13 = F12 + DURS.S13 - OVERLAP;
+  const F14 = F13 + DURS.S14 - OVERLAP;
+  const F15 = F14 + DURS.S15 - OVERLAP;
+  const F16 = F15 + DURS.S16 - OVERLAP;
+  const F17 = F16 + DURS.S17 - OVERLAP;
 
   // Audio Ducking Intervals
   const sIntervals = [
@@ -64,26 +77,26 @@ export const PainstackVideo = () => {
   const duckVolumeFactor = interpolate(duckSpring, [0, 1], isSpeaking ? [1, 0.4] : [0.4, 1]);
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#060609' }}>
+    <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
       <BackgroundMusic volume={0.12 * duckVolumeFactor} />
       <Sequence from={0}    durationInFrames={DURS.S1}><Scene01_BrandOpen /></Sequence>
-      <Sequence from={F1}   durationInFrames={DURS.S2}><Scene02_Pain /></Sequence>
-      <Sequence from={F2}   durationInFrames={DURS.S3}><Scene03_Input /></Sequence>
-      <Sequence from={F3}   durationInFrames={DURS.S4}><Scene04_Wait /></Sequence> 
-      <Sequence from={F4}   durationInFrames={DURS.S5}><Scene05_Blueprint /></Sequence>
-      <Sequence from={F5}   durationInFrames={DURS.S6}><Scene06_Transition1 /></Sequence>
-      <Sequence from={F6}   durationInFrames={DURS.S7}><Scene07_MarketCEO /></Sequence>
-      <Sequence from={F7}   durationInFrames={DURS.S8}><Scene08_CMO /></Sequence>
-      <Sequence from={F8}   durationInFrames={DURS.S9}><Scene09_CTO /></Sequence>
-      <Sequence from={F9}   durationInFrames={DURS.S10}><Scene10_Transition2 /></Sequence>
-      <Sequence from={F10}  durationInFrames={DURS.S11}><Scene11_Roadmap /></Sequence>
-      <Sequence from={F11}  durationInFrames={DURS.S12}><Scene12_Transition3 /></Sequence>
-      <Sequence from={F12}  durationInFrames={DURS.S13}><Scene13_Dataroom /></Sequence>
-      <Sequence from={F13}  durationInFrames={DURS.S14}><Scene14_ZoomOut /></Sequence>
-      <Sequence from={F14}  durationInFrames={DURS.S15}><Scene15_Stats /></Sequence>
-      <Sequence from={F15}  durationInFrames={DURS.S16}><Scene16_HookFinal /></Sequence>
-      <Sequence from={F16}  durationInFrames={DURS.S17}><Scene17_BrandClose /></Sequence>
-      <Sequence from={F17}  durationInFrames={DURS.S18}><Scene18_FadeOut /></Sequence>
+      <FadeSequence from={F1}   durationInFrames={DURS.S2}><Scene02_Pain /></FadeSequence>
+      <FadeSequence from={F2}   durationInFrames={DURS.S3}><Scene03_Input /></FadeSequence>
+      <FadeSequence from={F3}   durationInFrames={DURS.S4}><Scene04_Wait /></FadeSequence> 
+      <FadeSequence from={F4}   durationInFrames={DURS.S5}><Scene05_Blueprint /></FadeSequence>
+      <FadeSequence from={F5}   durationInFrames={DURS.S6}><Scene06_Transition1 /></FadeSequence>
+      <FadeSequence from={F6}   durationInFrames={DURS.S7}><Scene07_MarketCEO /></FadeSequence>
+      <FadeSequence from={F7}   durationInFrames={DURS.S8}><Scene08_CMO /></FadeSequence>
+      <FadeSequence from={F8}   durationInFrames={DURS.S9}><Scene09_CTO /></FadeSequence>
+      <FadeSequence from={F9}   durationInFrames={DURS.S10}><Scene10_Transition2 /></FadeSequence>
+      <FadeSequence from={F10}  durationInFrames={DURS.S11}><Scene11_Roadmap /></FadeSequence>
+      <FadeSequence from={F11}  durationInFrames={DURS.S12}><Scene12_Transition3 /></FadeSequence>
+      <FadeSequence from={F12}  durationInFrames={DURS.S13}><Scene13_Dataroom /></FadeSequence>
+      <FadeSequence from={F13}  durationInFrames={DURS.S14}><Scene14_ZoomOut /></FadeSequence>
+      <FadeSequence from={F14}  durationInFrames={DURS.S15}><Scene15_Stats /></FadeSequence>
+      <FadeSequence from={F15}  durationInFrames={DURS.S16}><Scene16_HookFinal /></FadeSequence>
+      <FadeSequence from={F16}  durationInFrames={DURS.S17}><Scene17_BrandClose /></FadeSequence>
+      <FadeSequence from={F17}  durationInFrames={DURS.S18}><Scene18_FadeOut /></FadeSequence>
     </AbsoluteFill>
   );
 };

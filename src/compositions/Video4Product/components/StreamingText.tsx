@@ -19,13 +19,13 @@ export const StreamingText: React.FC<StreamingTextProps> = ({
   lines,
   startFrame = 0,
   lineDelayFrames = 17,
-  fontSize = 15,
+  fontSize = 18, // Upscaled from 15
   color = '#E2E8F0',
   accentColor = '#F97316',
 }) => {
   const frame = useCurrentFrame();
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
       {lines.map((line, i) => {
         const lineStart = startFrame + i * lineDelayFrames;
         const opacity = interpolate(frame, [lineStart, lineStart + 10], [0, 1], {

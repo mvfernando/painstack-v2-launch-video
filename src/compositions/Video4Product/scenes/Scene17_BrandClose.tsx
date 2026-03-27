@@ -19,7 +19,7 @@ export const Scene17_BrandClose: React.FC = () => {
   const pulse = interpolate(Math.sin(frame / 10), [-1, 1], [1, 1.05]);
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#020617' }}>
+    <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
       <SceneAudio filename="v4_s17_close" />
       <BrandBackground glowOpacity={0.4} />
       

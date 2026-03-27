@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 
 // SARAH ONLY - VOICEOVER SCRIPT GENERATOR
-const API_KEY = 'sk_828137a0c3a05a70d60dd5faf5d1a28598e70c9c9d7dadb1';
+const API_KEY = 'sk_8d2e12cc64227689d8867072a65fae05c90d0cd39201fc3f';
 const VOICE_IDS = {
-  sarah: "EXAVITQu4vr4xnSDxMaL", // Domi (Standard)
+  sarah: "RXtWW6etvimS8QJ5nhVk", // New Voice Share
 };
 
 const OUTPUT_DIR = path.join(process.cwd(), 'public', 'audio');
@@ -28,8 +28,8 @@ async function generateAudio(text, filename, voiceId) {
     });
 
     if (!response.ok) {
-       console.error(`Error generating ${filename}: ${response.status}`, await response.text());
-       return;
+      console.error(`Error generating ${filename}: ${response.status}`, await response.text());
+      return;
     }
 
     const buffer = await response.arrayBuffer();
@@ -49,7 +49,6 @@ async function main() {
     { text: "No one is doing this locally.", filename: "v4_s7_market", voiceId: VOICE_IDS.sarah },
     { text: "I can send this today.", filename: "v4_s8_cmo", voiceId: VOICE_IDS.sarah },
     { text: "I don't know how to code. I can do this.", filename: "v4_s9_cto", voiceId: VOICE_IDS.sarah },
-    { text: "The agents built the plan. The roadmap executes it.", filename: "v4_s10_t2", voiceId: VOICE_IDS.sarah },
     { text: "I know exactly what to do tomorrow.", filename: "v4_s11_road", voiceId: VOICE_IDS.sarah },
     { text: "When the time comes to talk to investors, you're ready.", filename: "v4_s12_t3", voiceId: VOICE_IDS.sarah },
     { text: "Eight documents. I didn't write a single one.", filename: "v4_s13_data", voiceId: VOICE_IDS.sarah },

@@ -1,7 +1,6 @@
 import { AbsoluteFill, useCurrentFrame, Audio, staticFile, interpolate, spring, useVideoConfig } from 'remotion';
 import React from 'react';
 import { SceneAudio } from '../shared/SceneAudio';
-import { MouseCursor } from '../components/MouseCursor';
 import { LandingHero } from '../components/LandingHero';
 
 export const Scene03_Input: React.FC = () => {
@@ -46,16 +45,6 @@ export const Scene03_Input: React.FC = () => {
         transformOrigin: '50% 50%',
       }}>
         <LandingHero isTyping={frame >= T_TYPE_START} />
-        
-        {/* Mouse for Click - Targets the "Validate" button at bottom right of the 860px box */}
-        <MouseCursor 
-          startFrame={T_MOUSE_START} 
-          startX={1500} 
-          startY={1000}
-          endX={1180} 
-          endY={820} 
-          clickFrame={T_CLICK}
-        />
       </div>
     </AbsoluteFill>
   );

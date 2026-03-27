@@ -1,6 +1,7 @@
 import React from 'react';
-import { Img, staticFile, useCurrentFrame, interpolate } from 'remotion';
+import { Img, interpolate, useCurrentFrame, Sequence, Audio, staticFile } from 'remotion';
 import { TypewriterTextV2 } from './TypewriterTextV2';
+import logo1 from '../../../shared/Painstack.ai_logo1.png';
 
 interface LandingHeroProps {
   isTyping?: boolean;
@@ -11,6 +12,17 @@ export const LandingHero: React.FC<LandingHeroProps> = ({ isTyping }) => {
 
   // T_TYPE_START is T_ZOOM_END + 20 in Scene03_Input: 120 + 20 = 140
   const typingStart = 140;
+
+  // Text typing ends at ~420 frames now (much faster)
+  const T_MOUSE_START = 480;
+  const T_MOUSE_END = 540;
+  const T_CLICK = 550;
+
+  // Mouse trajectory logic
+  const mouseX = interpolate(frame, [T_MOUSE_START, T_MOUSE_END], [900, 780], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' });
+  const mouseY = interpolate(frame, [T_MOUSE_START, T_MOUSE_END], [400, 275], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' });
+  const mouseScale = interpolate(frame, [T_MOUSE_END, T_CLICK, T_CLICK + 10], [0.8, 0.65, 0.8], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' });
+  const clickedColor = frame > T_CLICK ? '#2563EB' : '#3B82F6'; // Button darkens when clicked
 
   return (
     <div style={{
@@ -31,7 +43,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({ isTyping }) => {
         zIndex: 50
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <Img src={staticFile('shared/Painstack.ai_logo1.png')} style={{ height: 40 }} />
+          <Img src={logo1} style={{ height: 40 }} />
         </div>
         <div style={{ display: 'flex', gap: 48, fontSize: 15, fontWeight: 600, color: '#64748B' }}>
           <span>Product</span>
@@ -101,13 +113,44 @@ export const LandingHero: React.FC<LandingHeroProps> = ({ isTyping }) => {
               <div style={{ border: '1px solid #E2E8F0', padding: '10px 20px', borderRadius: 10, fontSize: 14, color: '#64748B', backgroundColor: '#F8FAFC', fontWeight: 600 }}>Guide me </div>
             </div>
             <div style={{
-              backgroundColor: '#3B82F6', color: 'white',
+              backgroundColor: clickedColor, color: 'white',
               padding: '16px 40px', borderRadius: 14,
               fontWeight: 800, fontSize: 18,
-              boxShadow: '0 8px 24px rgba(59, 130, 246, 0.4)',
+              boxShadow: frame > T_CLICK ? '0 0px 0px transparent' : '0 8px 24px rgba(59, 130, 246, 0.4)',
+              transform: frame > T_CLICK ? 'scale(0.95)' : 'scale(1)',
+              transition: 'transform 0.1s, background-color 0.1s',
               cursor: 'pointer'
             }}>Validate →</div>
           </div>
+          
+          {/* Animated Mouse Cursor */}
+          {frame > T_MOUSE_START && (
+            <div style={{
+              position: 'absolute',
+              top: mouseY,
+              left: mouseX,
+              transform: `scale(${mouseScale})`,
+              zIndex: 100,
+              pointerEvents: 'none',
+              filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))'
+            }}>
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5.5 2.5L20.5 10.5L12.5 13.5L9.5 21.5L5.5 2.5Z" fill="white" stroke="#0F172A" strokeWidth="1.5" strokeLinejoin="round"/>
+              </svg>
+            </div>
+          )}
+
+          {/* Typing & Click SFX */}
+          {isTyping && frame < 430 && (
+            <Sequence from={typingStart}>
+              <Audio src={staticFile('audio/sfx_typing.mp3')} volume={0.8} />
+            </Sequence>
+          )}
+          {frame >= T_CLICK && (
+            <Sequence from={T_CLICK}>
+              <Audio src={staticFile('audio/sfx_click.mp3')} volume={1.0} />
+            </Sequence>
+          )}
         </div>
       </div>
     </div>

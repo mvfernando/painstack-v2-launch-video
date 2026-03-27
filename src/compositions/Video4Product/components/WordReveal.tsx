@@ -11,6 +11,7 @@ interface WordRevealProps {
   italic?: boolean;
   textAlign?: 'left' | 'center' | 'right';
   style?: React.CSSProperties;
+  highlights?: Record<string, string>;
 }
 
 export const WordReveal: React.FC<WordRevealProps> = ({
@@ -24,6 +25,7 @@ export const WordReveal: React.FC<WordRevealProps> = ({
   italic = false,
   textAlign = 'center',
   style = {},
+  highlights,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -46,13 +48,20 @@ export const WordReveal: React.FC<WordRevealProps> = ({
           extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
         });
         const translateY = interpolate(prog, [0, 1], [-15, 0]);
+        let finalColor = color;
+        if (highlights) {
+          const match = Object.keys(highlights).find(k => word.toLowerCase().includes(k.toLowerCase()));
+          if (match) finalColor = highlights[match];
+        }
+
         const textStyle: React.CSSProperties = gradient
           ? {
               background: gradient,
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }
-          : { color };
+          : { color: finalColor };
+
         return (
           <span key={i} style={{
             opacity,
@@ -61,7 +70,7 @@ export const WordReveal: React.FC<WordRevealProps> = ({
             fontStyle: italic ? 'italic' : 'normal',
             fontFamily: 'Inter, sans-serif',
             lineHeight: 1.1,
-            letterSpacing: '-0.02em',
+            letterSpacing: '0px',
             display: 'inline-block',
             ...textStyle,
           }}>

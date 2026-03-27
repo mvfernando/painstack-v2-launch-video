@@ -9,7 +9,7 @@ export const Scene14_ZoomOut: React.FC = () => {
   const { nodes, userCaption } = COPY.c14;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#0A0A0F' }}>
+    <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
       <SceneAudio filename="v4_s14_out" />
       <DotGrid opacity={0.2} bgColor="transparent" />
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>

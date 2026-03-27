@@ -13,7 +13,7 @@ export const Scene04_Internet: React.FC = () => {
   const brainOpacity = interpolate(frame, [0, 20], [0, 0.7], { extrapolateLeft: 'clamp' });
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#0A0A0F' }}>
+    <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
       <SceneAudio filename="v4_s4_wait_s" />
 
       <div style={{

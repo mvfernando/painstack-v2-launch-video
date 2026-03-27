@@ -28,13 +28,13 @@ export const TypewriterTextV2: React.FC<TypewriterTextV2Props> = ({
     const char = text[charIndex];
     currentText += char;
     
-    // Default frames per char (fast Typing)
-    let delay = 1.2; // slow down slightly for human feel
+    // Human-like typing (thinks, speaks, types)
+    let delay = 1.0; 
     
     if (char === '.' || char === '?' || char === '!') {
-      delay = pauseAfterPunctuation;
+      delay = 30; // Pauses 1 sec at punctuation
     } else if (char === ',') {
-      delay = Math.floor(pauseAfterPunctuation / 2);
+      delay = 10;
     }
     
     frameTicker += delay;
@@ -42,7 +42,6 @@ export const TypewriterTextV2: React.FC<TypewriterTextV2Props> = ({
   }
 
   // Blinking cursor logic
-  const cursorOpacity = Math.floor(frame / 6) % 2 === 0 ? 1 : 0;
   const isFinished = charIndex >= text.length;
 
   return (

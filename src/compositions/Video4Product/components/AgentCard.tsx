@@ -44,22 +44,22 @@ export const AgentCard: React.FC<AgentCardProps> = ({
       backgroundColor: lightTheme ? '#FFFFFF' : '#0F0F1E',
       border: `1px solid ${lightTheme ? '#E2E8F0' : '#2D2D50'}`,
       borderLeft: `4px solid ${accentColor}`,
-      borderRadius: 14,
-      padding: 28,
-      display: 'flex', flexDirection: 'column', gap: 16,
+      borderRadius: 16,
+      padding: 36,
+      display: 'flex', flexDirection: 'column', gap: 20,
       boxShadow: lightTheme
         ? '0 20px 50px rgba(0,0,0,0.12)'
         : '0 0 40px rgba(0,0,0,0.4)',
-      minWidth: 420, // Garante que o card preencha espaço suficiente em layouts lado a lado
+      minWidth: 500, // Increased for uniform visibility limit
       ...style,
     }}>
       <div style={{
-        fontSize: 11, fontWeight: 700,
+        fontSize: 14, fontWeight: 700, // Upscaled from 11
         fontFamily: 'Inter, sans-serif',
         color: accentColor,
         letterSpacing: '0.08em',
         textTransform: 'uppercase',
-        marginBottom: 4,
+        marginBottom: 6,
       }}>
         {agentLabel}
       </div>

@@ -10,24 +10,24 @@ export const Scene08_CMO: React.FC = () => {
   const { cmo, landing, userCaption } = COPY.c08;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#F8FAFC' }}>
-      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 85% 15%, rgba(129,140,248,0.05), transparent 60%)' }} />
+    <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 85% 15%, rgba(129,140,248,0.1), transparent 60%)' }} />
       <SceneAudio filename="v4_s8_cmo" />
-      <FeatureLabel text="Growth Engine" startFrame={0} position="top-left" dark />
+      <FeatureLabel text="Growth Engine" startFrame={0} position="top-left" />
 
       <div style={{
         position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-        display: 'flex', gap: 40, width: '90%', justifyContent: 'center', alignItems: 'center'
+        display: 'flex', gap: 40, width: '100%', justifyContent: 'center', alignItems: 'center'
       }}>
-        <AgentCard agentLabel={cmo.label} accentColor={cmo.accentColor} lines={cmo.lines} startFrame={0} lightTheme style={{ flex: 1 }} />
+        <AgentCard agentLabel={cmo.label} accentColor={cmo.accentColor} lines={cmo.lines} startFrame={0} style={{ flex: 1 }} />
         
         <div style={{ flex: 1.2 }}>
-          <BrowserMockup url="waitlist.painstack.ai" startFrame={30} width={680} height={420} light>
-            <div style={{ padding: 40, backgroundColor: '#FFFFFF', height: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div style={{ color: '#0F172A', fontSize: 28, fontWeight: 800, lineHeight: 1.2 }}>
+          <BrowserMockup url="waitlist.painstack.ai" startFrame={30} width={720} height={460}>
+            <div style={{ padding: 40, backgroundColor: '#0F172A', height: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div style={{ color: '#F8FAFC', fontSize: 32, fontWeight: 800, lineHeight: 1.2 }}>
                 {landing.headline}
               </div>
-              <div style={{ color: '#475569', fontSize: 16, fontWeight: 400 }}>
+              <div style={{ color: '#94A3B8', fontSize: 18, fontWeight: 400 }}>
                 {landing.sub}
               </div>
               <div style={{ 
@@ -42,7 +42,7 @@ export const Scene08_CMO: React.FC = () => {
               }}>
                 {landing.cta}
               </div>
-              <div style={{ marginTop: 'auto', color: '#94A3B8', fontSize: 13, borderTop: '1px solid #F1F5F9', paddingTop: 16 }}>
+              <div style={{ marginTop: 'auto', color: '#64748B', fontSize: 13, borderTop: '1px solid #1E293B', paddingTop: 16 }}>
                 ✅ {landing.social}
               </div>
             </div>
@@ -50,7 +50,7 @@ export const Scene08_CMO: React.FC = () => {
         </div>
       </div>
 
-      <UserCaption text={userCaption} startFrame={120} dark />
+      <UserCaption text={userCaption} startFrame={120} />
     </AbsoluteFill>
   );
 };
