@@ -25,7 +25,7 @@ export const Scene11_Roadmap: React.FC = () => {
         <RoadmapBoard header={header} progress={progress} progressPct={progressPct} weeks={weeks} startFrame={15} />
       </div>
 
-      <UserCaption text={userCaption} startFrame={110} exitFrame={215} dark />
+      <UserCaption text={userCaption} startFrame={10} exitFrame={115} dark />
     </AbsoluteFill>
   );
 };

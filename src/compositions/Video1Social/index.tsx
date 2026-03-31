@@ -1,5 +1,4 @@
 
-import React from 'react';
 import { AbsoluteFill, Sequence, Audio, staticFile, useCurrentFrame, interpolate } from 'remotion';
 import { Scene1Hook } from './scenes/Scene1Hook';
 import { Scene2Problem } from './scenes/Scene2Problem';
@@ -18,21 +17,21 @@ const Transition = ({ duration, children }: { duration: number; children: React.
     return <AbsoluteFill style={{ opacity }}>{children}</AbsoluteFill>;
 };
 
-export const Video1Social: React.FC = () => {
+export const Video1Social = () => {
   return (
     <AbsoluteFill style={{ backgroundColor: colors.bg }}>
       <BackgroundMusic />
       
-      {/* S1: Hook (0-123) | Audio: 103 + 20 buffer */}
-      <Sequence durationInFrames={123}>
+      {/* S1: Hook (0-114) | Speech: 99 + 15 buffer */}
+      <Sequence durationInFrames={114}>
         <Scene1Hook />
         <SceneAudio filename="v1_s1_hook" />
         <Audio src={staticFile('audio/sfx_whoosh_clean.mp3')} volume={0.15} />
       </Sequence>
 
-      {/* S2: Problem (123-360) | Audio: 212 + 25 buffer */}
-      <Sequence from={123} durationInFrames={237}>
-        <Transition duration={237}>
+      {/* S2: Problem (114-372) | Speech: 243 + 15 buffer */}
+      <Sequence from={114} durationInFrames={258}>
+        <Transition duration={258}>
             <Scene2Problem />
         </Transition>
         <SceneAudio filename="v1_s2_problem" />
@@ -47,9 +46,9 @@ export const Video1Social: React.FC = () => {
         </Sequence>
       </Sequence>
 
-      {/* S2b: Bridge (360-565) | Audio: 180 + 25 buffer */}
-      <Sequence from={360} durationInFrames={205}>
-        <Transition duration={205}>
+      {/* S2b: Bridge (372-550) | Speech: 163 + 15 buffer */}
+      <Sequence from={372} durationInFrames={178}>
+        <Transition duration={178}>
             <Scene2bBridge />
         </Transition>
         <SceneAudio filename="v1_s2b_bridge" />
@@ -63,9 +62,9 @@ export const Video1Social: React.FC = () => {
         <Audio src={staticFile('audio/sfx_whoosh_clean.mp3')} volume={0.1} />
       </Sequence>
 
-      {/* S3: Input (565-744) | Audio: 154 + 25 buffer */}
-      <Sequence from={565} durationInFrames={179}>
-        <Transition duration={179}>
+      {/* S3: Input (550-710) | Speech: 145 + 15 buffer */}
+      <Sequence from={550} durationInFrames={160}>
+        <Transition duration={160}>
             <DashboardInputScene withInteractions />
         </Transition>
         <SceneAudio filename="v1_s3_input" />
@@ -77,30 +76,30 @@ export const Video1Social: React.FC = () => {
         </Sequence>
       </Sequence>
 
-      {/* S4: Agents (744-1037) | Audio: 268 + 25 buffer */}
-      <Sequence from={744} durationInFrames={293}>
-        <Transition duration={293}>
+      {/* S4: Agents (710-925) | Speech: 200 + 15 buffer */}
+      <Sequence from={710} durationInFrames={215}>
+        <Transition duration={215}>
             <Scene4Agents />
         </Transition>
         <SceneAudio filename="v1_s4_agents" />
-        <Sequence from={40} durationInFrames={120}>
+        <Sequence from={40} durationInFrames={100}>
           <Audio src={staticFile('audio/sfx_data_scan.mp3')} volume={0.25} />
         </Sequence>
       </Sequence>
 
-      {/* S5: Verdict (1037-1245) | Audio: 183 + 25 buffer */}
-      <Sequence from={1037} durationInFrames={208}>
-        <Transition duration={208}>
+      {/* S5: Verdict (925-1046) | Speech: 91 + 30 buffer */}
+      <Sequence from={925} durationInFrames={121}>
+        <Transition duration={121}>
             <BlueprintScoreScene />
         </Transition>
         <SceneAudio filename="v1_s5_verdict" />
-        <Sequence from={90} durationInFrames={30}>
+        <Sequence from={60} durationInFrames={30}>
           <Audio src={staticFile('audio/sfx_success_chime.mp3')} volume={0.3} />
         </Sequence>
       </Sequence>
 
-      {/* S6: CTA (1245-1450) | Audio: 131 + huge buffer */}
-      <Sequence from={1245} durationInFrames={205}>
+      {/* S6: CTA (1046-1216) | Speech: 110 + 60 buffer */}
+      <Sequence from={1046} durationInFrames={170}>
         <Scene6CTA />
         <SceneAudio filename="v1_s6_cta" />
         <Sequence from={10} durationInFrames={60}>

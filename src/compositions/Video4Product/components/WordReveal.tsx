@@ -67,10 +67,18 @@ export const WordReveal: React.FC<WordRevealProps> = ({
           : interpolate(popSpring, [0, 1], [-15, 0]);
 
         let finalColor = color;
+        let isHighlighted = false;
         if (highlights) {
           const match = Object.keys(highlights).find(k => word.toLowerCase().includes(k.toLowerCase()));
-          if (match) finalColor = highlights[match];
+          if (match) {
+            finalColor = highlights[match];
+            isHighlighted = true;
+          }
         }
+
+        const pulseScale = isHighlighted 
+          ? interpolate(Math.sin((frame - wordStart) / 5), [-1, 1], [1, 1.05], { extrapolateLeft: 'clamp' })
+          : 1;
 
         const textStyle: React.CSSProperties = gradient
           ? {
@@ -78,12 +86,15 @@ export const WordReveal: React.FC<WordRevealProps> = ({
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }
-          : { color: finalColor };
+          : { 
+              color: finalColor,
+              textShadow: isHighlighted ? `0 0 20px ${finalColor}80` : 'none',
+            };
 
         return (
           <span key={i} style={{
             opacity,
-            transform: `scale(${scale}) translateY(${translateY}px)`,
+            transform: `scale(${scale * pulseScale}) translateY(${translateY}px)`,
             filter: `blur(${blur}px)`,
             fontSize, fontWeight,
             fontStyle: italic ? 'italic' : 'normal',

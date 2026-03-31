@@ -32,7 +32,7 @@ export const Scene02_Pain: React.FC = () => {
         </div>
       </div>
 
-      <UserCaption text={userCaption} startFrame={15} exitFrame={165} />
+      <UserCaption text={userCaption} startFrame={15} exitFrame={219} />
     </AbsoluteFill>
   );
 };

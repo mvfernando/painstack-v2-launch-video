@@ -18,11 +18,11 @@ export const Scene07_MarketCEO: React.FC = () => {
         position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
         display: 'flex', gap: 40, width: '90%', justifyContent: 'center'
       }}>
-        <AgentCard agentLabel={data.market.label} accentColor={data.market.accentColor} lines={data.market.lines} startFrame={15} />
-        <AgentCard agentLabel={data.ceo.label} accentColor={data.ceo.accentColor} lines={data.ceo.lines} startFrame={100} />
+        <AgentCard agentLabel={data.market.label} accentColor={data.market.accentColor} lines={data.market.lines} startFrame={10} />
+        <AgentCard agentLabel={data.ceo.label} accentColor={data.ceo.accentColor} lines={data.ceo.lines} startFrame={60} />
       </div>
 
-      <UserCaption text={data.userCaption} startFrame={220} exitFrame={235} />
+      <UserCaption text={data.userCaption} startFrame={10} exitFrame={165} />
     </AbsoluteFill>
   );
 };

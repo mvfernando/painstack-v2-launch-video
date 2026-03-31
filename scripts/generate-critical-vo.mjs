@@ -18,15 +18,16 @@ if (fs.existsSync(envPath)) {
 }
 
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
-const PAINSTACK_VOICE_ID = 'TX3LPaxL7no93ppTy6fJ'; // Liam
+const PAINSTACK_VOICE_ID = 'RXtWW6etvimS8QJ5nhVk'; // Fiona - chill, natural & Real
 const MODEL_ID = 'eleven_multilingual_v2';
 
 const CRITICAL_SCRIPTS = [
   { id: 'v4_s4_wait_p', text: 'Analyzing 3,241 local conversations about this problem...' },
   { id: 'v4_s5_blue_p', text: 'The market data is clear. Move forward.' },
-  { id: 'v4_s6_t1_p',   text: 'Verdict: build. Your AI team is entering now.' },
-  { id: 'v4_s10_t2_p',  text: 'The roadmap is clear.' },
+  { id: 'v4_s6_t1_p', text: 'Verdict: build. Your AI team is entering now.' },
+  { id: 'v4_s10_t2_p', text: 'The roadmap is clear.' },
   { id: 'v4_s16_hook_p', text: 'To business.' },
+  { id: 'v4_s17_close', text: 'Painstack AI. From idea to business.' },
 ];
 
 async function generateAudio(s) {
@@ -47,7 +48,7 @@ async function generateAudio(s) {
 
 async function run() {
   for (const s of CRITICAL_SCRIPTS) {
-    try { await generateAudio(s); await new Promise(r => setTimeout(r, 2000)); } 
+    try { await generateAudio(s); await new Promise(r => setTimeout(r, 2000)); }
     catch (e) { console.error(`   ❌ Failed: ${e.message}`); }
   }
 }

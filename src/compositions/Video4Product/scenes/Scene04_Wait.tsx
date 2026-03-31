@@ -46,8 +46,7 @@ export const Scene04_Wait: React.FC = () => {
     <AbsoluteFill style={{ backgroundColor: 'transparent' }}>
       <SceneAudio filename="v4_s4_wait_s" />
 
-      {/* SFX: SEARCH HUM (Looping) */}
-      <Audio src={staticFile('audio/sfx_hum.mp3')} volume={0.2} loop />
+      {/* SFX: Sweep only (data_scan removed — too harsh) */}
       {frame === T_SWEEP && <Audio src={staticFile('audio/sfx_sweep.mp3')} volume={0.4} />}
 
       <div style={{
@@ -143,9 +142,9 @@ export const Scene04_Wait: React.FC = () => {
         This takes 30-60 seconds — real evidence takes time to gather.
       </div>
 
-      <UserCaption text={userCaption} startFrame={10} exitFrame={100} />
+      <UserCaption text={userCaption} startFrame={10} exitFrame={130} />
       
-      <Sequence from={110}>
+      <Sequence from={135}>
         <SceneAudio filename="v4_s4_wait_p" />
         <ProductCaption text={productCaption} startFrame={0} />
       </Sequence>

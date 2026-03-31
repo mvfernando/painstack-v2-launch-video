@@ -10,9 +10,28 @@ import {
 } from 'remotion';
 import { colors, fonts } from '../../../shared/brand';
 
-export const DashboardInputScene: React.FC<{ withInteractions?: boolean }> = ({ withInteractions = false }) => {
+
+export const DashboardInputScene: React.FC<{ 
+  withInteractions?: boolean;
+  theme?: 'light' | 'dark';
+  customText?: string;
+}> = ({ 
+  withInteractions = false, 
+  theme = 'dark',
+  customText
+}) => {
   const frame = useCurrentFrame();
   const { fps, width, height } = useVideoConfig();
+
+  const isLight = theme === 'light';
+  const themeColors = {
+    bg: isLight ? colors.lightBgProduct : colors.bg,
+    card: isLight ? colors.lightBg : colors.bgCard,
+    text: isLight ? colors.lightText : colors.white,
+    border: isLight ? colors.lightBorder : colors.border,
+    muted: isLight ? colors.lightMuted : colors.muted,
+    inputBg: isLight ? '#f1f5f9' : "rgba(15, 23, 42, 0.4)",
+  };
 
   // Entrance
   const entrance = spring({ frame, fps, config: { damping: 20 } });
@@ -21,7 +40,7 @@ export const DashboardInputScene: React.FC<{ withInteractions?: boolean }> = ({ 
   const contentOpacity = interpolate(entrance, [0, 1], [0, 1]);
 
   // Typing Simulation
-  const text = "An AI-powered tool that helps founders validate their ideas by scanning real-world market pain points...";
+  const text = customText || "An AI-powered tool that helps founders validate their ideas by scanning real-world market pain points...";
   const charsShown = Math.floor(interpolate(frame, [40, 120], [0, text.length], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }));
 
   // Interactions (Zoom & Mouse)
@@ -44,14 +63,12 @@ export const DashboardInputScene: React.FC<{ withInteractions?: boolean }> = ({ 
   }) : 0;
 
   const cameraScale = interpolate(cameraZoom, [0, 1], [1, 1.1]);
-  // Refined mouse coordinates to hit the "Validate" button precisely
-  // Center of screen is 960x540. Button is bottom-right of the 1100px wide box.
   const mouseX = interpolate(mouseProg, [0, 1], [width * 0.95, width * 0.75]); 
   const mouseY = interpolate(mouseProg, [0, 1], [height * 0.95, height * 0.78]);
   const buttonScale = interpolate(clickSpring, [0, 0.5, 1], [1, 0.9, 1]);
 
   return (
-    <AbsoluteFill style={{ backgroundColor: colors.bg, overflow: 'hidden', fontFamily: fonts.base }}>
+    <AbsoluteFill style={{ backgroundColor: themeColors.bg, overflow: 'hidden', fontFamily: fonts.base }}>
       <div style={{ 
         flex: 1, 
         display: 'flex',
@@ -73,15 +90,15 @@ export const DashboardInputScene: React.FC<{ withInteractions?: boolean }> = ({ 
         }}>
           <div style={{ position: 'absolute', left: 0 }}>
              <img 
-                src={staticFile('shared/Painstack.ai_logo2.png')} 
+                src={staticFile(isLight ? 'shared/Painstack.ai_logo1.png' : 'shared/Painstack.ai_logo2.png')} 
                 style={{ height: 48, width: 'auto', objectFit: 'contain' }} 
                 alt="Logo"
               />
           </div>
           
           <div style={{
-            background: 'rgba(30, 41, 59, 0.8)',
-            border: `1px solid ${colors.border}`,
+            background: isLight ? colors.lightBg : 'rgba(30, 41, 59, 0.8)',
+            border: `1px solid ${themeColors.border}`,
             borderRadius: 100,
             padding: '8px 20px',
             display: 'flex',
@@ -89,7 +106,7 @@ export const DashboardInputScene: React.FC<{ withInteractions?: boolean }> = ({ 
             gap: 10,
             fontSize: 13,
             fontWeight: 700,
-            color: colors.muted,
+            color: themeColors.muted,
             textTransform: 'uppercase',
             letterSpacing: '1px'
           }}>
@@ -102,7 +119,7 @@ export const DashboardInputScene: React.FC<{ withInteractions?: boolean }> = ({ 
         <h1 style={{ 
           fontSize: 64, 
           fontWeight: 800, 
-          color: colors.white, 
+          color: themeColors.text, 
           textAlign: 'center',
           maxWidth: 900,
           marginBottom: 60,
@@ -116,34 +133,34 @@ export const DashboardInputScene: React.FC<{ withInteractions?: boolean }> = ({ 
         <div style={{
           width: '100%',
           maxWidth: 1100,
-          background: colors.bgCard,
-          border: `1px solid ${colors.border}`,
+          background: themeColors.card,
+          border: `1px solid ${themeColors.border}`,
           borderRadius: 32,
           padding: 40,
-          boxShadow: "0 40px 100px rgba(0,0,0,0.4)",
+          boxShadow: isLight ? "0 20px 50px rgba(0,0,0,0.05)" : "0 40px 100px rgba(0,0,0,0.4)",
           position: 'relative'
         }}>
           <div style={{
-            background: "rgba(15, 23, 42, 0.4)",
-            border: `1px solid ${colors.border}`,
+            background: themeColors.inputBg,
+            border: `1px solid ${themeColors.border}`,
             borderRadius: 20,
             padding: 30,
             minHeight: 180,
-            color: colors.white,
+            color: themeColors.text,
             fontSize: 24,
             lineHeight: 1.5,
             marginBottom: 40,
             fontWeight: 300
           }}>
              {frame < 40 ? (
-               <span style={{ color: colors.muted, opacity: 0.6 }}>
+               <span style={{ color: themeColors.muted, opacity: 0.6 }}>
                  Paste a real complaint or describe the problem in your own words...
                </span>
              ) : (
                <span>{text.substring(0, charsShown)}</span>
              )}
              <span style={{ 
-                borderRight: `3px solid ${colors.blue}`,
+                borderRight: `3px solid ${colors.orange}`,
                 marginLeft: 4,
                 opacity: frame % 30 < 15 ? 1 : 0 
               }} />
@@ -153,16 +170,16 @@ export const DashboardInputScene: React.FC<{ withInteractions?: boolean }> = ({ 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', gap: 15 }}>
               {[
-                { icon: '📎', label: 'Upload a document' },
-                { icon: '🔗', label: 'I have a Reddit post' },
-                { icon: '❓', label: 'Guide me with questions', color: colors.orange }
+                { icon: '📝', label: 'Free text' },
+                { icon: '🔗', label: 'Reddit' },
+                { icon: '📄', label: 'Doc' }
               ].map((btn, i) => (
                 <div key={i} style={{
                   padding: '12px 24px',
                   borderRadius: 12,
-                  border: `1px solid ${colors.border}`,
-                  background: 'rgba(255,255,255,0.03)',
-                  color: btn.color || colors.white,
+                  border: `1px solid ${themeColors.border}`,
+                  background: isLight ? '#f8fafc' : 'rgba(255,255,255,0.03)',
+                  color: isLight ? colors.lightText : colors.white,
                   fontSize: 15,
                   fontWeight: 600,
                   display: 'flex',
@@ -206,7 +223,7 @@ export const DashboardInputScene: React.FC<{ withInteractions?: boolean }> = ({ 
           opacity: interpolate(mouseProg, [0, 0.1, 0.9, 1], [0, 1, 1, 0.2])
         }}>
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <path d="M7 26L5 5L22 17L13.5 19.5L7 26Z" fill="black" stroke="white" strokeWidth="2" strokeLinejoin="round"/>
+            <path d="M7 26L5 5L22 17L13.5 19.5L7 26Z" fill={isLight ? "white" : "black"} stroke={isLight ? "black" : "white"} strokeWidth="2" strokeLinejoin="round"/>
           </svg>
         </div>
       )}

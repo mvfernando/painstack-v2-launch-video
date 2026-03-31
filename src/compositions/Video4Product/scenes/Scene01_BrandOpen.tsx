@@ -1,5 +1,6 @@
 import { AbsoluteFill, interpolate, useCurrentFrame, Img, staticFile, spring, useVideoConfig } from 'remotion';
 import { DotGridBackground } from '../components/DotGridBackground';
+import { SceneAudio } from '../shared/SceneAudio';
 import { COPY } from '../constants/copy';
 
 export const Scene01_BrandOpen: React.FC = () => {
@@ -27,6 +28,7 @@ export const Scene01_BrandOpen: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
+      <SceneAudio filename="v4_s1_open" />
       {/* Global Dot Grid - Subtly present at 5% opacity */}
       <div style={{ opacity: 0.05 }}>
         <DotGridBackground />

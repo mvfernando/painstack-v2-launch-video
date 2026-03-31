@@ -12,12 +12,9 @@ export const Scene05_Blueprint: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ backgroundColor: 'transparent' }}>
-      <Sequence from={60}>
-        <Audio src={staticFile('audio/sfx_success_chime.mp3')} volume={0.6} />
-      </Sequence>
-      {/* THE STITCH DING - Exactly on BUILD verdict */}
+      {/* Single chime — synced exactly with BUILD verdict at F90 */}
       <Sequence from={90}>
-        <Audio src={staticFile('audio/sfx_ding.mp3')} volume={0.15} />
+        <Audio src={staticFile('audio/sfx_success_chime.mp3')} volume={0.5} />
       </Sequence>
       <SceneAudio filename="v4_s5_blue_s" />
 
@@ -28,9 +25,9 @@ export const Scene05_Blueprint: React.FC = () => {
         <BlueprintCard label={label} score={score} verdict={verdict} bullets={bullets} startFrame={0} />
       </div>
 
-      <UserCaption text={userCaptionPre} startFrame={10} exitFrame={80} />
-      <UserCaption text={userCaptionPost} startFrame={95} exitFrame={160} />
-      <Sequence from={175}>
+      <UserCaption text={userCaptionPre} startFrame={10} exitFrame={110} />
+      <UserCaption text={userCaptionPost} startFrame={115} exitFrame={150} />
+      <Sequence from={151}>
         <SceneAudio filename="v4_s5_blue_p" />
         <ProductCaption text={productCaption} startFrame={0} />
       </Sequence>

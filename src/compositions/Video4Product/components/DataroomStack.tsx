@@ -75,7 +75,7 @@ export const DataroomStack: React.FC = () => {
     }}>
       {/* SFX: PAPER SWEEP / RUSTLE */}
       {frame === 10 && <Audio src={staticFile('audio/sfx_sweep.mp3')} volume={0.5} />}
-      {frame === 60 && <Audio src={staticFile('audio/sfx_ding.mp3')} volume={0.2} />}
+      {frame === 60 && <Audio src={staticFile('audio/sfx_success_chime.mp3')} volume={0.2} />}
 
       <div style={{
         display: 'flex',

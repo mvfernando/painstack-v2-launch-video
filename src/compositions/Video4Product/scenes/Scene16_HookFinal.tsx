@@ -32,11 +32,12 @@ export const Scene16_HookFinal: React.FC = () => {
         </div>
       </div>
 
-      <UserCaption text={userCaption} startFrame={10} exitFrame={115} />
-      <Sequence from={120}>
+      <UserCaption text={userCaption} startFrame={10} exitFrame={180} />
+      
+      <Sequence from={185}>
         <SceneAudio filename="v4_s16_hook_p" />
+        <ProductCaption text={productCaption} startFrame={0} />
       </Sequence>
-      <ProductCaption text={productCaption} startFrame={120} />
     </AbsoluteFill>
   );
 };

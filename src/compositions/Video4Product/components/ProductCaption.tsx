@@ -3,11 +3,12 @@ import { interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
 interface ProductCaptionProps {
   text:        string;
   startFrame?: number; 
+  exitFrame?:  number;
   dark?:       boolean; // Para fundos claros
 }
 
 export const ProductCaption = ({
-  text, startFrame = 0, dark = false,
+  text, startFrame = 0, exitFrame, dark = false,
 }: ProductCaptionProps) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -17,7 +18,13 @@ export const ProductCaption = ({
     fps,
     config: { stiffness: 60, damping: 14, mass: 1 } 
   });
-  const opacity    = interpolate(s, [0, 1], [0, 1]);
+  const enterOpacity = interpolate(s, [0, 1], [0, 1]);
+  
+  const exitOpacity = exitFrame
+    ? interpolate(frame, [exitFrame, exitFrame + 15], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+    : 1;
+
+  const opacity    = Math.min(enterOpacity, exitOpacity);
   const translateY = interpolate(s, [0, 1], [8, 0]);
 
   return (

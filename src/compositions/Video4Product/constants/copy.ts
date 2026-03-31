@@ -2,7 +2,7 @@ export const COPY = {
 
   c01: {
     logoSuffix: '.ai',
-    badge: 'FROM IDEA TO REVALIDATED BUSINESS',
+    badge: 'FROM IDEA TO BUSINESS',
   },
 
   c02: {
@@ -20,15 +20,15 @@ export const COPY = {
       color: '#ffffffff',
       holdFrames: 30,
     },
-    userCaption: '"uff, ok... friday night panic. who watches the kids?"',
+    userCaption: '"uff, okay... who watches the kids? there has to be a better way than this."',
   },
 
   c03: {
     label: 'Describe, Link or Upload →',
-    typewriter: "Parents in my neighbourhood waste hours every week trying to find a trusted babysitter. There's no easy way to find vetted, available sitters nearby — especially last minute.",
+    typewriter: "Parents in my neighbourhood waste hours every week trying to find a trusted babysitter. There's no easy way to find vetted, available sitters nearby, especially last minute.",
     pills: ['📝 Free text', '🔗 Reddit link', '📄 Document'],
     badge: 'Painstack Pro',
-    userCaption: '"I can describe it, paste a Reddit link, or upload notes. It just works."',
+    userCaption: '"so i just... describe it. like parents in my area wasting hours finding a sitter."',
   },
 
   c04: {
@@ -44,17 +44,17 @@ export const COPY = {
       { label: 'Web', count: '18,400+ results', delay: 36 },
     ],
     footer: 'This takes 30–60 seconds — real evidence takes time to gather.',
-    userCaption: '"it\'s scanning reddit. actual complaints."',
-    productCaption: 'analyzing 3,241 local conversations...',
+    userCaption: '"it\'s scanning everywhere. finding signals i didn\'t even see."',
+    productCaption: 'analyzing local conversations...',
   },
 
   c05: {
     label: 'NOT MOTIVATIONAL. JUST THE TRUTH.',
     score: 81,
     verdict: 'BUILD' as const,
-    userCaptionPre: '"81. Most ideas score 30."',
-    userCaptionPost: '"This isn\'t hype. It\'s actual market data."',
-    productCaption: 'validation score calibrated with real evidence.',
+    userCaptionPre: '"score 81? okay, this isn\'t just hype."',
+    userCaptionPost: '"this is buildable."',
+    productCaption: 'the market data is clear.',
     bullets: [
       'Real problem: 74% of parents struggle with short-notice care',
       'Honest Truth: The market is $4.8B but fragmented',
@@ -65,8 +65,8 @@ export const COPY = {
 
   c06: {
     line1: 'verdict: build.',
-    line2: 'your team enters now.',
-    productCaption: 'your team is ready.',
+    line2: 'the ai team enters now.',
+    productCaption: 'the ai team is ready.',
     agents: [
       { label: 'Market', border: '#94A3B8' },
       { label: 'CEO', border: '#F97316' },
@@ -102,7 +102,7 @@ export const COPY = {
         { text: 'North star: 50 paying families in 90 days' },
       ],
     },
-    userCaption: '"no one is doing this locally."',
+    userCaption: '"my market agent confirms it: nobody is doing this locally. i\'m first."',
   },
 
   c08: {
@@ -125,7 +125,7 @@ export const COPY = {
       cta: 'Join the waitlist',
       social: '84 parents already on the list · Porto',
     },
-    userCaption: '"i can send this today."',
+    userCaption: '"my cmo built the whole campaign. i could literally send this today."',
   },
 
   c09: {
@@ -153,7 +153,7 @@ export const COPY = {
         { name: 'Carla T.', sub: '1.1km · Busy today · ★5.0', dot: 'amber' },
       ],
     },
-    userCaption: '"i don\'t know how to code. i can do this."',
+    userCaption: '"i\'m not a coder, but my cto says i don\'t need to be."',
   },
 
   c10: {
@@ -166,7 +166,7 @@ export const COPY = {
     header: 'Roadmap — 90 days',
     progress: 'Week 3 of 13 · 23% complete',
     progressPct: 23,
-    userCaption: '"i know exactly what to do tomorrow."',
+    userCaption: '"week three. i know exactly what to do tomorrow morning."',
     weeks: [
       {
         label: 'Week 1', status: 'done' as const,
@@ -188,10 +188,10 @@ export const COPY = {
   },
 
   c12: {
-    line1: 'when the time comes',
+    line1: 'and when the time comes',
     line2: 'to talk to investors',
-    line3: "you're ready.",
-    productCaption: "you're ready.",
+    line3: "i'm ready.",
+    productCaption: "i'm ready.",
   },
 
   c13: {
@@ -209,7 +209,7 @@ export const COPY = {
       'EXECUTIVE SUMMARY (1-PAGE)',
     ],
     footer: 'Everything a professional founder needs — auto-generated.',
-    userCaption: '"The executive summary, the pitch deck... it built the whole dataroom."',
+    userCaption: '"eight documents. i didn\'t write a single one, but they\'re all here."',
   },
 
   c14: {
@@ -221,7 +221,7 @@ export const COPY = {
       { label: 'Dataroom · 8 documents', color: '#C084FC' },
       { label: 'Business with paying customers', color: '#F97316' },
     ],
-    userCaption: '"from a friday panic. a real startup."',
+    userCaption: '"from a friday panic... to a real startup."',
   },
 
   c15: {
@@ -230,19 +230,19 @@ export const COPY = {
       { value: '90 days', label: 'from zero to first paying customers', color: '#818CF8' },
       { value: '0', label: 'lines of code required to build your MVP', color: '#38BDF8' },
     ],
-    userCaption: '"it\'s real. we have a clear path."',
+    userCaption: '"an honest verdict in under a minute."',
   },
 
   c16: {
     line1: "you don't need a team.",
     line2: "you don't need to code.",
-    line3: 'you need a real problem.',
+    line3: "you need a real problem.",
     punchline: {
       text: 'your idea is waiting.',
       gradient: 'linear-gradient(90deg, #FFFFFF, #FFEDD5)', // White to very light orange
     },
     userCaption: '"from idea..."',
-    productCaption: 'to business.',
+    productCaption: 'Painstack AI',
   },
 
   c17: {

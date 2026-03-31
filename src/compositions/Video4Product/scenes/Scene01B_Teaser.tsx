@@ -1,6 +1,7 @@
 import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion';
 import React from 'react';
 import { WordReveal } from '../components/WordReveal';
+import { SceneAudio } from '../shared/SceneAudio';
 
 export const Scene01B_Teaser: React.FC = () => {
   const frame = useCurrentFrame();
@@ -9,10 +10,11 @@ export const Scene01B_Teaser: React.FC = () => {
   const line2 = "Painstack is your AI validation engine.";
   const line3 = "Real evidence. Zero guessing.";
 
-  const lineStarts = [20, 80, 140];
+  const lineStarts = [10, 75, 150];
 
   return (
     <AbsoluteFill style={{ backgroundColor: 'transparent' }}>
+      <SceneAudio filename="v4_s1b_teaser" />
       {/* Background Aurora depth */}
       <div style={{
           position: 'absolute', inset: 0,
@@ -26,7 +28,7 @@ export const Scene01B_Teaser: React.FC = () => {
       }}>
         {[line1, line2, line3].map((line, i) => {
           const start = lineStarts[i];
-          const opacity = interpolate(frame, [start - 5, start, 240, 260], [0, 1, 1, 0], { extrapolateLeft: 'clamp' });
+          const opacity = interpolate(frame, [start - 5, start, 220, 241], [0, 1, 1, 0], { extrapolateLeft: 'clamp' });
           
           return (
             <div key={i} style={{ opacity }}>

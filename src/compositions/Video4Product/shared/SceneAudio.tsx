@@ -1,30 +1,14 @@
-import { Audio, staticFile, useCurrentFrame, Sequence } from 'remotion';
+import { Audio, staticFile, Sequence } from 'remotion';
 
 interface BackgroundMusicProps {
   volume?: number;
 }
 
-export const BackgroundMusic: React.FC<BackgroundMusicProps> = ({
+export const BackgroundMusic = ({
   volume = 0.10,
-}) => {
-  const frame = useCurrentFrame();
-  
-  // Audio Ducking Logic
-  // Define intervals where someone is speaking (based on new durations)
-  // For V4.2, nearly the entire video is dialogue. 
-  // We duck whenever isSpeaking is true (calculated in PainstackVideo)
-  // or we can use a simpler heuristic here if we don't pass props.
-  const speakingIntervals = [
-    [20, 5800], // Generic ducking for the whole video
-  ];
-
-  // For a generic "lower when speaking" logic:
-  // If frame is in any interval, lower volume.
-  const isSpeaking = speakingIntervals.some(([start, end]) => frame >= start && frame <= end);
-  const targetVolume = isSpeaking ? volume * 0.4 : volume; // drop to 40% when speaking
-
+}: BackgroundMusicProps) => {
   const src = staticFile('audio/v1_music.wav');
-  return <Audio src={src} volume={targetVolume} loop />;
+  return <Audio src={src} volume={volume} loop />;
 };
 
 interface SceneAudioProps {
@@ -32,10 +16,10 @@ interface SceneAudioProps {
   startFrom?: number;
 }
 
-export const SceneAudio: React.FC<SceneAudioProps> = ({
+export const SceneAudio = ({
   filename,
   startFrom = 0,
-}) => {
+}: SceneAudioProps) => {
   const src = staticFile(`audio/${filename}.mp3`);
   
   // startFrom here is used as a DELAY in the sequence

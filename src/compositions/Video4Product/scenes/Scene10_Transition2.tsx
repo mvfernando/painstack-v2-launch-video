@@ -1,10 +1,9 @@
-import { AbsoluteFill, useCurrentFrame, interpolate, Audio, staticFile } from 'remotion';
+import { AbsoluteFill, useCurrentFrame, interpolate, Audio, staticFile, Sequence } from 'remotion';
 import React from 'react';
 import { WordReveal } from '../components/WordReveal';
 import { ProductCaption } from '../components/ProductCaption';
 import { SceneAudio } from '../shared/SceneAudio';
 import { COPY } from '../constants/copy';
-import { STAGGER_SLOW } from '../constants/motion';
 
 export const Scene10_Transition2: React.FC = () => {
   const { line1, line2, productCaption } = COPY.c10;
@@ -38,10 +37,13 @@ export const Scene10_Transition2: React.FC = () => {
       }} />
 
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, width: '80%', zIndex: 10 }}>
-            <WordReveal text={line1} startFrame={20} staggerFrames={STAGGER_SLOW} fontSize={56} fontWeight={600} color="#FFFFFF" mode="pop" />
-            <WordReveal text={line2} startFrame={90} staggerFrames={STAGGER_SLOW} fontSize={56} fontWeight={600} color="#FFFFFF" mode="pop" />
+            <WordReveal text={line1} startFrame={10} staggerFrames={2} fontSize={56} fontWeight={600} color="#FFFFFF" mode="pop" />
+            <WordReveal text={line2} startFrame={50} staggerFrames={2} fontSize={56} fontWeight={600} color="#FFFFFF" mode="pop" />
       </div>
-      <ProductCaption text={productCaption} startFrame={40} />
+      <Sequence from={105}>
+        <SceneAudio filename="v4_s10_t2_p" />
+        <ProductCaption text={productCaption} startFrame={0} />
+      </Sequence>
     </AbsoluteFill>
   );
 };

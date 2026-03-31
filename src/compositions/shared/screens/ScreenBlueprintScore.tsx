@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { 
   AbsoluteFill, 
   useCurrentFrame, 
@@ -9,8 +10,22 @@ import {
 } from 'remotion';
 import { colors, fonts } from '../../../shared/brand';
 
-const MetricRow = ({ label, val, color, delay }: { label: string; val: string; color: string; delay: number }) => {
+
+const MetricRow = ({ 
+  label, 
+  val, 
+  color, 
+  delay, 
+  theme = 'dark' 
+}: { 
+  label: string; 
+  val: string; 
+  color: string; 
+  delay: number;
+  theme?: 'light' | 'dark';
+}) => {
   const frame = useCurrentFrame();
+  const isLight = theme === 'light';
   
   const entrance = interpolate(frame, [delay, delay + 15], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
   const x = interpolate(entrance, [0, 1], [30, 0]);
@@ -21,22 +36,33 @@ const MetricRow = ({ label, val, color, delay }: { label: string; val: string; c
       justifyContent: "space-between", 
       alignItems: "center", 
       padding: "14px 18px", 
-      background: colors.bgCard, 
+      background: isLight ? '#f1f5f9' : colors.bgCard, 
       borderRadius: 12, 
-      border: `1px solid ${colors.border}`,
+      border: `1px solid ${isLight ? colors.lightBorder : colors.border}`,
       opacity: entrance,
       transform: `translateX(${x}px)`
     }}>
-      <div style={{ fontSize: 14, color: colors.muted, fontWeight: 500 }}>{label}</div>
+      <div style={{ fontSize: 14, color: isLight ? colors.lightMuted : colors.muted, fontWeight: 500 }}>{label}</div>
       <div style={{ fontSize: 14, fontWeight: 800, color }}>{val}</div>
     </div>
   );
 };
 
-export const BlueprintScoreScene = () => {
+export const BlueprintScoreScene = ({
+  theme = 'dark',
+  targetScore = 87,
+  metrics: customMetrics,
+  cardWidth = "100%"
+}: {
+  theme?: 'light' | 'dark';
+  targetScore?: number;
+  metrics?: Array<{ label: string; val: string; color: string; delay: number }>;
+  cardWidth?: string;
+}) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
+  const isLight = theme === 'light';
   const radius = 90;
   const circumference = 2 * Math.PI * radius;
   
@@ -44,54 +70,51 @@ export const BlueprintScoreScene = () => {
   const ringEntrance = interpolate(frame, [5, 25], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
   const ringScale = interpolate(ringEntrance, [0, 1], [0.85, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
-  const ringProgress = interpolate(frame, [20, 90], [0, 0.87], {
+  const ringProgress = interpolate(frame, [20, 90], [0, targetScore / 100], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
     easing: Easing.bezier(0.4, 0, 0.2, 1)
   });
   
   const offset = circumference * (1 - ringProgress);
-  const scoreVal = Math.floor(interpolate(frame, [20, 90], [0, 87], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }));
+  const scoreVal = Math.floor(interpolate(frame, [20, 90], [0, targetScore], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }));
   const showCalculating = frame < 20;
 
-  const badgeEntrance = spring({ frame: frame - 90, fps, config: { damping: 14, stiffness: 160 } });
+  const badgeEntrance = spring({ 
+    frame: frame - 90, 
+    fps, 
+    config: theme === 'light' ? { damping: 10, stiffness: 100 } : { damping: 14, stiffness: 160 } 
+  });
 
-  // Cinematic Glint (Visual highlight traveling with the ring)
-  const glintAngle = (ringProgress * 0.87 * 360) - 90;
-  const glintX = 110 + radius * Math.cos((glintAngle * Math.PI) / 180);
-  const glintY = 110 + radius * Math.sin((glintAngle * Math.PI) / 180);
-  const glintOpacity = interpolate(frame, [20, 30, 90, 100], [0, 1, 1, 0]);
-
-  // Bloom pulse at 87
   const bloom = interpolate(frame, [90, 95, 105], [0, 1, 0], { extrapolateRight: 'clamp' });
 
   const btnEntrance = interpolate(frame, [130, 150], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
   const btnY = interpolate(btnEntrance, [0, 1], [10, 0]);
 
-  const metrics = [
+  const finalMetrics = customMetrics || [
     { label: "Problem Signal", val: "STRONG", color: colors.green, delay: 60 },
     { label: "Market Size", val: "$2.4B TAM", color: colors.blue, delay: 75 },
     { label: "Competition", val: "FRAGMENTED", color: colors.orange, delay: 90 },
-    { label: "Time to MVP", val: "6–10 weeks", color: colors.white, delay: 105 },
+    { label: "Time to MVP", val: "6–10 weeks", color: isLight ? colors.lightText : colors.white, delay: 105 },
   ];
 
   return (
     <AbsoluteFill style={{ 
-      background: colors.bg, 
+      background: isLight ? colors.lightBgProduct : colors.bg, 
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center',
       padding: 40
     }}>
       <div style={{ 
-        background: colors.bg, 
-        border: `1px solid ${colors.border}`, 
+        background: isLight ? colors.lightBg : colors.bg, 
+        border: `1px solid ${isLight ? colors.lightBorder : colors.border}`, 
         borderRadius: 24, 
         padding: "48px", 
-        width: "100%", 
-        height: "100%",
+        width: cardWidth, 
+        height: cardWidth === "100%" ? "100%" : "auto",
         boxSizing: "border-box",
-        boxShadow: "0 40px 100px rgba(0,0,0,0.6)",
+        boxShadow: isLight ? "0 20px 60px rgba(0,0,0,0.08)" : "0 40px 100px rgba(0,0,0,0.6)",
         fontFamily: fonts.base,
         display: "flex", 
         gap: 60, 
@@ -101,7 +124,7 @@ export const BlueprintScoreScene = () => {
       }}>
         {/* Success Bloom Overlay */}
         <AbsoluteFill style={{
-            background: `radial-gradient(circle at center, ${colors.green}44 0%, transparent 70%)`,
+            background: `radial-gradient(circle at center, ${colors.green}22 0%, transparent 70%)`,
             opacity: bloom,
             pointerEvents: 'none',
             zIndex: 10
@@ -112,7 +135,7 @@ export const BlueprintScoreScene = () => {
           <div style={{ 
             fontSize: 11, 
             fontWeight: 700, 
-            color: colors.muted, 
+            color: isLight ? colors.lightMuted : colors.muted, 
             textTransform: "uppercase", 
             letterSpacing: "0.15em", 
             marginBottom: 24,
@@ -128,29 +151,19 @@ export const BlueprintScoreScene = () => {
             transform: `scale(${ringScale})`
           }}>
             <svg width={220} height={220} viewBox="0 0 220 220">
-              <circle cx={110} cy={110} r={radius} fill="none" stroke={colors.bgCard} strokeWidth={14} />
+              <circle cx={110} cy={110} r={radius} fill="none" stroke={isLight ? '#f1f5f9' : colors.bgCard} strokeWidth={14} />
               <circle 
                 cx={110} cy={110} r={radius} 
                 fill="none" 
-                stroke={colors.green} 
+                stroke={isLight ? colors.orange : colors.green} 
                 strokeWidth={14} 
                 strokeLinecap="round"
                 strokeDasharray={circumference} 
                 strokeDashoffset={offset} 
                 transform="rotate(-90 110 110)"
                 style={{ 
-                    filter: `drop-shadow(0 0 ${interpolate(frame, [90, 110], [12, 24], { extrapolateRight: 'clamp' })}px rgba(34,197,94,0.6))`,
+                    filter: isLight ? 'none' : `drop-shadow(0 0 12px rgba(34,197,94,0.4))`,
                     transition: 'stroke-dashoffset 0.1s linear'
-                }}
-              />
-              
-              {/* Traveling Success Glint */}
-              <circle 
-                cx={glintX} cy={glintY} r={6} 
-                fill="white" 
-                style={{ 
-                    opacity: glintOpacity,
-                    filter: 'blur(4px) drop-shadow(0 0 10px white)'
                 }}
               />
             </svg>
@@ -163,13 +176,13 @@ export const BlueprintScoreScene = () => {
               justifyContent: "center" 
             }}>
               {showCalculating ? (
-                <div style={{ fontSize: 16, color: colors.muted, fontWeight: 600 }}>Calculating...</div>
+                <div style={{ fontSize: 16, color: isLight ? colors.lightMuted : colors.muted, fontWeight: 600 }}>Calculating...</div>
               ) : (
                 <>
                   <div style={{ 
                       fontSize: 72, 
                       fontWeight: 900, 
-                      color: colors.white, 
+                      color: isLight ? colors.lightText : colors.white, 
                       letterSpacing: "-2px", 
                       lineHeight: 1,
                       transform: `scale(${1 + bloom * 0.1})`,
@@ -177,14 +190,14 @@ export const BlueprintScoreScene = () => {
                   }}>
                     {scoreVal}
                   </div>
-                  <div style={{ fontSize: 16, color: colors.muted, fontWeight: 500 }}>/100</div>
+                  <div style={{ fontSize: 16, color: isLight ? colors.lightMuted : colors.muted, fontWeight: 500 }}>/100</div>
                 </>
               )}
             </div>
           </div>
 
           <div style={{ 
-            background: "rgba(34,197,94,0.15)", 
+            background: isLight ? `${colors.green}11` : "rgba(34,197,94,0.15)", 
             border: `2px solid ${colors.green}`, 
             borderRadius: 12, 
             padding: "12px 40px", 
@@ -196,7 +209,7 @@ export const BlueprintScoreScene = () => {
             display: "inline-block",
             opacity: badgeEntrance,
             transform: `scale(${badgeEntrance})`,
-            boxShadow: `0 10px 40px ${colors.green}55`
+            boxShadow: isLight ? "none" : `0 10px 40px ${colors.green}55`
           }}>
             BUILD ✓
           </div>
@@ -204,14 +217,14 @@ export const BlueprintScoreScene = () => {
 
         {/* Metrics Section */}
         <div style={{ flex: 1, zIndex: 1 }}>
-          <div style={{ fontSize: 24, fontWeight: 900, color: colors.white, marginBottom: 28, letterSpacing: '-1.2px' }}>Startup Blueprint</div>
+          <div style={{ fontSize: 24, fontWeight: 900, color: isLight ? colors.lightText : colors.white, marginBottom: 28, letterSpacing: '-1.2px' }}>Startup Blueprint</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 40 }}>
-            {metrics.map((m, i) => (
-              <MetricRow key={i} {...m} />
+            {finalMetrics.map((m, i) => (
+              <MetricRow key={i} {...m} theme={theme} />
             ))}
           </div>
           <div style={{ 
-            background: `linear-gradient(135deg, ${colors.blue}, #1d4ed8)`,
+            background: isLight ? colors.lightText : `linear-gradient(135deg, ${colors.blue}, #1d4ed8)`,
             borderRadius: 14, 
             padding: "18px", 
             textAlign: "center", 
@@ -220,8 +233,7 @@ export const BlueprintScoreScene = () => {
             color: colors.white,
             opacity: btnEntrance,
             transform: `translateY(${btnY}px)`,
-            boxShadow: `0 15px 35px ${colors.blue}66`,
-            cursor: 'none'
+            boxShadow: isLight ? "0 10px 30px rgba(0,0,0,0.1)" : `0 15px 35px ${colors.blue}66`,
           }}>
             Explore Full Blueprint →
           </div>

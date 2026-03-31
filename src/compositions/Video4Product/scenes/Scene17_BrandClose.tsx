@@ -46,9 +46,8 @@ export const Scene17_BrandClose: React.FC = () => {
           opacity: auroraOpacity
       }} />
       
-      {/* FINAL DING SFX */}
       {/* FINAL DING SFX - Sync to button pop */}
-      {frame === 45 && <Audio src={staticFile('audio/sfx_ding.mp3')} volume={0.6} />}
+      {frame === 45 && <Audio src={staticFile('audio/sfx_success_chime.mp3')} volume={0.6} />}
       
       <div style={{ 
         position: 'absolute', top: '50%', left: '50%', 

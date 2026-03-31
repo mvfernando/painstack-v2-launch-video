@@ -1,4 +1,4 @@
-import { AbsoluteFill } from 'remotion';
+import { AbsoluteFill, useCurrentFrame, interpolate } from 'remotion';
 import { AuroraBackground } from '../components/AuroraBackground';
 import { StatCard } from '../components/StatCard';
 import { UserCaption } from '../components/UserCaption';
@@ -7,15 +7,25 @@ import { COPY } from '../constants/copy';
 
 export const Scene15_Stats: React.FC = () => {
   const { stats, userCaption } = COPY.c15;
+  const frame = useCurrentFrame();
 
   return (
     <AbsoluteFill style={{ backgroundColor: 'transparent' }}>
       <SceneAudio filename="v4_s15_stat" />
-      <AuroraBackground baseColor="#08080F" blobs={[{ x: 30, y: 30, color: 'rgba(249,115,22,0.08)', size: 400, speed: 8, phase: 0 }, { x: 70, y: 70, color: 'rgba(129,140,248,0.06)', size: 350, speed: 10, phase: 3 }]} />
+      <AuroraBackground baseColor="transparent" blobs={[{ x: 30, y: 30, color: 'rgba(249,115,22,0.08)', size: 400, speed: 8, phase: 0 }, { x: 70, y: 70, color: 'rgba(129,140,248,0.06)', size: 350, speed: 10, phase: 3 }]} />
+      
+      {/* Neon Progress Bar - Unifying aesthetic */}
+      <div style={{
+          position: 'absolute', bottom: 0, left: 0, height: 4,
+          width: `${interpolate(frame, [0, 80], [0, 100], { extrapolateRight: 'clamp' })}%`,
+          background: 'linear-gradient(90deg, #3B82F6, #ec7524)',
+          boxShadow: '0 0 20px rgba(59,130,246,0.8)', zIndex: 50
+      }} />
+
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', gap: 32 }}>
         {stats.map((stat, i) => <StatCard key={i} value={stat.value} label={stat.label} accentColor={stat.color} startFrame={i * 15} />)}
       </div>
-      <UserCaption text={userCaption} startFrame={10} exitFrame={110} />
+      <UserCaption text={userCaption} startFrame={10} exitFrame={157} />
     </AbsoluteFill>
   );
 };

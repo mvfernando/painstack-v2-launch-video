@@ -1,4 +1,3 @@
-import React from 'react';
 import { Audio, staticFile } from 'remotion';
 
 // Wrapper para áudio ElevenLabs — usa staticFile() para servir de public/audio/

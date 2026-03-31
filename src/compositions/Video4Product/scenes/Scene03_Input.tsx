@@ -13,12 +13,9 @@ export const Scene03_Input: React.FC = () => {
   // Timings matching LandingHero logic - Compressed for 92s
   const T_ZOOM_START = 20;
   
-  const T_TYPE_START = 60; 
-  const T_TYPE_END = T_TYPE_START + 80; 
-  
-  const T_MOUSE_START = T_TYPE_END + 10;
-  const T_MOUSE_MOVE_DUR = 40;
-  const T_CLICK = T_MOUSE_START + T_MOUSE_MOVE_DUR;
+  const T_TYPE_START = 30; 
+  const T_CLICK = 250;
+  const T_MOUSE_START = 220;
 
   const zoomSpring = spring({
     frame: frame - T_ZOOM_START,
@@ -39,18 +36,23 @@ export const Scene03_Input: React.FC = () => {
       
       {/* NOTORIOUS CLICK SFX */}
       {isClickFrame && <Audio src={staticFile('audio/sfx_click.mp3')} volume={1.0} />}
-      {isClickFrame && <Audio src={staticFile('audio/sfx_ding.mp3')} volume={0.4} />}
+      {isClickFrame && <Audio src={staticFile('audio/sfx_success_chime.mp3')} volume={0.4} />}
       
       <div style={{
         width: '100%', height: '100%',
         transform: `scale(${scale}) translateY(${translateY}px)`,
         transformOrigin: '50% 50%',
       }}>
-        <LandingHero isTyping={frame >= T_TYPE_START} />
+        <LandingHero 
+          isTyping={frame >= T_TYPE_START} 
+          typingStart={T_TYPE_START}
+          clickFrame={T_CLICK}
+          mouseStart={T_MOUSE_START}
+        />
       </div>
 
       {/* SYNCED CAPTION */}
-      <UserCaption text={userCaption} startFrame={10} exitFrame={180} dark />
+      <UserCaption text={userCaption} startFrame={10} exitFrame={267} dark />
     </AbsoluteFill>
   );
 };

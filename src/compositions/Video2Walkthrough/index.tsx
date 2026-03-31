@@ -1,5 +1,5 @@
 
-import React, { useMemo } from 'react';
+import { type ReactNode, type CSSProperties, useMemo } from 'react';
 import { 
   AbsoluteFill, 
   Sequence, 
@@ -22,7 +22,7 @@ import { RoadmapScene } from '../shared/screens/ScreenRoadmap';
 import { DataRoomScene } from '../shared/screens/ScreenDataroom';
 
 // --- Transition Helper ---
-const Transition = ({ duration, children }: { duration: number; children: React.ReactNode }) => {
+const Transition = ({ duration, children }: { duration: number; children: ReactNode }) => {
     const frame = useCurrentFrame();
     const opacity = interpolate(frame, [duration - 10, duration], [1, 0], { extrapolateRight: 'clamp' });
     return <AbsoluteFill style={{ opacity }}>{children}</AbsoluteFill>;
@@ -63,7 +63,7 @@ const FadeSlide = ({
   delay = 0, 
   children, 
   style 
-}: { delay?: number; children: React.ReactNode; style?: React.CSSProperties }) => {
+}: { delay?: number; children: ReactNode; style?: CSSProperties }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const spr = spring({ 
@@ -89,7 +89,7 @@ const FadeSlide = ({
 const SceneContainer = ({ 
   children, 
   bg = colors.bg 
-}: { children: React.ReactNode; bg?: string }) => (
+}: { children: ReactNode; bg?: string }) => (
   <AbsoluteFill style={{ 
     background: bg, 
     display: 'flex', 
@@ -534,16 +534,16 @@ export const Video2Walkthrough = () => {
     <AbsoluteFill style={{ backgroundColor: colors.bg }}>
       <BackgroundMusic volume={0.06} />
 
-      {/* Hero (0-156) | Audio: 126 frames + 30 buffer */}
-      <Sequence durationInFrames={156}>
+      {/* Hero (0-246) | Speech: 226 frames + 20 buffer */}
+      <Sequence durationInFrames={246}>
         <SceneA />
         <SceneAudio filename="v2_sa_hero" />
         <Audio src={staticFile('audio/sfx_whoosh_clean.mp3')} volume={0.15} />
       </Sequence>
 
-      {/* S2: Problem (156-433) | Audio: 247 frames + 30 buffer */}
-      <Sequence from={156} durationInFrames={277}>
-        <Transition duration={277}>
+      {/* S2: Problem (246-554) | Speech: 288 frames + 20 buffer */}
+      <Sequence from={246} durationInFrames={308}>
+        <Transition duration={308}>
           <SceneB />
         </Transition>
         <SceneAudio filename="v2_sb_problem" />
@@ -557,23 +557,23 @@ export const Video2Walkthrough = () => {
         </Sequence>
       </Sequence>
 
-      {/* S3: Dashboard Input (433-721) | Audio: 258 frames + 30 buffer */}
-      <Sequence from={433} durationInFrames={288}>
-        <Transition duration={288}>
+      {/* S3: Dashboard Input (554-800) | Speech: 226 frames + 20 buffer */}
+      <Sequence from={554} durationInFrames={246}>
+        <Transition duration={246}>
             <DashboardInputScene withInteractions />
         </Transition>
         <SceneAudio filename="v2_sc_input" />
         <Sequence from={20} durationInFrames={120}>
           <Audio src={staticFile('audio/sfx_typing.mp3')} volume={0.15} />
         </Sequence>
-        <Sequence from={258} durationInFrames={20}>
+        <Sequence from={154} durationInFrames={20}>
           <Audio src={staticFile('audio/sfx_click.mp3')} volume={0.4} />
         </Sequence>
       </Sequence>
 
-      {/* S4: Evidence (721-1066) | Audio: 315 frames + 30 buffer */}
-      <Sequence from={721} durationInFrames={345}>
-        <Transition duration={345}>
+      {/* S4: Evidence (800-1098) | Speech: 278 frames + 20 buffer */}
+      <Sequence from={800} durationInFrames={298}>
+        <Transition duration={298}>
             <EvidenceCardsScene />
         </Transition>
         <SceneAudio filename="v2_sd_evidence" />
@@ -587,14 +587,14 @@ export const Video2Walkthrough = () => {
         ))}
       </Sequence>
 
-      {/* S5: Agents (1066-1323) | Audio: 227 frames + 30 buffer */}
-      <Sequence from={1066} durationInFrames={257}>
+      {/* S5: Agents (1098-1416) | Speech: 298 frames + 20 buffer */}
+      <Sequence from={1098} durationInFrames={318}>
         <SceneEAgents />
         <SceneAudio filename="v2_se_agents" volume={1} />
       </Sequence>
 
-      {/* S6: Blueprint Score (1323-1651) | Audio: 298 frames + 30 buffer */}
-      <Sequence from={1323} durationInFrames={328}>
+      {/* S6: Blueprint Score (1416-1711) | Speech: 275 frames + 20 buffer */}
+      <Sequence from={1416} durationInFrames={295}>
         <BlueprintScoreScene />
         <SceneAudio filename="v2_sf_blueprint" />
         <Sequence from={20} durationInFrames={70}>
@@ -605,8 +605,8 @@ export const Video2Walkthrough = () => {
         </Sequence>
       </Sequence>
 
-      {/* S6c: Dataroom (1651-1934) | Audio: 253 frames + 30 buffer */}
-      <Sequence from={1651} durationInFrames={283}>
+      {/* S6c: Dataroom (1711-2000) | Speech: 269 frames + 20 buffer */}
+      <Sequence from={1711} durationInFrames={289}>
         <DataRoomScene />
         <SceneAudio filename="v2_sh_dataroom" />
         <Sequence from={20} durationInFrames={60}>
@@ -614,8 +614,8 @@ export const Video2Walkthrough = () => {
         </Sequence>
       </Sequence>
 
-      {/* S7: CTA (1934-2200) | Audio: 166 frames + huge buffer for end screen */}
-      <Sequence from={1934} durationInFrames={266}>
+      {/* S7: CTA (2000-2213) | Speech: 163 frames + huge buffer for end screen */}
+      <Sequence from={2000} durationInFrames={213}>
         <SceneG />
         <SceneAudio filename="v2_sg_cta" />
         <Sequence from={15} durationInFrames={60}>

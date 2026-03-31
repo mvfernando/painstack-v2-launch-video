@@ -1,5 +1,5 @@
 
-import React, { useMemo } from 'react';
+import { type ReactNode, useMemo, Fragment } from 'react';
 import { 
   AbsoluteFill, 
   Sequence, 
@@ -14,7 +14,7 @@ import { colors, fonts } from '../../shared/brand';
 import { SceneAudio, BackgroundMusic } from '../../shared/SceneAudio';
 
 // --- Transition Helper ---
-const Transition = ({ duration, children }: { duration: number; children: React.ReactNode }) => {
+const Transition = ({ duration, children }: { duration: number; children: ReactNode }) => {
     const frame = useCurrentFrame();
     const opacity = interpolate(frame, [duration - 10, duration], [1, 0], { extrapolateRight: 'clamp' });
     return <AbsoluteFill style={{ opacity }}>{children}</AbsoluteFill>;
@@ -64,7 +64,7 @@ const PopLogo = ({
     y: number; 
     color: string; 
     label: string;
-    icon: React.ReactNode;
+    icon: ReactNode;
 }) => {
     const frame = useCurrentFrame();
     const { fps } = useVideoConfig();
@@ -449,7 +449,7 @@ const Scene5CTA = () => {
             width: '100%'
         }}>
             {["Free to start", "No card required", "Results in minutes"].map((item, i) => (
-                <React.Fragment key={item}>
+                <Fragment key={item}>
                     <div style={{
                         fontSize: 20,
                         color: colors.muted,
@@ -462,7 +462,7 @@ const Scene5CTA = () => {
                         <span style={{ color: colors.green, fontWeight: 900 }}>✓</span> {item}
                     </div>
                     {i < 2 && <div style={{ color: colors.muted, fontSize: 24, fontWeight: 300 }}>.</div>}
-                </React.Fragment>
+                </Fragment>
             ))}
         </div>
 
@@ -503,16 +503,16 @@ export const Video3Shorts = () => {
     <AbsoluteFill style={{ background: colors.bg }}>
       <BackgroundMusic volume={0.12} />
 
-      {/* S1: Hook (0-102) | Audio: 87 + 15 buffer */}
-      <Sequence durationInFrames={102}>
+      {/* S1: Hook (0-83) | Speech: 68 + 15 buffer */}
+      <Sequence durationInFrames={83}>
         <Scene1Hook />
         <SceneAudio filename="v3_s1_hook" />
         <Audio src={staticFile('audio/sfx_whoosh_clean.mp3')} volume={0.2} />
       </Sequence>
 
-      {/* S2: Problem (102-278) | Audio: 156 + 20 buffer */}
-      <Sequence from={102} durationInFrames={176}>
-        <Transition duration={176}>
+      {/* S2: Problem (83-219) | Speech: 121 + 15 buffer */}
+      <Sequence from={83} durationInFrames={136}>
+        <Transition duration={136}>
             <Scene2Problem />
         </Transition>
         <SceneAudio filename="v3_s2_problem" />
@@ -522,9 +522,9 @@ export const Video3Shorts = () => {
         </Sequence>
       </Sequence>
 
-      {/* S3: Solution (278-454) | Audio: 156 + 20 buffer */}
-      <Sequence from={278} durationInFrames={176}>
-        <Transition duration={176}>
+      {/* S3: Solution (219-383) | Speech: 149 + 15 buffer */}
+      <Sequence from={219} durationInFrames={164}>
+        <Transition duration={164}>
             <Scene3Input />
         </Transition>
         <SceneAudio filename="v3_s3_solution" />
@@ -540,9 +540,9 @@ export const Video3Shorts = () => {
         </Sequence>
       </Sequence>
 
-      {/* S4: Result (454-609) | Audio: 135 + 20 buffer */}
-      <Sequence from={454} durationInFrames={155}>
-        <Transition duration={155}>
+      {/* S4: Result (383-485) | Speech: 87 + 15 buffer */}
+      <Sequence from={383} durationInFrames={102}>
+        <Transition duration={102}>
             <Scene4Score />
         </Transition>
         <SceneAudio filename="v3_s4_result" />
@@ -554,8 +554,8 @@ export const Video3Shorts = () => {
         </Sequence>
       </Sequence>
 
-      {/* S5: CTA (609-800) | Audio: 112 + buffer */}
-      <Sequence from={609} durationInFrames={191}>
+      {/* S5: CTA (485-632) | Speech: 91 + 56 buffer */}
+      <Sequence from={485} durationInFrames={147}>
         <Scene5CTA />
         <SceneAudio filename="v3_s5_cta" />
         <Sequence from={15} durationInFrames={60}>

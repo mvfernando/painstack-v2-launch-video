@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig, spring, interpolate, Easing } from 'remotion';
 import { DotGridBackground } from './components/DotGridBackground';
 import { BackgroundMusic } from './shared/SceneAudio';
@@ -23,7 +24,7 @@ import { Scene18_FadeOut } from './scenes/Scene18_FadeOut';
 
 const OVERLAP = 12; // 400ms at 30fps
 
-const LiquidSequence: React.FC<{from: number; durationInFrames: number; children: React.ReactNode; isFirst?: boolean}> = ({ from, durationInFrames, children, isFirst = false }) => {
+const LiquidSequence = ({ from, durationInFrames, children, isFirst = false }: {from: number; durationInFrames: number; children: ReactNode; isFirst?: boolean}) => {
   const frame = useCurrentFrame();
   const rel = frame - from;
   
@@ -54,8 +55,8 @@ export const PainstackVideo = () => {
 
   // HIGH-ENERGY 92s TIMELINE (2760 frames total)
   const DURS = {
-    S1: 150, S1B: 160, S2: 180, S3: 200, S4: 180, S5: 220, S6: 60, S7: 240, S8: 180, S9: 240, 
-    S10: 60, S11: 220, S12: 60, S13: 200, S14: 120, S15: 120, S16: 180, S17: 280, S18: 100
+    S1: 170, S1B: 241, S2: 219, S3: 267, S4: 250, S5: 238, S6: 209, S7: 165, S8: 154, S9: 191,
+    S10: 178, S11: 115, S12: 150, S13: 119, S14: 91, S15: 157, S16: 223, S17: 150, S18: 90
   };
 
   // Sequence offsets with CROSSFADE overlaps
@@ -80,9 +81,10 @@ export const PainstackVideo = () => {
 
   // Audio Ducking Intervals
   const sIntervals = [
-    [20, F1-20], [F1+20, F2-20], [F2+20, F3-20], [F3+20, F4-20],
-    [F4+20, F5-20], [F6+20, F7-20], [F7+20, F8-20], [F8+20, F9-20],
-    [F10+20, F11-20], [F12+20, F13-20], [F13+20, F14-20], [F14+20, F15-20], [F15+20, F16-20]
+    [20, F1-20], [F1+20, F1B-20], [F1B+20, F2-20], [F2+20, F3-20], [F3+20, F4-20],
+    [F4+20, F5-20], [F5+10, F6-10], [F6+20, F7-20], [F7+20, F8-20], [F8+20, F9-20],
+    [F9+10, F10-10], [F10+20, F11-20], [F11+20, F12-20], [F12+20, F13-20], [F13+20, F14-20],
+    [F14+20, F15-20], [F15+10, F16-10], [F16+10, F17-10]
   ];
 
   const isSpeaking = sIntervals.some(([s, e]) => frame >= s && frame <= e);
@@ -92,11 +94,13 @@ export const PainstackVideo = () => {
     config: { stiffness: 60, damping: 20 } 
   });
   const duckVolumeFactor = interpolate(duckSpring, [0, 1], isSpeaking ? [1, 0.4] : [0.4, 1]);
+  const musicFadeOut = interpolate(frame, [3100, 3161], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const finalMusicVolume = 0.12 * duckVolumeFactor * musicFadeOut;
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#0F172A' }}>
       <DotGridBackground />
-      <BackgroundMusic volume={0.12 * duckVolumeFactor} />
+      <BackgroundMusic volume={finalMusicVolume} />
       <LiquidSequence from={0}    durationInFrames={DURS.S1} isFirst><Scene01_BrandOpen /></LiquidSequence>
       <LiquidSequence from={F1}   durationInFrames={DURS.S1B}><Scene01B_Teaser /></LiquidSequence>
       <LiquidSequence from={F1B}  durationInFrames={DURS.S2}><Scene02_Pain /></LiquidSequence>

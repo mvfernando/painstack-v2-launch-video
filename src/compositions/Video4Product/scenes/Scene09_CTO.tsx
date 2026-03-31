@@ -40,7 +40,7 @@ export const Scene09_CTO: React.FC = () => {
         <AgentCard agentLabel={cto.label} accentColor={cto.accentColor} lines={cto.lines} startFrame={20} style={{ flex: 1 }} />
         
         <div style={{ flex: 1.2 }}>
-          <BrowserMockup url={currentUrl} startFrame={100} width={720} height={460}>
+          <BrowserMockup url={currentUrl} startFrame={60} width={720} height={460}>
             {/* Carousel Container */}
             <div style={{ 
               width: '100%', height: '100%', 
@@ -61,7 +61,7 @@ export const Scene09_CTO: React.FC = () => {
         </div>
       </div>
 
-      <UserCaption text={userCaption} startFrame={220} exitFrame={235} />
+      <UserCaption text={userCaption} startFrame={10} exitFrame={191} />
     </AbsoluteFill>
   );
 };

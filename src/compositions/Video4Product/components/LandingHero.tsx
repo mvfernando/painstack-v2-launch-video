@@ -5,18 +5,22 @@ import logo1 from '../../../shared/Painstack.ai_logo1.png';
 
 interface LandingHeroProps {
   isTyping?: boolean;
+  typingStart?: number;
+  clickFrame?: number;
+  mouseStart?: number;
 }
 
-export const LandingHero: React.FC<LandingHeroProps> = ({ isTyping }) => {
+export const LandingHero: React.FC<LandingHeroProps> = ({
+  isTyping,
+  typingStart = 140,
+  clickFrame = 550,
+  mouseStart = 480
+}) => {
   const frame = useCurrentFrame();
 
-  // T_TYPE_START is T_ZOOM_END + 20 in Scene03_Input: 120 + 20 = 140
-  const typingStart = 140;
-
-  // Text typing ends at ~420 frames now (much faster)
-  const T_MOUSE_START = 480;
-  const T_MOUSE_END = 540;
-  const T_CLICK = 550;
+  const T_MOUSE_START = mouseStart;
+  const T_MOUSE_END = clickFrame - 10;
+  const T_CLICK = clickFrame;
 
   // Mouse trajectory logic
   const mouseX = interpolate(frame, [T_MOUSE_START, T_MOUSE_END], [900, 780], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' });
@@ -62,7 +66,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({ isTyping }) => {
         paddingLeft: 40, paddingRight: 40
       }}>
         <h1 style={{
-          fontSize: 84, fontWeight: 900, color: 'white',
+          fontSize: 84, fontWeight: 900, color: '#1b1b1bea',
           lineHeight: 1.05, marginBottom: 28, letterSpacing: '-0.04em'
         }}>
           From idea to <span style={{
@@ -79,11 +83,11 @@ export const LandingHero: React.FC<LandingHeroProps> = ({ isTyping }) => {
 
         {/* The Glassmorphic Input Box (Target) */}
         <div id="hero-input-target" style={{
-          width: 860, minHeight: 320, 
-          backgroundColor: 'rgba(15, 23, 42, 0.4)', 
+          width: 860, minHeight: 320,
+          backgroundColor: 'rgba(15, 23, 42, 0.4)',
           backdropFilter: 'blur(20px)',
           borderRadius: 32,
-          border: '1px solid rgba(255, 255, 255, 0.08)', 
+          border: '1px solid rgba(255, 255, 255, 0.08)',
           boxShadow: '0 40px 100px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)',
           padding: 48, display: 'flex', flexDirection: 'column', gap: 24,
           textAlign: 'left',
@@ -108,7 +112,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({ isTyping }) => {
               fontWeight: 400
             }}>
               <TypewriterTextV2
-                text="Parents in my neighbourhood waste hours every week trying to find a trusted babysitter. There's no easy way to find vetted, available sitters nearby — especially last minute."
+                text="Parents in my neighbourhood waste hours every week trying to find a trusted babysitter. There's no easy way to find vetted, available sitters nearby, especially last minute."
                 startFrame={typingStart}
               />
             </div>
@@ -116,9 +120,9 @@ export const LandingHero: React.FC<LandingHeroProps> = ({ isTyping }) => {
 
           <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 2 }}>
             <div style={{ display: 'flex', gap: 20 }}>
-              <div style={{ border: '1px solid rgba(255,255,255,0.15)', padding: '10px 24px', borderRadius: 12, fontSize: 14, color: '#FFFFFF', backgroundColor: 'rgba(255,255,255,0.06)', fontWeight: 600 }}>📄 Document</div>
-              <div style={{ border: '1px solid rgba(59,130,246,0.3)', padding: '10px 24px', borderRadius: 12, fontSize: 14, color: '#3B82F6', backgroundColor: 'rgba(59,130,246,0.08)', fontWeight: 600 }}>🔗 Reddit Link</div>
-              <div style={{ border: '1px solid rgba(255,255,255,0.1)', padding: '10px 20px', borderRadius: 12, fontSize: 14, color: '#94A3B8', backgroundColor: 'rgba(255,255,255,0.03)', fontWeight: 500 }}>✨ Pro </div>
+              <div style={{ border: '1px solid rgba(255,255,255,0.15)', padding: '10px 24px', borderRadius: 12, fontSize: 14, color: '#dbdbdbff', backgroundColor: 'rgba(255,255,255,0.06)', fontWeight: 600 }}>Upload</div>
+              <div style={{ border: '1px solid rgba(59,130,246,0.3)', padding: '10px 24px', borderRadius: 12, fontSize: 14, color: '#f6763bff', backgroundColor: 'rgba(59,130,246,0.08)', fontWeight: 600 }}>I have a Reddit post</div>
+              <div style={{ border: '1px solid rgba(255,255,255,0.1)', padding: '10px 20px', borderRadius: 12, fontSize: 14, color: '#dbdbdbff', backgroundColor: 'rgba(255,255,255,0.03)', fontWeight: 500 }}>Guide-me</div>
             </div>
             <div style={{
               backgroundColor: clickedColor, color: 'white',
@@ -131,7 +135,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({ isTyping }) => {
               letterSpacing: 0.5
             }}>VALIDATE</div>
           </div>
-          
+
           {/* Animated Mouse Cursor */}
           {frame > T_MOUSE_START && (
             <div style={{
@@ -144,7 +148,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({ isTyping }) => {
               filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))'
             }}>
               <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5.5 2.5L20.5 10.5L12.5 13.5L9.5 21.5L5.5 2.5Z" fill="white" stroke="#0F172A" strokeWidth="1.5" strokeLinejoin="round"/>
+                <path d="M5.5 2.5L20.5 10.5L12.5 13.5L9.5 21.5L5.5 2.5Z" fill="white" stroke="#0F172A" strokeWidth="1.5" strokeLinejoin="round" />
               </svg>
             </div>
           )}
