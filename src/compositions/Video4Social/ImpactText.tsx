@@ -1,4 +1,4 @@
-import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion';
+import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from 'remotion';
 import { colors, fonts } from '../../shared/brand';
 
 const WordReveal = ({ 
@@ -19,12 +19,16 @@ const WordReveal = ({
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
+  const scale = interpolate(frame, [delay, delay + 6], [0.8, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
 
   return (
     <span style={{ 
       display: 'inline-block', 
       opacity, 
-      transform: `translateY(${y}px)`,
+      transform: `translateY(${y}px) scale(${scale})`,
       color,
       marginRight: '0.25em'
     }}>
@@ -37,6 +41,9 @@ export const ImpactText: React.FC<{
   lines: Array<{ text: string; color?: string; accent?: { word: string; color: string } }>;
   stagger?: number;
 }> = ({ lines, stagger = 6 }) => {
+  const { width, height } = useVideoConfig();
+  const isVertical = height > width;
+
   return (
     <AbsoluteFill style={{ 
       backgroundColor: colors.lightBg, 
@@ -45,36 +52,37 @@ export const ImpactText: React.FC<{
       alignItems: 'center', 
       justifyContent: 'center',
       fontFamily: fonts.base,
-      padding: '0 100px'
+      padding: isVertical ? '0 40px' : '0 100px',
+      textAlign: 'center'
     }}>
-      <div style={{ textAlign: 'center' }}>
-        {lines.map((line, i) => {
-          const words = line.text.split(' ');
-          const lineDelay = i * 18; // Stagger between lines
-
-          return (
-            <div key={i} style={{ 
-              fontSize: 72, 
-              fontWeight: 700, 
-              lineHeight: 1.2,
-              marginBottom: i === lines.length - 1 ? 0 : 10,
-              textTransform: 'lowercase'
-            }}>
-              {words.map((word, j) => {
-                const isAccent = line.accent && word.toLowerCase() === line.accent.word.toLowerCase();
-                return (
-                  <WordReveal 
-                    key={j} 
-                    text={word} 
-                    delay={lineDelay + j * stagger} 
-                    color={isAccent ? line.accent?.color : line.color}
-                  />
-                );
-              })}
-            </div>
-          );
-        })}
-      </div>
+      {lines.map((line, i) => {
+        const words = line.text.split(' ');
+        return (
+          <div key={i} style={{ 
+            fontSize: isVertical ? 100 : 72, 
+            fontWeight: 900, 
+            lineHeight: 1.1,
+            letterSpacing: '-3px',
+            marginBottom: i === lines.length - 1 ? 0 : (isVertical ? 30 : 10),
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center'
+          }}>
+            {words.map((word, j) => {
+              const isAccent = line.accent?.word === word;
+              const delay = (i * stagger) + (j * 2);
+              return (
+                <WordReveal 
+                  key={j} 
+                  text={word} 
+                  delay={delay} 
+                  color={isAccent ? line.accent?.color : (line.color || colors.lightText)} 
+                />
+              );
+            })}
+          </div>
+        );
+      })}
     </AbsoluteFill>
   );
 };

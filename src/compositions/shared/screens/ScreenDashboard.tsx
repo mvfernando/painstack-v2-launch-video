@@ -24,6 +24,8 @@ export const DashboardInputScene: React.FC<{
   const { fps, width, height } = useVideoConfig();
 
   const isLight = theme === 'light';
+  const isVertical = height > width;
+
   const themeColors = {
     bg: isLight ? colors.lightBgProduct : colors.bg,
     card: isLight ? colors.lightBg : colors.bgCard,
@@ -51,21 +53,26 @@ export const DashboardInputScene: React.FC<{
   }) : 0;
 
   const mouseProg = withInteractions ? spring({
-    frame: frame - 120,
+    frame: frame - 180,
     fps,
     config: { damping: 25, stiffness: 30 }
   }) : 0;
 
   const clickSpring = withInteractions ? spring({
-    frame: frame - 142,
+    frame: frame - 220,
     fps,
     config: { damping: 12, stiffness: 200 }
   }) : 0;
 
-  const cameraScale = interpolate(cameraZoom, [0, 1], [1, 1.1]);
-  const mouseX = interpolate(mouseProg, [0, 1], [width * 0.95, width * 0.75]); 
-  const mouseY = interpolate(mouseProg, [0, 1], [height * 0.95, height * 0.78]);
-  const buttonScale = interpolate(clickSpring, [0, 0.5, 1], [1, 0.9, 1]);
+  const cameraScale = interpolate(cameraZoom, [0, 1], [1, 1.05]);
+  
+  // Responsive mouse coordinates
+  const targetX = isVertical ? width * 0.76 : width * 0.72;
+  const targetY = isVertical ? height * 0.58 : height * 0.60;
+  
+  const mouseX = interpolate(mouseProg, [0, 1], [width * 0.95, targetX]); 
+  const mouseY = interpolate(mouseProg, [0, 1], [height * 0.95, targetY]);
+  const buttonScale = interpolate(clickSpring, [0, 0.5, 1], [1, 0.85, 1]);
 
   return (
     <AbsoluteFill style={{ backgroundColor: themeColors.bg, overflow: 'hidden', fontFamily: fonts.base }}>
@@ -74,7 +81,7 @@ export const DashboardInputScene: React.FC<{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: '60px 100px',
+        padding: isVertical ? '80px 40px' : '60px 100px',
         transform: `scale(${cameraScale})`,
         transformOrigin: 'center 70%',
         opacity: contentOpacity,
@@ -84,27 +91,31 @@ export const DashboardInputScene: React.FC<{
         <div style={{ 
           width: '100%', 
           display: 'flex', 
-          justifyContent: 'center', 
+          flexDirection: isVertical ? 'column' : 'row',
+          justifyContent: isVertical ? 'center' : 'center', 
+          alignItems: 'center',
           position: 'relative',
-          marginBottom: 60
+          marginBottom: isVertical ? 40 : 60,
+          gap: isVertical ? 24 : 0
         }}>
-          <div style={{ position: 'absolute', left: 0 }}>
+          <div style={{ position: isVertical ? 'static' : 'absolute', left: isVertical ? 'auto' : 0 }}>
              <img 
                 src={staticFile(isLight ? 'shared/Painstack.ai_logo1.png' : 'shared/Painstack.ai_logo2.png')} 
-                style={{ height: 48, width: 'auto', objectFit: 'contain' }} 
+                style={{ height: isVertical ? 40 : 48, width: 'auto', objectFit: 'contain' }} 
                 alt="Logo"
               />
           </div>
           
           <div style={{
-            background: isLight ? colors.lightBg : 'rgba(30, 41, 59, 0.8)',
+            background: isLight ? 'rgba(255, 255, 255, 0.6)' : 'rgba(30, 41, 59, 0.6)',
+            backdropFilter: 'blur(10px)',
             border: `1px solid ${themeColors.border}`,
             borderRadius: 100,
             padding: '8px 20px',
             display: 'flex',
             alignItems: 'center',
             gap: 10,
-            fontSize: 13,
+            fontSize: isVertical ? 11 : 13,
             fontWeight: 700,
             color: themeColors.muted,
             textTransform: 'uppercase',
@@ -117,12 +128,12 @@ export const DashboardInputScene: React.FC<{
 
         {/* Title */}
         <h1 style={{ 
-          fontSize: 64, 
+          fontSize: isVertical ? 42 : 64, 
           fontWeight: 800, 
           color: themeColors.text, 
           textAlign: 'center',
-          maxWidth: 900,
-          marginBottom: 60,
+          maxWidth: isVertical ? '100%' : 900,
+          marginBottom: isVertical ? 40 : 60,
           lineHeight: 1.1,
           letterSpacing: '-2px'
         }}>
@@ -132,11 +143,11 @@ export const DashboardInputScene: React.FC<{
         {/* Input Box */}
         <div style={{
           width: '100%',
-          maxWidth: 1100,
+          maxWidth: isVertical ? '100%' : 1100,
           background: themeColors.card,
           border: `1px solid ${themeColors.border}`,
           borderRadius: 32,
-          padding: 40,
+          padding: isVertical ? 24 : 40,
           boxShadow: isLight ? "0 20px 50px rgba(0,0,0,0.05)" : "0 40px 100px rgba(0,0,0,0.4)",
           position: 'relative'
         }}>
@@ -144,12 +155,12 @@ export const DashboardInputScene: React.FC<{
             background: themeColors.inputBg,
             border: `1px solid ${themeColors.border}`,
             borderRadius: 20,
-            padding: 30,
-            minHeight: 180,
+            padding: isVertical ? 20 : 30,
+            minHeight: isVertical ? 220 : 180,
             color: themeColors.text,
-            fontSize: 24,
+            fontSize: isVertical ? 20 : 24,
             lineHeight: 1.5,
-            marginBottom: 40,
+            marginBottom: isVertical ? 24 : 40,
             fontWeight: 300
           }}>
              {frame < 40 ? (
@@ -167,15 +178,25 @@ export const DashboardInputScene: React.FC<{
           </div>
 
           {/* Bottom Actions */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ display: 'flex', gap: 15 }}>
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: isVertical ? 'column' : 'row',
+            justifyContent: 'space-between', 
+            alignItems: isVertical ? 'stretch' : 'center',
+            gap: isVertical ? 20 : 0
+          }}>
+            <div style={{ 
+              display: 'flex', 
+              gap: 10,
+              justifyContent: isVertical ? 'center' : 'flex-start'
+            }}>
               {[
-                { icon: '📝', label: 'Free text' },
-                { icon: '🔗', label: 'Reddit' },
-                { icon: '📄', label: 'Doc' }
+                { icon: '📝', label: isVertical ? '' : 'Free text' },
+                { icon: '🔗', label: isVertical ? '' : 'Reddit' },
+                { icon: '📄', label: isVertical ? '' : 'Doc' }
               ].map((btn, i) => (
                 <div key={i} style={{
-                  padding: '12px 24px',
+                  padding: isVertical ? '10px 16px' : '12px 24px',
                   borderRadius: 12,
                   border: `1px solid ${themeColors.border}`,
                   background: isLight ? '#f8fafc' : 'rgba(255,255,255,0.03)',
@@ -194,14 +215,15 @@ export const DashboardInputScene: React.FC<{
             <div style={{
               background: colors.blue,
               color: colors.white,
-              padding: "16px 48px",
+              padding: isVertical ? "16px 32px" : "16px 48px",
               borderRadius: 14,
               fontWeight: 700,
-              fontSize: 20,
+              fontSize: isVertical ? 18 : 20,
               boxShadow: `0 15px 30px ${colors.blue}44`,
               transform: `scale(${buttonScale})`,
               display: 'flex',
               alignItems: 'center',
+              justifyContent: 'center',
               gap: 10
             }}>
               Validate <span style={{ fontSize: 24 }}>→</span>

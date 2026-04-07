@@ -57,6 +57,15 @@ export const RemotionRoot = () => {
         width={1920}
         height={1080}
       />
+
+      <Composition
+        id="PainstackV4-SocialVertical"
+        component={Video4Social}
+        durationInFrames={2100}
+        fps={60}
+        width={1080}
+        height={1920}
+      />
     </>
   );
 };

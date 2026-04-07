@@ -17,7 +17,8 @@ const RoadmapPhase = ({
   status, 
   items, 
   delay,
-  theme = 'dark' 
+  theme = 'dark',
+  isVertical = false
 }: { 
   phase: string; 
   title: string; 
@@ -26,13 +27,15 @@ const RoadmapPhase = ({
   items: string[];
   delay: [number, number];
   theme?: 'light' | 'dark';
+  isVertical?: boolean;
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const isLight = theme === 'light';
   
   const entrance = interpolate(frame, [delay[0], delay[1]], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
-  const x = interpolate(entrance, [0, 1], [-40, 0]);
+  const x = interpolate(entrance, [0, 1], [isVertical ? 0 : -40, 0]);
+  const y = interpolate(entrance, [0, 1], [isVertical ? 20 : 0, 0]);
 
   const isActive = status === "active";
   const themeColors = {
@@ -60,56 +63,88 @@ const RoadmapPhase = ({
       background: themeColors.card, 
       borderRadius: 14, 
       border: `1px solid ${isActive ? (isLight ? colors.orange : colors.blue) + "66" : themeColors.border}`, 
-      padding: "24px", 
+      padding: isVertical ? "16px 20px" : "24px", 
       boxShadow,
       opacity: entrance,
-      transform: `translateX(${x}px)`,
+      transform: isVertical ? `translateY(${y}px)` : `translateX(${x}px)`,
       display: "flex",
-      flexDirection: "column",
+      flexDirection: isVertical ? "row" : "column",
+      alignItems: isVertical ? "center" : "stretch",
+      gap: isVertical ? 16 : 0,
       height: "100%",
       boxSizing: "border-box"
     }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+      <div style={{ 
+        display: "flex", 
+        flexDirection: isVertical ? "row" : "column",
+        justifyContent: "space-between", 
+        alignItems: isVertical ? "center" : "flex-start", 
+        marginBottom: isVertical ? 0 : 16,
+        flex: isVertical ? 1 : 'none'
+      }}>
         <div>
-          <div style={{ fontSize: 11, fontWeight: 700, color: themeColors.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>{phase}</div>
-          <div style={{ fontSize: 16, fontWeight: 800, color: themeColors.text, lineHeight: 1.3 }}>{title}</div>
+          <div style={{ fontSize: isVertical ? 10 : 11, fontWeight: 700, color: themeColors.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: isVertical ? 2 : 6 }}>{phase}</div>
+          <div style={{ fontSize: isVertical ? 14 : 16, fontWeight: 800, color: themeColors.text, lineHeight: 1.2 }}>{title}</div>
         </div>
-        <div style={{ 
-          fontSize: 11, 
-          fontWeight: 700, 
-          padding: "4px 10px", 
-          borderRadius: 100, 
-          background: status === "done" ? "rgba(34,197,94,0.12)" : status === "active" ? (isLight ? "rgba(249, 115, 22, 0.12)" : "rgba(45,129,224,0.12)") : "rgba(148,163,184,0.1)", 
-          color: status === "done" ? colors.green : status === "active" ? (isLight ? colors.orange : colors.blue) : themeColors.muted, 
-          border: `1px solid ${status === "done" ? colors.green + "44" : status === "active" ? (isLight ? colors.orange : colors.blue) + "44" : themeColors.border}`,
-          opacity: badgeEntrance,
-          transform: `scale(${badgeEntrance})`
-        }}>
-          {status === "done" ? "✓ Done" : status === "active" ? "● Active" : "○ Next"}
-        </div>
-      </div>
-      <div style={{ fontSize: 13, color: colors.orange, marginBottom: 16, fontWeight: 600 }}>{weeks}</div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        {items.map((item, j) => {
-          const itemEntrance = spring({ frame: frame - delay[0] - 15 - j * 8, fps, config: { damping: 15 } });
-          return (
-            <div key={j} style={{ 
-              display: "flex", 
-              alignItems: "center", 
-              gap: 10, 
-              fontSize: 14, 
-              color: status === "done" ? themeColors.muted : themeColors.text,
-              opacity: itemEntrance,
-              transform: `translateX(${interpolate(itemEntrance, [0, 1], [-10, 0])}px)`
+        {!isVertical && (
+            <div style={{ 
+                fontSize: 11, 
+                fontWeight: 700, 
+                padding: "4px 10px", 
+                borderRadius: 100, 
+                background: status === "done" ? "rgba(34,197,94,0.12)" : status === "active" ? (isLight ? "rgba(249, 115, 22, 0.12)" : "rgba(45,129,224,0.12)") : "rgba(148,163,184,0.1)", 
+                color: status === "done" ? colors.green : status === "active" ? (isLight ? colors.orange : colors.blue) : themeColors.muted, 
+                border: `1px solid ${status === "done" ? colors.green + "44" : status === "active" ? (isLight ? colors.orange : colors.blue) + "44" : themeColors.border}`,
+                opacity: badgeEntrance,
+                transform: `scale(${badgeEntrance})`,
+                marginTop: 8
             }}>
-              <span style={{ color: status === "done" ? colors.green : status === "active" ? (isLight ? colors.orange : colors.blue) : themeColors.muted, fontSize: 10 }}>
-                {status === "done" ? "✓" : status === "active" ? "●" : "○"}
-              </span>
-              {item}
+                {status === "done" ? "✓ Done" : status === "active" ? "● Active" : "○ Next"}
             </div>
-          );
-        })}
+        )}
       </div>
+      
+      {!isVertical && <div style={{ fontSize: 13, color: colors.orange, marginBottom: 16, fontWeight: 600 }}>{weeks}</div>}
+      
+      {!isVertical && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {items.slice(0, 3).map((item, j) => {
+            const itemEntrance = spring({ frame: frame - delay[0] - 15 - j * 8, fps, config: { damping: 15 } });
+            return (
+                <div key={j} style={{ 
+                display: "flex", 
+                alignItems: "center", 
+                gap: 10, 
+                fontSize: 14, 
+                color: status === "done" ? themeColors.muted : themeColors.text,
+                opacity: itemEntrance,
+                transform: `translateX(${interpolate(itemEntrance, [0, 1], [-10, 0])}px)`
+                }}>
+                <span style={{ color: status === "done" ? colors.green : status === "active" ? (isLight ? colors.orange : colors.blue) : themeColors.muted, fontSize: 10 }}>
+                    {status === "done" ? "✓" : status === "active" ? "●" : "○"}
+                </span>
+                {item}
+                </div>
+            );
+            })}
+        </div>
+      )}
+
+      {isVertical && (
+          <div style={{ 
+            fontSize: 11, 
+            fontWeight: 700, 
+            padding: "4px 10px", 
+            borderRadius: 100, 
+            background: status === "done" ? "rgba(34,197,94,0.12)" : status === "active" ? (isLight ? "rgba(249, 115, 22, 0.12)" : "rgba(45,129,224,0.12)") : "rgba(148,163,184,0.1)", 
+            color: status === "done" ? colors.green : status === "active" ? (isLight ? colors.orange : colors.blue) : themeColors.muted, 
+            border: `1px solid ${status === "done" ? colors.green + "44" : status === "active" ? (isLight ? colors.orange : colors.blue) + "44" : themeColors.border}`,
+            opacity: badgeEntrance,
+            transform: `scale(${badgeEntrance})`
+          }}>
+            {status === "done" ? "DONE" : status === "active" ? "ACTIVE" : "NEXT"}
+          </div>
+      )}
     </div>
   );
 };
@@ -130,13 +165,15 @@ export const RoadmapScene: React.FC<{
   cardWidth = "100%"
 }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { width, height } = useVideoConfig();
   const isLight = theme === 'light';
+  const isVertical = height > width;
 
   const defaultPhases = [
-    { phase: "Phase 1", title: "Validation & MVP Scope", weeks: "Weeks 1–2", status: "done", items: ["Problem interviews (5–10)", "Define core features", "Tech stack decision", "Wireframes"], delay: [20, 45] as [number, number] },
-    { phase: "Phase 2", title: "Build MVP", weeks: "Weeks 3–8", status: "active", items: ["Auth + onboarding", "Core feature v1", "Basic analytics", "Internal testing"], delay: [35, 60] as [number, number] },
-    { phase: "Phase 3", title: "Launch & GTM", weeks: "Weeks 9–10", status: "upcoming", items: ["Product Hunt launch", "LinkedIn outreach", "First 100 users", "Feedback loop"], delay: [50, 75] as [number, number] },
+    { phase: "Phase 1", title: "Validation & MVP Scope", weeks: "Weeks 1–2", status: "done", items: ["Problem interviews", "Define features", "Tech stack", "Wireframes"], delay: [20, 45] as [number, number] },
+    { phase: "Phase 2", title: "Build Engine", weeks: "Weeks 3–8", status: "active", items: ["Auth + onboarding", "Core feature v1", "Basic analytics", "Testing"], delay: [35, 60] as [number, number] },
+    { phase: "Phase 3", title: "Launch & GTM", weeks: "Weeks 9–10", status: "upcoming", items: ["Product Hunt launch", "LinkedIn outreach", "First users", "Feedback"], delay: [50, 75] as [number, number] },
+    { phase: "Phase 4", title: "Scale Up", weeks: "Week 12+", status: "upcoming", items: ["Public release", "Growth hack", "Series A prep", "Team expansion"], delay: [65, 90] as [number, number] },
   ];
 
   const phases = customPhases || defaultPhases;
@@ -152,13 +189,13 @@ export const RoadmapScene: React.FC<{
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center',
-      padding: 40
+      padding: isVertical ? 20 : 40
     }}>
       <div style={{ 
         background: isLight ? colors.lightBg : colors.bg, 
         border: `1px solid ${isLight ? colors.lightBorder : colors.border}`, 
         borderRadius: 24, 
-        padding: "48px", 
+        padding: isVertical ? "32px 24px" : "48px", 
         width: cardWidth, 
         height: cardWidth === "100%" ? "100%" : "auto",
         boxSizing: "border-box",
@@ -166,20 +203,23 @@ export const RoadmapScene: React.FC<{
         fontFamily: fonts.base
       }}>
         <div style={{ 
-          marginBottom: 32,
+          marginBottom: isVertical ? 24 : 32,
           opacity: headerEntrance,
           transform: `translateY(${headerY}px)`,
           display: 'flex',
+          flexDirection: isVertical ? 'column' : 'row',
           justifyContent: 'space-between',
-          alignItems: 'flex-end'
+          alignItems: isVertical ? 'center' : 'flex-end',
+          textAlign: isVertical ? 'center' : 'left',
+          gap: isVertical ? 16 : 0
         }}>
           <div>
-            <div style={{ fontSize: 11, fontWeight: 700, color: isLight ? colors.orange : colors.purple, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 8 }}>{title}</div>
-            <div style={{ fontSize: 26, fontWeight: 800, color: isLight ? colors.lightText : colors.white, letterSpacing: "-0.5px" }}>{subtitle}</div>
+            <div style={{ fontSize: isVertical ? 10 : 11, fontWeight: 700, color: isLight ? colors.orange : colors.purple, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 8 }}>{title}</div>
+            <div style={{ fontSize: isVertical ? 24 : 26, fontWeight: 800, color: isLight ? colors.lightText : colors.white, letterSpacing: "-0.5px" }}>{subtitle}</div>
           </div>
           {progress !== undefined && (
-            <div style={{ width: 300 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, fontWeight: 700, color: isLight ? colors.lightMuted : colors.muted, marginBottom: 8 }}>
+            <div style={{ width: isVertical ? '100%' : 300 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, fontWeight: 700, color: isLight ? colors.lightMuted : colors.muted, marginBottom: 8 }}>
                 <span>PROGRESS</span>
                 <span>{Math.round(progressVal)}%</span>
               </div>
@@ -190,9 +230,13 @@ export const RoadmapScene: React.FC<{
           )}
         </div>
 
-        <div style={{ display: "flex", gap: 20 }}>
+        <div style={{ 
+            display: "flex", 
+            flexDirection: isVertical ? "column" : "row", 
+            gap: isVertical ? 12 : 20 
+        }}>
           {phases.map((phase, i) => (
-            <RoadmapPhase key={i} {...phase} theme={theme} />
+            <RoadmapPhase key={i} {...phase} theme={theme} isVertical={isVertical} />
           ))}
         </div>
       </div>

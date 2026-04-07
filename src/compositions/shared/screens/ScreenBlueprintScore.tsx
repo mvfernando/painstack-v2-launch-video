@@ -1,5 +1,4 @@
 
-import React from 'react';
 import { 
   AbsoluteFill, 
   useCurrentFrame, 
@@ -36,9 +35,10 @@ const MetricRow = ({
       justifyContent: "space-between", 
       alignItems: "center", 
       padding: "14px 18px", 
-      background: isLight ? '#f1f5f9' : colors.bgCard, 
+      background: isLight ? 'rgba(241, 245, 249, 0.4)' : "rgba(30, 41, 59, 0.4)", 
+      backdropFilter: 'blur(10px)',
       borderRadius: 12, 
-      border: `1px solid ${isLight ? colors.lightBorder : colors.border}`,
+      border: `1px solid ${isLight ? 'rgba(226, 232, 240, 0.5)' : "rgba(45, 63, 94, 0.5)"}`,
       opacity: entrance,
       transform: `translateX(${x}px)`
     }}>
@@ -60,9 +60,10 @@ export const BlueprintScoreScene = ({
   cardWidth?: string;
 }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, width, height } = useVideoConfig();
 
   const isLight = theme === 'light';
+  const isVertical = height > width;
   const radius = 90;
   const circumference = 2 * Math.PI * radius;
   
@@ -104,20 +105,21 @@ export const BlueprintScoreScene = ({
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center',
-      padding: 40
+      padding: isVertical ? 20 : 40
     }}>
       <div style={{ 
         background: isLight ? colors.lightBg : colors.bg, 
         border: `1px solid ${isLight ? colors.lightBorder : colors.border}`, 
         borderRadius: 24, 
-        padding: "48px", 
+        padding: isVertical ? "40px 24px" : "48px", 
         width: cardWidth, 
         height: cardWidth === "100%" ? "100%" : "auto",
         boxSizing: "border-box",
         boxShadow: isLight ? "0 20px 60px rgba(0,0,0,0.08)" : "0 40px 100px rgba(0,0,0,0.6)",
         fontFamily: fonts.base,
         display: "flex", 
-        gap: 60, 
+        flexDirection: isVertical ? 'column' : 'row',
+        gap: isVertical ? 40 : 60, 
         alignItems: "center",
         position: 'relative',
         overflow: 'hidden'
@@ -131,36 +133,36 @@ export const BlueprintScoreScene = ({
         }} />
 
         {/* Ring Section */}
-        <div style={{ textAlign: "center", flexShrink: 0, width: 300, zIndex: 1 }}>
+        <div style={{ textAlign: "center", flexShrink: 0, width: isVertical ? '100%' : 300, zIndex: 1 }}>
           <div style={{ 
             fontSize: 11, 
             fontWeight: 700, 
             color: isLight ? colors.lightMuted : colors.muted, 
             textTransform: "uppercase", 
             letterSpacing: "0.15em", 
-            marginBottom: 24,
+            marginBottom: isVertical ? 16 : 24,
             opacity: labelEntrance
           }}>Blueprint Score</div>
           
           <div style={{ 
             position: "relative", 
-            width: 220, 
-            height: 220, 
+            width: isVertical ? 180 : 220, 
+            height: isVertical ? 180 : 220, 
             margin: "0 auto",
             opacity: ringEntrance,
             transform: `scale(${ringScale})`
           }}>
-            <svg width={220} height={220} viewBox="0 0 220 220">
-              <circle cx={110} cy={110} r={radius} fill="none" stroke={isLight ? '#f1f5f9' : colors.bgCard} strokeWidth={14} />
+            <svg width={isVertical ? 180 : 220} height={isVertical ? 180 : 220} viewBox={isVertical ? "0 0 180 180" : "0 0 220 220"}>
+              <circle cx={isVertical ? 90 : 110} cy={isVertical ? 90 : 110} r={isVertical ? 75 : radius} fill="none" stroke={isLight ? '#f1f5f9' : colors.bgCard} strokeWidth={isVertical ? 12 : 14} />
               <circle 
-                cx={110} cy={110} r={radius} 
+                cx={isVertical ? 90 : 110} cy={isVertical ? 90 : 110} r={isVertical ? 75 : radius} 
                 fill="none" 
                 stroke={isLight ? colors.orange : colors.green} 
-                strokeWidth={14} 
+                strokeWidth={isVertical ? 12 : 14} 
                 strokeLinecap="round"
-                strokeDasharray={circumference} 
-                strokeDashoffset={offset} 
-                transform="rotate(-90 110 110)"
+                strokeDasharray={isVertical ? 2 * Math.PI * 75 : circumference} 
+                strokeDashoffset={isVertical ? (2 * Math.PI * 75) * (1 - ringProgress) : offset} 
+                transform={isVertical ? "rotate(-90 90 90)" : "rotate(-90 110 110)"}
                 style={{ 
                     filter: isLight ? 'none' : `drop-shadow(0 0 12px rgba(34,197,94,0.4))`,
                     transition: 'stroke-dashoffset 0.1s linear'
@@ -176,11 +178,11 @@ export const BlueprintScoreScene = ({
               justifyContent: "center" 
             }}>
               {showCalculating ? (
-                <div style={{ fontSize: 16, color: isLight ? colors.lightMuted : colors.muted, fontWeight: 600 }}>Calculating...</div>
+                <div style={{ fontSize: 14, color: isLight ? colors.lightMuted : colors.muted, fontWeight: 600 }}>Calculating...</div>
               ) : (
                 <>
                   <div style={{ 
-                      fontSize: 72, 
+                      fontSize: isVertical ? 56 : 72, 
                       fontWeight: 900, 
                       color: isLight ? colors.lightText : colors.white, 
                       letterSpacing: "-2px", 
@@ -190,7 +192,7 @@ export const BlueprintScoreScene = ({
                   }}>
                     {scoreVal}
                   </div>
-                  <div style={{ fontSize: 16, color: isLight ? colors.lightMuted : colors.muted, fontWeight: 500 }}>/100</div>
+                  <div style={{ fontSize: 14, color: isLight ? colors.lightMuted : colors.muted, fontWeight: 500 }}>/100</div>
                 </>
               )}
             </div>
@@ -200,11 +202,11 @@ export const BlueprintScoreScene = ({
             background: isLight ? `${colors.green}11` : "rgba(34,197,94,0.15)", 
             border: `2px solid ${colors.green}`, 
             borderRadius: 12, 
-            padding: "12px 40px", 
-            fontSize: 28, 
+            padding: isVertical ? "8px 32px" : "12px 40px", 
+            fontSize: isVertical ? 22 : 28, 
             fontWeight: 900, 
             color: colors.green, 
-            marginTop: 32, 
+            marginTop: isVertical ? 20 : 32, 
             letterSpacing: "0.12em", 
             display: "inline-block",
             opacity: badgeEntrance,
@@ -216,9 +218,16 @@ export const BlueprintScoreScene = ({
         </div>
 
         {/* Metrics Section */}
-        <div style={{ flex: 1, zIndex: 1 }}>
-          <div style={{ fontSize: 24, fontWeight: 900, color: isLight ? colors.lightText : colors.white, marginBottom: 28, letterSpacing: '-1.2px' }}>Startup Blueprint</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 40 }}>
+        <div style={{ flex: 1, zIndex: 1, width: isVertical ? '100%' : 'auto' }}>
+          <div style={{ 
+            fontSize: isVertical ? 20 : 24, 
+            fontWeight: 900, 
+            color: isLight ? colors.lightText : colors.white, 
+            marginBottom: 20, 
+            letterSpacing: '-1.2px',
+            textAlign: isVertical ? 'center' : 'left'
+          }}>Startup Blueprint</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: isVertical ? 30 : 40 }}>
             {finalMetrics.map((m, i) => (
               <MetricRow key={i} {...m} theme={theme} />
             ))}
@@ -226,9 +235,9 @@ export const BlueprintScoreScene = ({
           <div style={{ 
             background: isLight ? colors.lightText : `linear-gradient(135deg, ${colors.blue}, #1d4ed8)`,
             borderRadius: 14, 
-            padding: "18px", 
+            padding: "16px", 
             textAlign: "center", 
-            fontSize: 20, 
+            fontSize: 18, 
             fontWeight: 900, 
             color: colors.white,
             opacity: btnEntrance,

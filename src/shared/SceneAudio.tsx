@@ -30,12 +30,16 @@ export const SceneAudio = ({
 // Coloca um ficheiro public/audio/bg_ambient.mp3 para ativar
 interface BackgroundMusicProps {
   volume?: number;
+  filename?: string;
 }
 
-export const BackgroundMusic = ({ volume = 0.05 }: BackgroundMusicProps) => {
+export const BackgroundMusic = ({ 
+  volume = 0.05,
+  filename = 'percussion',
+}: BackgroundMusicProps) => {
   return (
     <Audio
-      src={staticFile('audio/percussion.wav')}
+      src={staticFile(`audio/${filename}.${filename.includes('wav') ? '' : 'mp3'}`)}
       volume={volume}
       loop
     />
