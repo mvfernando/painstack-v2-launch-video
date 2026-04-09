@@ -107,9 +107,7 @@ export const Video1Social = () => {
         </Sequence>
       </Sequence>
       
-      <AbsoluteFill style={{ pointerEvents: 'none' }}>
-        <div style={{ position: 'absolute', inset: 0, boxShadow: 'inset 0 0 200px rgba(0,0,0,0.3)', zIndex: 10 }} />
-      </AbsoluteFill>
+
     </AbsoluteFill>
   );
 };

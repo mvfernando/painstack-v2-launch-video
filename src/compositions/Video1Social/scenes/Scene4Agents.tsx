@@ -72,9 +72,7 @@ export const Scene4Agents: React.FC = () => {
       alignItems: 'center',
       justifyContent: 'center',
     }}>
-      {/* Cinematic Vignette Background */}
       <AbsoluteFill style={{ 
-        boxShadow: 'inset 0 0 300px rgba(0,0,0,0.9)',
         backgroundImage: `radial-gradient(ellipse at 50% 50%, rgba(45,129,224,0.08) 0%, transparent 80%)`,
       }} />
 

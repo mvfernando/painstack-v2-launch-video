@@ -35,11 +35,14 @@ interface BackgroundMusicProps {
 
 export const BackgroundMusic = ({ 
   volume = 0.05,
-  filename = 'percussion',
+  filename = 'percussion.wav',
 }: BackgroundMusicProps) => {
+  // If filename already has an extension use as-is, otherwise append .mp3
+  const hasExt = filename.includes('.');
+  const src = staticFile(`audio/${hasExt ? filename : filename + '.mp3'}`);
   return (
     <Audio
-      src={staticFile(`audio/${filename}.${filename.includes('wav') ? '' : 'mp3'}`)}
+      src={src}
       volume={volume}
       loop
     />

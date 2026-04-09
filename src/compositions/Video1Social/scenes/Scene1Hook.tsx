@@ -38,19 +38,21 @@ export const Scene1Hook: React.FC = () => {
         }));
     }, []);
 
-    const entranceProgress = spring({ frame, fps, config: { damping: 18, stiffness: 100 } });
-    const tilt = interpolate(entranceProgress, [0, 1], [10, 0]);
-    
-    const word1Progress = spring({ frame, fps, config: { damping: 18, stiffness: 100 } });
-    const word1Y = interpolate(word1Progress, [0, 1], [60, 0]);
-    const word1Opacity = interpolate(word1Progress, [0, 1], [0, 1]);
+    // === BLOOM POP-IN (same as Video4Product logo intro) ===
+    // Line 1: "Stop guessing." — starts immediately
+    const bloom1 = spring({ frame: Math.max(0, frame), fps, config: { stiffness: 300, damping: 25, mass: 0.5 } });
+    const line1Blur = interpolate(frame, [0, 6], [60, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+    const line1Scale = interpolate(bloom1, [0, 1], [1.3, 1.0]);
+    const line1Opacity = interpolate(frame, [0, 4], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
-    const word2Progress = spring({ frame: frame - 15, fps, config: { damping: 18, stiffness: 100 } });
-    const word2Y = interpolate(word2Progress, [0, 1], [60, 0]);
-    const word2Opacity = interpolate(word2Progress, [0, 1], [0, 1]);
+    // Line 2: "Start building." — staggered 12 frames later
+    const STAGGER = 12;
+    const bloom2 = spring({ frame: Math.max(0, frame - STAGGER), fps, config: { stiffness: 300, damping: 25, mass: 0.5 } });
+    const line2Blur = interpolate(frame, [STAGGER, STAGGER + 6], [60, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+    const line2Scale = interpolate(bloom2, [0, 1], [1.3, 1.0]);
+    const line2Opacity = interpolate(frame, [STAGGER, STAGGER + 4], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
     const subtitleOpacity = interpolate(frame, [45, 60], [0, 1], { extrapolateRight: 'clamp' });
-    const sweepPos = interpolate(frame % 90, [0, 90], [-100, 300]);
 
     return (
         <AbsoluteFill style={{ background: colors.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 24 }}>
@@ -62,56 +64,44 @@ export const Scene1Hook: React.FC = () => {
             {/* Particles */}
             {particles.map((p, i) => <Particle key={i} {...p} />)}
             
-            {/* Vignette */}
-            <AbsoluteFill style={{ 
-                boxShadow: 'inset 0 0 300px rgba(0,0,0,0.8)',
-                pointerEvents: 'none'
-            }} />
 
-            <div style={{ textAlign: 'center', zIndex: 1, perspective: 1000 }}>
-                <div style={{ overflow: 'hidden', marginBottom: 8 }}>
-                    <div style={{
-                        fontFamily: fonts.base,
-                        fontSize: 110,
-                        fontWeight: 900,
-                        color: colors.white,
-                        letterSpacing: '-5px',
-                        opacity: word1Opacity,
-                        transform: `translateY(${word1Y}px) rotateX(${tilt}deg)`,
-                        lineHeight: 1,
-                    }}>
-                        Stop guessing.
-                    </div>
+
+            <div style={{ textAlign: 'center', zIndex: 1 }}>
+                {/* Line 1: Bloom Pop-In — no overflow:hidden, free in space */}
+                <div style={{
+                    fontFamily: fonts.base,
+                    fontSize: 110,
+                    fontWeight: 900,
+                    color: colors.white,
+                    letterSpacing: '-5px',
+                    lineHeight: 1,
+                    marginBottom: 8,
+                    opacity: line1Opacity,
+                    filter: `blur(${line1Blur}px)`,
+                    transform: `scale(${line1Scale})`,
+                    transformOrigin: 'center center',
+                }}>
+                    Stop guessing.
                 </div>
 
-                <div style={{ overflow: 'hidden', position: 'relative' }}>
-                    <div style={{
-                        fontFamily: fonts.base,
-                        fontSize: 110,
-                        fontWeight: 900,
-                        background: `linear-gradient(135deg, ${colors.orange} 0%, ${colors.blue} 100%)`,
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        letterSpacing: '-5px',
-                        opacity: word2Opacity,
-                        transform: `translateY(${word2Y}px) rotateX(${tilt}deg)`,
-                        lineHeight: 1,
-                        position: 'relative'
-                    }}>
-                        Start building.
-                        
-                        <div style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: `${sweepPos}%`,
-                            width: '40%',
-                            height: '100%',
-                            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
-                            transform: 'skewX(-25deg)',
-                            pointerEvents: 'none',
-                            mixBlendMode: 'overlay'
-                        }} />
-                    </div>
+                {/* Line 2: Bloom Pop-In staggered — no overflow:hidden, free */}
+                <div style={{
+                    fontFamily: fonts.base,
+                    fontSize: 110,
+                    fontWeight: 900,
+                    background: `linear-gradient(135deg, ${colors.orange} 0%, ${colors.blue} 100%)`,
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    letterSpacing: '-5px',
+                    lineHeight: 1,
+                    position: 'relative',
+                    opacity: line2Opacity,
+                    filter: `blur(${line2Blur}px)`,
+                    transform: `scale(${line2Scale})`,
+                    transformOrigin: 'center center',
+                }}>
+                    Start building.
                 </div>
             </div>
 
