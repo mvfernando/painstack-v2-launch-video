@@ -34,32 +34,32 @@ const AgentCard = ({
     <div style={{
       background: themeColors.card,
       borderRadius: 24,
-      padding: isVertical ? "20px 24px" : "32px",
-      border: `1px solid ${themeColors.border}`,
+      padding: isVertical ? "24px 28px" : "32px",
+      border: `2px solid ${themeColors.border}`,
       display: "flex",
       alignItems: "center",
-      gap: isVertical ? 16 : 24,
+      gap: isVertical ? 24 : 24,
       opacity: interpolate(frame, [delay, delay + 15], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }),
       transform: `scale(${interpolate(frame, [delay, delay + 20], [0.95, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })})`,
       boxShadow: isLight ? "0 10px 30px rgba(0,0,0,0.04)" : "0 20px 50px rgba(0,0,0,0.2)"
     }}>
       <div style={{ 
-        width: isVertical ? 56 : 64, 
-        height: isVertical ? 56 : 64, 
+        width: isVertical ? 64 : 64, 
+        height: isVertical ? 64 : 64, 
         borderRadius: 16, 
         background: themeColors.bgIcon,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: isVertical ? 28 : 32,
+        fontSize: isVertical ? 32 : 32,
         flexShrink: 0
       }}>
         {icon}
       </div>
 
       <div>
-        <div style={{ fontSize: isVertical ? 18 : 24, fontWeight: 800, color: themeColors.text, marginBottom: 4, lineHeight: 1.2 }}>{name}</div>
-        <div style={{ fontSize: isVertical ? 13 : 15, color: themeColors.muted, lineHeight: 1.4 }}>{desc}</div>
+        <div style={{ fontSize: isVertical ? 24 : 24, fontWeight: 800, color: themeColors.text, marginBottom: 4, lineHeight: 1.2 }}>{name}</div>
+        <div style={{ fontSize: isVertical ? 16 : 15, color: themeColors.muted, lineHeight: 1.4 }}>{desc}</div>
       </div>
     </div>
   );
@@ -120,7 +120,7 @@ export const ExecutiveTeamScene = ({
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: isVertical ? 24 : 40,
+      padding: isVertical ? 40 : 40,
       fontFamily: fonts.base
     }}>
       <div style={{ 
@@ -128,19 +128,19 @@ export const ExecutiveTeamScene = ({
         maxWidth: isVertical ? '100%' : 1100,
         display: 'flex',
         flexDirection: 'column',
-        gap: isVertical ? 24 : 48
+        gap: isVertical ? 48 : 48
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ 
-            fontSize: isVertical ? 11 : 14, 
+            fontSize: isVertical ? 18 : 14, 
             fontWeight: 700, 
             color: colors.orange, 
             textTransform: 'uppercase', 
             letterSpacing: '3px', 
-            marginBottom: 8 
+            marginBottom: 12 
           }}>POWERED BY PAINSTACK</div>
           <h2 style={{ 
-            fontSize: isVertical ? 36 : 56, 
+            fontSize: isVertical ? 48 : 56, 
             fontWeight: 900, 
             color: isLight ? colors.lightText : colors.white, 
             letterSpacing: '-2px',

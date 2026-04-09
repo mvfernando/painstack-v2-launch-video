@@ -187,23 +187,16 @@ export const RoadmapScene: React.FC<{
     <AbsoluteFill style={{ 
       background: isLight ? colors.lightBgProduct : colors.bg, 
       display: 'flex', 
+      flexDirection: 'column',
       alignItems: 'center', 
       justifyContent: 'center',
-      padding: isVertical ? 20 : 40
+      padding: isVertical ? 40 : 40
     }}>
+      {/* Header Outside Card (for Vertical) */}
       <div style={{ 
-        background: isLight ? colors.lightBg : colors.bg, 
-        border: `1px solid ${isLight ? colors.lightBorder : colors.border}`, 
-        borderRadius: 24, 
-        padding: isVertical ? "32px 24px" : "48px", 
-        width: cardWidth, 
-        height: cardWidth === "100%" ? "100%" : "auto",
-        boxSizing: "border-box",
-        boxShadow: isLight ? "0 20px 60px rgba(0,0,0,0.08)" : "0 40px 100px rgba(0,0,0,0.5)",
-        fontFamily: fonts.base
-      }}>
-        <div style={{ 
-          marginBottom: isVertical ? 24 : 32,
+          width: cardWidth,
+          maxWidth: isVertical ? '100%' : 1100,
+          marginBottom: isVertical ? 40 : 32,
           opacity: headerEntrance,
           transform: `translateY(${headerY}px)`,
           display: 'flex',
@@ -211,29 +204,53 @@ export const RoadmapScene: React.FC<{
           justifyContent: 'space-between',
           alignItems: isVertical ? 'center' : 'flex-end',
           textAlign: isVertical ? 'center' : 'left',
-          gap: isVertical ? 16 : 0
+          gap: isVertical ? 24 : 0
         }}>
           <div>
-            <div style={{ fontSize: isVertical ? 10 : 11, fontWeight: 700, color: isLight ? colors.orange : colors.purple, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 8 }}>{title}</div>
-            <div style={{ fontSize: isVertical ? 24 : 26, fontWeight: 800, color: isLight ? colors.lightText : colors.white, letterSpacing: "-0.5px" }}>{subtitle}</div>
+            <div style={{ 
+              fontSize: isVertical ? 22 : 11, // Significantly increased
+              fontWeight: 800, 
+              color: isLight ? colors.orange : colors.purple, 
+              textTransform: "uppercase", 
+              letterSpacing: "0.2em", 
+              marginBottom: 12 
+            }}>{title}</div>
+            <div style={{ 
+              fontSize: isVertical ? 42 : 26, // Significantly increased
+              fontWeight: 900, 
+              color: isLight ? colors.lightText : colors.white, 
+              letterSpacing: "-1px",
+              lineHeight: 1.1
+            }}>{subtitle}</div>
           </div>
           {progress !== undefined && (
             <div style={{ width: isVertical ? '100%' : 300 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, fontWeight: 700, color: isLight ? colors.lightMuted : colors.muted, marginBottom: 8 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: isVertical ? 14 : 11, fontWeight: 700, color: isLight ? colors.lightMuted : colors.muted, marginBottom: 8 }}>
                 <span>PROGRESS</span>
                 <span>{Math.round(progressVal)}%</span>
               </div>
-              <div style={{ height: 6, width: '100%', background: isLight ? colors.lightBorder : colors.border, borderRadius: 10, overflow: 'hidden' }}>
+              <div style={{ height: 8, width: '100%', background: isLight ? colors.lightBorder : colors.border, borderRadius: 10, overflow: 'hidden' }}>
                 <div style={{ height: '100%', width: `${progressVal}%`, background: colors.orange, borderRadius: 10 }} />
               </div>
             </div>
           )}
         </div>
 
+      <div style={{ 
+        background: isLight ? colors.lightBg : colors.bg, 
+        border: `2px solid ${isLight ? colors.lightBorder : colors.border}`, 
+        borderRadius: 24, 
+        padding: isVertical ? "32px 24px" : "48px", 
+        width: cardWidth, 
+        height: cardWidth === "100%" ? "auto" : "auto",
+        boxSizing: "border-box",
+        boxShadow: isLight ? "0 20px 60px rgba(0,0,0,0.08)" : "0 40px 100px rgba(0,0,0,0.5)",
+        fontFamily: fonts.base
+      }}>
         <div style={{ 
             display: "flex", 
             flexDirection: isVertical ? "column" : "row", 
-            gap: isVertical ? 12 : 20 
+            gap: isVertical ? 16 : 20 
         }}>
           {phases.map((phase, i) => (
             <RoadmapPhase key={i} {...phase} theme={theme} isVertical={isVertical} />

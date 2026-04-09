@@ -147,19 +147,19 @@ export const Video4Social = () => {
           display: 'flex', 
           flexDirection: 'column',
           alignItems: 'center', 
-          justifyContent: isVertical ? 'flex-start' : 'center',
-          paddingTop: isVertical ? 240 : 0,
+          justifyContent: 'center', // Changed for explicit centering
+          paddingTop: 0, // Removed top padding
           fontFamily: fonts.base,
-          paddingLeft: isVertical ? 40 : 100,
-          paddingRight: isVertical ? 40 : 100
+          paddingLeft: isVertical ? 60 : 100,
+          paddingRight: isVertical ? 60 : 100
         }}>
           <div style={{
             opacity: interpolate(frame - 1560, [0, 20], [0, 1]),
-            marginBottom: isVertical ? 60 : 40
+            marginBottom: isVertical ? 80 : 40
           }}>
             <img 
               src={staticFile('shared/Painstack.ai_logo1.png')} 
-              style={{ height: isVertical ? 80 : 60, width: 'auto' }} 
+              style={{ height: isVertical ? 120 : 60, width: 'auto' }} 
               alt="Logo"
             />
           </div>
@@ -167,29 +167,29 @@ export const Video4Social = () => {
           <div style={{
             opacity: interpolate(frame - 1560, [10, 30], [0, 1]),
             color: colors.orange,
-            fontSize: isVertical ? 20 : 16,
+            fontSize: isVertical ? 32 : 16, // Significantly increased
             fontWeight: 800,
             textTransform: 'uppercase',
             letterSpacing: '2px',
-            marginBottom: 20
+            marginBottom: isVertical ? 40 : 20
           }}>
             Your Startup Journey Starts Here.
           </div>
           
           <div style={{
             color: colors.lightText,
-            fontSize: isVertical ? 48 : 36,
+            fontSize: isVertical ? 60 : 36, // Increased
             fontWeight: 800,
             textAlign: 'center',
-            marginBottom: isVertical ? 80 : 60,
+            marginBottom: isVertical ? 100 : 60,
             lineHeight: 1.1
           }}>
             Validate your idea free at<br/>
-            <span style={{ fontSize: isVertical ? 56 : 52, fontWeight: 900, color: colors.lightText, display: 'block', marginTop: 15 }}>
+            <span style={{ fontSize: isVertical ? 72 : 52, fontWeight: 900, color: colors.lightText, display: 'block', marginTop: 20 }}>
                 usepainstackai.com
             </span>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 15 }}>
-                <CTAUnderline width={isVertical ? 360 : 450} delay={1560 + 40} />
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 25 }}>
+                <CTAUnderline width={isVertical ? 600 : 450} delay={1560 + 40} />
             </div>
           </div>
 
@@ -197,11 +197,11 @@ export const Video4Social = () => {
               display: 'flex',
               flexDirection: isVertical ? 'column' : 'row',
               alignItems: 'center',
-              gap: isVertical ? 24 : 40,
+              gap: isVertical ? 32 : 40,
               opacity: interpolate(frame - 1560, [60, 80], [0, 1])
           }}>
               {['No code required', 'AI Team from Day 0', 'Real Market Data'].map((tag, i) => (
-                  <div key={i} style={{ color: colors.lightMuted, fontSize: isVertical ? 20 : 14, fontWeight: 600 }}>
+                  <div key={i} style={{ color: colors.lightMuted, fontSize: isVertical ? 28 : 14, fontWeight: 700 }}>
                       ✓ {tag}
                   </div>
               ))}

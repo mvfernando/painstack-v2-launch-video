@@ -66,9 +66,9 @@ export const DashboardInputScene: React.FC<{
 
   const cameraScale = interpolate(cameraZoom, [0, 1], [1, 1.05]);
   
-  // Responsive mouse coordinates
+  // Responsive mouse coordinates (Recalibrated for centered layout)
   const targetX = isVertical ? width * 0.76 : width * 0.72;
-  const targetY = isVertical ? height * 0.58 : height * 0.60;
+  const targetY = isVertical ? height * 0.50 : height * 0.60; // Adjusted for center alignment
   
   const mouseX = interpolate(mouseProg, [0, 1], [width * 0.95, targetX]); 
   const mouseY = interpolate(mouseProg, [0, 1], [height * 0.95, targetY]);
@@ -81,9 +81,10 @@ export const DashboardInputScene: React.FC<{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        justifyContent: 'center', // Added for vertical centering
         padding: isVertical ? '80px 40px' : '60px 100px',
         transform: `scale(${cameraScale})`,
-        transformOrigin: 'center 70%',
+        transformOrigin: 'center center', // Changed for center scaling
         opacity: contentOpacity,
       }}>
         
@@ -92,16 +93,16 @@ export const DashboardInputScene: React.FC<{
           width: '100%', 
           display: 'flex', 
           flexDirection: isVertical ? 'column' : 'row',
-          justifyContent: isVertical ? 'center' : 'center', 
+          justifyContent: 'center', 
           alignItems: 'center',
           position: 'relative',
-          marginBottom: isVertical ? 40 : 60,
+          marginBottom: isVertical ? 60 : 60,
           gap: isVertical ? 24 : 0
         }}>
           <div style={{ position: isVertical ? 'static' : 'absolute', left: isVertical ? 'auto' : 0 }}>
              <img 
                 src={staticFile(isLight ? 'shared/Painstack.ai_logo1.png' : 'shared/Painstack.ai_logo2.png')} 
-                style={{ height: isVertical ? 40 : 48, width: 'auto', objectFit: 'contain' }} 
+                style={{ height: isVertical ? 48 : 48, width: 'auto', objectFit: 'contain' }} 
                 alt="Logo"
               />
           </div>
@@ -109,31 +110,31 @@ export const DashboardInputScene: React.FC<{
           <div style={{
             background: isLight ? 'rgba(255, 255, 255, 0.6)' : 'rgba(30, 41, 59, 0.6)',
             backdropFilter: 'blur(10px)',
-            border: `1px solid ${themeColors.border}`,
+            border: `2px solid ${themeColors.border}`,
             borderRadius: 100,
-            padding: '8px 20px',
+            padding: isVertical ? '12px 28px' : '8px 20px',
             display: 'flex',
             alignItems: 'center',
-            gap: 10,
-            fontSize: isVertical ? 11 : 13,
-            fontWeight: 700,
+            gap: 12,
+            fontSize: isVertical ? 16 : 13, // Increased for mobile
+            fontWeight: 800,
             color: themeColors.muted,
             textTransform: 'uppercase',
-            letterSpacing: '1px'
+            letterSpacing: '2px'
           }}>
-            <div style={{ width: 8, height: 8, borderRadius: '50%', background: colors.orange }} />
+            <div style={{ width: 10, height: 10, borderRadius: '50%', background: colors.orange }} />
             WELCOME BACK, ELIO 👋
           </div>
         </div>
 
         {/* Title */}
         <h1 style={{ 
-          fontSize: isVertical ? 42 : 64, 
+          fontSize: isVertical ? 54 : 64, // Increased for mobile
           fontWeight: 800, 
           color: themeColors.text, 
           textAlign: 'center',
           maxWidth: isVertical ? '100%' : 900,
-          marginBottom: isVertical ? 40 : 60,
+          marginBottom: isVertical ? 60 : 60,
           lineHeight: 1.1,
           letterSpacing: '-2px'
         }}>
@@ -147,7 +148,7 @@ export const DashboardInputScene: React.FC<{
           background: themeColors.card,
           border: `1px solid ${themeColors.border}`,
           borderRadius: 32,
-          padding: isVertical ? 24 : 40,
+          padding: isVertical ? 32 : 40, // Slightly increased padding
           boxShadow: isLight ? "0 20px 50px rgba(0,0,0,0.05)" : "0 40px 100px rgba(0,0,0,0.4)",
           position: 'relative'
         }}>
@@ -155,13 +156,13 @@ export const DashboardInputScene: React.FC<{
             background: themeColors.inputBg,
             border: `1px solid ${themeColors.border}`,
             borderRadius: 20,
-            padding: isVertical ? 20 : 30,
-            minHeight: isVertical ? 220 : 180,
+            padding: isVertical ? 24 : 30,
+            minHeight: isVertical ? 240 : 180,
             color: themeColors.text,
-            fontSize: isVertical ? 20 : 24,
+            fontSize: isVertical ? 24 : 24, // Increased for mobile
             lineHeight: 1.5,
-            marginBottom: isVertical ? 24 : 40,
-            fontWeight: 300
+            marginBottom: isVertical ? 32 : 40,
+            fontWeight: 400
           }}>
              {frame < 40 ? (
                <span style={{ color: themeColors.muted, opacity: 0.6 }}>
