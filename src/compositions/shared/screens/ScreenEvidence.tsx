@@ -1,5 +1,4 @@
 
-import React from 'react';
 import { 
   AbsoluteFill, 
   useCurrentFrame, 
@@ -103,7 +102,6 @@ const RedditCard = ({ post, cardDelay }: { post: any; cardDelay: [number, number
 
 export const EvidenceCardsScene = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
 
   const posts = [
     { sub: "r/startups", upvotes: "2.4k", pain: "HIGH", text: "Spent $40k and 8 months building. Got 3 users. I should have validated first.", tags: ["validation", "failure"] },

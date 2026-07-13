@@ -229,7 +229,6 @@ const Scene2Problem = () => {
 
 const Scene3Input = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
 
   const text = "An AI tool that helps founders validate their ideas...";
   const charsShown = Math.floor(interpolate(frame, [20, 70], [0, text.length], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }));

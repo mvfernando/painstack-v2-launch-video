@@ -1,17 +1,14 @@
 
-import React from 'react';
 import { 
   AbsoluteFill, 
   useCurrentFrame, 
-  useVideoConfig, 
   interpolate, 
-  spring, 
 } from 'remotion';
 import { colors, fonts } from '../../../shared/brand';
 
 const DocRow = ({ doc, delay }: { doc: any; delay: number }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  
   
   // 2. Cada linha de documento entra em stagger: translateY 15px→0 + opacity 0→1
   const entrance = interpolate(frame, [delay, delay + 15], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
@@ -63,7 +60,6 @@ const DocRow = ({ doc, delay }: { doc: any; delay: number }) => {
 
 export const DataRoomScene = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
 
   const docs = [
     { icon: "📊", title: "Market Analysis Report", type: "PDF", size: "2.4 MB", date: "Today", badge: "AI Generated", badgeColor: colors.blue, delay: 20 },

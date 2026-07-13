@@ -1,5 +1,5 @@
 
-import { type ReactNode, type CSSProperties, useMemo } from 'react';
+import React, { type ReactNode, type CSSProperties, useMemo } from 'react';
 import { 
   AbsoluteFill, 
   Sequence, 
@@ -9,7 +9,6 @@ import {
   spring,
   Audio,
   staticFile,
-  Easing
 } from 'remotion';
 import { colors, fonts } from '../../shared/brand';
 import { SceneAudio, BackgroundMusic } from '../../shared/SceneAudio';
@@ -18,7 +17,6 @@ import { SceneAudio, BackgroundMusic } from '../../shared/SceneAudio';
 import { DashboardInputScene } from '../shared/screens/ScreenDashboard';
 import { EvidenceCardsScene } from '../shared/screens/ScreenEvidence';
 import { BlueprintScoreScene } from '../shared/screens/ScreenBlueprintScore';
-import { RoadmapScene } from '../shared/screens/ScreenRoadmap';
 import { DataRoomScene } from '../shared/screens/ScreenDataroom';
 
 // --- Transition Helper ---
@@ -346,7 +344,6 @@ const AgentCard = ({
 };
 
 const SceneEAgents = () => {
-    const frame = useCurrentFrame();
     
     return (
         <SceneContainer>

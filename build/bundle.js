@@ -2,7 +2,7 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 968
+/***/ 90
 (__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
 
 
@@ -15,17 +15,23 @@ var react = __webpack_require__(6540);
 ;// ./src/shared/brand.ts
 
 const colors = {
-  bg: "#0F172A",
-  bgLight: "#1E293B",
-  bgCard: "#1E293B",
+  bg: "#0f172a",
+  bgLight: "#1e293b",
+  bgCard: "#1e293b",
   border: "#2d3f5e",
   blue: "#2d81e0",
   orange: "#f96426",
-  white: "#F8FAFC",
-  muted: "#94A3B8",
+  white: "#f1f5f9",
+  muted: "#94a3b8",
   green: "#22c55e",
   red: "#ef4444",
-  purple: "#a78bfa"
+  purple: "#a78bfa",
+  // Light Theme Tokens
+  lightBg: "#FFFFFF",
+  lightBgProduct: "#F8FAFC",
+  lightText: "#0F172A",
+  lightBorder: "#E2E8F0",
+  lightMuted: "#64748B"
 };
 const fonts = {
   base: '"Inter", system-ui, sans-serif'
@@ -67,62 +73,51 @@ const Scene1Hook = () => {
       size: 2 + Math.random() * 4
     }));
   }, []);
-  const entranceProgress = (0,esm.spring)({ frame, fps, config: { damping: 18, stiffness: 100 } });
-  const tilt = (0,esm.interpolate)(entranceProgress, [0, 1], [10, 0]);
-  const word1Progress = (0,esm.spring)({ frame, fps, config: { damping: 18, stiffness: 100 } });
-  const word1Y = (0,esm.interpolate)(word1Progress, [0, 1], [60, 0]);
-  const word1Opacity = (0,esm.interpolate)(word1Progress, [0, 1], [0, 1]);
-  const word2Progress = (0,esm.spring)({ frame: frame - 15, fps, config: { damping: 18, stiffness: 100 } });
-  const word2Y = (0,esm.interpolate)(word2Progress, [0, 1], [60, 0]);
-  const word2Opacity = (0,esm.interpolate)(word2Progress, [0, 1], [0, 1]);
+  const bloom1 = (0,esm.spring)({ frame: Math.max(0, frame), fps, config: { stiffness: 300, damping: 25, mass: 0.5 } });
+  const line1Blur = (0,esm.interpolate)(frame, [0, 6], [60, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const line1Scale = (0,esm.interpolate)(bloom1, [0, 1], [1.3, 1]);
+  const line1Opacity = (0,esm.interpolate)(frame, [0, 4], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const STAGGER = 12;
+  const bloom2 = (0,esm.spring)({ frame: Math.max(0, frame - STAGGER), fps, config: { stiffness: 300, damping: 25, mass: 0.5 } });
+  const line2Blur = (0,esm.interpolate)(frame, [STAGGER, STAGGER + 6], [60, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const line2Scale = (0,esm.interpolate)(bloom2, [0, 1], [1.3, 1]);
+  const line2Opacity = (0,esm.interpolate)(frame, [STAGGER, STAGGER + 4], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const subtitleOpacity = (0,esm.interpolate)(frame, [45, 60], [0, 1], { extrapolateRight: "clamp" });
-  const sweepPos = (0,esm.interpolate)(frame % 90, [0, 90], [-100, 300]);
   return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { background: colors.bg, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 24 }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.AbsoluteFill, { style: {
       background: `radial-gradient(circle at 50% 50%, rgba(45,129,224,0.1) 0%, transparent 80%)`
     } }),
     particles.map((p, i) => /* @__PURE__ */ (0,jsx_runtime.jsx)(Particle, { ...p }, i)),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.AbsoluteFill, { style: {
-      boxShadow: "inset 0 0 300px rgba(0,0,0,0.8)",
-      pointerEvents: "none"
-    } }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { textAlign: "center", zIndex: 1, perspective: 1e3 }, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { overflow: "hidden", marginBottom: 8 }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { textAlign: "center", zIndex: 1 }, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
         fontFamily: fonts.base,
         fontSize: 110,
         fontWeight: 900,
         color: colors.white,
         letterSpacing: "-5px",
-        opacity: word1Opacity,
-        transform: `translateY(${word1Y}px) rotateX(${tilt}deg)`,
-        lineHeight: 1
-      }, children: "Stop guessing." }) }),
-      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { overflow: "hidden", position: "relative" }, children: /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
+        lineHeight: 1,
+        marginBottom: 8,
+        opacity: line1Opacity,
+        filter: `blur(${line1Blur}px)`,
+        transform: `scale(${line1Scale})`,
+        transformOrigin: "center center"
+      }, children: "Stop guessing." }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
         fontFamily: fonts.base,
         fontSize: 110,
         fontWeight: 900,
         background: `linear-gradient(135deg, ${colors.orange} 0%, ${colors.blue} 100%)`,
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
         letterSpacing: "-5px",
-        opacity: word2Opacity,
-        transform: `translateY(${word2Y}px) rotateX(${tilt}deg)`,
         lineHeight: 1,
-        position: "relative"
-      }, children: [
-        "Start building.",
-        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
-          position: "absolute",
-          top: 0,
-          left: `${sweepPos}%`,
-          width: "40%",
-          height: "100%",
-          background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
-          transform: "skewX(-25deg)",
-          pointerEvents: "none",
-          mixBlendMode: "overlay"
-        } })
-      ] }) })
+        position: "relative",
+        opacity: line2Opacity,
+        filter: `blur(${line2Blur}px)`,
+        transform: `scale(${line2Scale})`,
+        transformOrigin: "center center"
+      }, children: "Start building." })
     ] }),
     /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
       fontFamily: fonts.base,
@@ -461,7 +456,6 @@ const Scene4Agents = () => {
     justifyContent: "center"
   }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.AbsoluteFill, { style: {
-      boxShadow: "inset 0 0 300px rgba(0,0,0,0.9)",
       backgroundImage: `radial-gradient(ellipse at 50% 50%, rgba(45,129,224,0.08) 0%, transparent 80%)`
     } }),
     [...Array(20)].map((_, i) => {
@@ -621,12 +615,26 @@ const Scene4Agents = () => {
 
 
 
-const DashboardInputScene = ({ withInteractions = false }) => {
+const DashboardInputScene = ({
+  withInteractions = false,
+  theme = "dark",
+  customText
+}) => {
   const frame = (0,esm.useCurrentFrame)();
   const { fps, width, height } = (0,esm.useVideoConfig)();
+  const isLight = theme === "light";
+  const isVertical = height > width;
+  const themeColors = {
+    bg: isLight ? colors.lightBgProduct : colors.bg,
+    card: isLight ? colors.lightBg : colors.bgCard,
+    text: isLight ? colors.lightText : colors.white,
+    border: isLight ? colors.lightBorder : colors.border,
+    muted: isLight ? colors.lightMuted : colors.muted,
+    inputBg: isLight ? "#f1f5f9" : "rgba(15, 23, 42, 0.4)"
+  };
   const entrance = (0,esm.spring)({ frame, fps, config: { damping: 20 } });
   const contentOpacity = (0,esm.interpolate)(entrance, [0, 1], [0, 1]);
-  const text = "An AI-powered tool that helps founders validate their ideas by scanning real-world market pain points...";
+  const text = customText || "An AI-powered tool that helps founders validate their ideas by scanning real-world market pain points...";
   const charsShown = Math.floor((0,esm.interpolate)(frame, [40, 120], [0, text.length], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }));
   const cameraZoom = withInteractions ? (0,esm.spring)({
     frame: frame - 40,
@@ -634,70 +642,81 @@ const DashboardInputScene = ({ withInteractions = false }) => {
     config: { damping: 25, stiffness: 40 }
   }) : 0;
   const mouseProg = withInteractions ? (0,esm.spring)({
-    frame: frame - 120,
+    frame: frame - 180,
     fps,
     config: { damping: 25, stiffness: 30 }
   }) : 0;
   const clickSpring = withInteractions ? (0,esm.spring)({
-    frame: frame - 142,
+    frame: frame - 220,
     fps,
     config: { damping: 12, stiffness: 200 }
   }) : 0;
-  const cameraScale = (0,esm.interpolate)(cameraZoom, [0, 1], [1, 1.1]);
-  const mouseX = (0,esm.interpolate)(mouseProg, [0, 1], [width * 0.95, width * 0.75]);
-  const mouseY = (0,esm.interpolate)(mouseProg, [0, 1], [height * 0.95, height * 0.78]);
-  const buttonScale = (0,esm.interpolate)(clickSpring, [0, 0.5, 1], [1, 0.9, 1]);
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: colors.bg, overflow: "hidden", fontFamily: fonts.base }, children: [
+  const cameraScale = (0,esm.interpolate)(cameraZoom, [0, 1], [1, 1.05]);
+  const targetX = isVertical ? width * 0.76 : width * 0.72;
+  const targetY = isVertical ? height * 0.5 : height * 0.6;
+  const mouseX = (0,esm.interpolate)(mouseProg, [0, 1], [width * 0.95, targetX]);
+  const mouseY = (0,esm.interpolate)(mouseProg, [0, 1], [height * 0.95, targetY]);
+  const buttonScale = (0,esm.interpolate)(clickSpring, [0, 0.5, 1], [1, 0.85, 1]);
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: themeColors.bg, overflow: "hidden", fontFamily: fonts.base }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
       flex: 1,
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      padding: "60px 100px",
+      justifyContent: "center",
+      // Added for vertical centering
+      padding: isVertical ? "80px 40px" : "60px 100px",
       transform: `scale(${cameraScale})`,
-      transformOrigin: "center 70%",
+      transformOrigin: "center center",
+      // Changed for center scaling
       opacity: contentOpacity
     }, children: [
       /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
         width: "100%",
         display: "flex",
+        flexDirection: isVertical ? "column" : "row",
         justifyContent: "center",
+        alignItems: "center",
         position: "relative",
-        marginBottom: 60
+        marginBottom: isVertical ? 60 : 60,
+        gap: isVertical ? 24 : 0
       }, children: [
-        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", left: 0 }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: isVertical ? "static" : "absolute", left: isVertical ? "auto" : 0 }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
           "img",
           {
-            src: (0,esm.staticFile)("shared/Painstack.ai_logo2.png"),
-            style: { height: 48, width: "auto", objectFit: "contain" },
+            src: (0,esm.staticFile)(isLight ? "shared/Painstack.ai_logo1.png" : "shared/Painstack.ai_logo2.png"),
+            style: { height: isVertical ? 48 : 48, width: "auto", objectFit: "contain" },
             alt: "Logo"
           }
         ) }),
         /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
-          background: "rgba(30, 41, 59, 0.8)",
-          border: `1px solid ${colors.border}`,
+          background: isLight ? "rgba(255, 255, 255, 0.6)" : "rgba(30, 41, 59, 0.6)",
+          backdropFilter: "blur(10px)",
+          border: `2px solid ${themeColors.border}`,
           borderRadius: 100,
-          padding: "8px 20px",
+          padding: isVertical ? "12px 28px" : "8px 20px",
           display: "flex",
           alignItems: "center",
-          gap: 10,
-          fontSize: 13,
-          fontWeight: 700,
-          color: colors.muted,
+          gap: 12,
+          fontSize: isVertical ? 16 : 13,
+          // Increased for mobile
+          fontWeight: 800,
+          color: themeColors.muted,
           textTransform: "uppercase",
-          letterSpacing: "1px"
+          letterSpacing: "2px"
         }, children: [
-          /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { width: 8, height: 8, borderRadius: "50%", background: colors.orange } }),
+          /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { width: 10, height: 10, borderRadius: "50%", background: colors.orange } }),
           "WELCOME BACK, ELIO \u{1F44B}"
         ] })
       ] }),
       /* @__PURE__ */ (0,jsx_runtime.jsxs)("h1", { style: {
-        fontSize: 64,
+        fontSize: isVertical ? 54 : 64,
+        // Increased for mobile
         fontWeight: 800,
-        color: colors.white,
+        color: themeColors.text,
         textAlign: "center",
-        maxWidth: 900,
-        marginBottom: 60,
+        maxWidth: isVertical ? "100%" : 900,
+        marginBottom: isVertical ? 60 : 60,
         lineHeight: 1.1,
         letterSpacing: "-2px"
       }, children: [
@@ -707,44 +726,56 @@ const DashboardInputScene = ({ withInteractions = false }) => {
       ] }),
       /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
         width: "100%",
-        maxWidth: 1100,
-        background: colors.bgCard,
-        border: `1px solid ${colors.border}`,
+        maxWidth: isVertical ? "100%" : 1100,
+        background: themeColors.card,
+        border: `1px solid ${themeColors.border}`,
         borderRadius: 32,
-        padding: 40,
-        boxShadow: "0 40px 100px rgba(0,0,0,0.4)",
+        padding: isVertical ? 32 : 40,
+        // Slightly increased padding
+        boxShadow: isLight ? "0 20px 50px rgba(0,0,0,0.05)" : "0 40px 100px rgba(0,0,0,0.4)",
         position: "relative"
       }, children: [
         /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
-          background: "rgba(15, 23, 42, 0.4)",
-          border: `1px solid ${colors.border}`,
+          background: themeColors.inputBg,
+          border: `1px solid ${themeColors.border}`,
           borderRadius: 20,
-          padding: 30,
-          minHeight: 180,
-          color: colors.white,
-          fontSize: 24,
+          padding: isVertical ? 24 : 30,
+          minHeight: isVertical ? 240 : 180,
+          color: themeColors.text,
+          fontSize: isVertical ? 24 : 24,
+          // Increased for mobile
           lineHeight: 1.5,
-          marginBottom: 40,
-          fontWeight: 300
+          marginBottom: isVertical ? 32 : 40,
+          fontWeight: 400
         }, children: [
-          frame < 40 ? /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: { color: colors.muted, opacity: 0.6 }, children: "Paste a real complaint or describe the problem in your own words..." }) : /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { children: text.substring(0, charsShown) }),
+          frame < 40 ? /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: { color: themeColors.muted, opacity: 0.6 }, children: "Paste a real complaint or describe the problem in your own words..." }) : /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { children: text.substring(0, charsShown) }),
           /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: {
-            borderRight: `3px solid ${colors.blue}`,
+            borderRight: `3px solid ${colors.orange}`,
             marginLeft: 4,
             opacity: frame % 30 < 15 ? 1 : 0
           } })
         ] }),
-        /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center" }, children: [
-          /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { display: "flex", gap: 15 }, children: [
-            { icon: "\u{1F4CE}", label: "Upload a document" },
-            { icon: "\u{1F517}", label: "I have a Reddit post" },
-            { icon: "\u2753", label: "Guide me with questions", color: colors.orange }
+        /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
+          display: "flex",
+          flexDirection: isVertical ? "column" : "row",
+          justifyContent: "space-between",
+          alignItems: isVertical ? "stretch" : "center",
+          gap: isVertical ? 20 : 0
+        }, children: [
+          /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+            display: "flex",
+            gap: 10,
+            justifyContent: isVertical ? "center" : "flex-start"
+          }, children: [
+            { icon: "\u{1F4DD}", label: isVertical ? "" : "Free text" },
+            { icon: "\u{1F517}", label: isVertical ? "" : "Reddit" },
+            { icon: "\u{1F4C4}", label: isVertical ? "" : "Doc" }
           ].map((btn, i) => /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
-            padding: "12px 24px",
+            padding: isVertical ? "10px 16px" : "12px 24px",
             borderRadius: 12,
-            border: `1px solid ${colors.border}`,
-            background: "rgba(255,255,255,0.03)",
-            color: btn.color || colors.white,
+            border: `1px solid ${themeColors.border}`,
+            background: isLight ? "#f8fafc" : "rgba(255,255,255,0.03)",
+            color: isLight ? colors.lightText : colors.white,
             fontSize: 15,
             fontWeight: 600,
             display: "flex",
@@ -758,14 +789,15 @@ const DashboardInputScene = ({ withInteractions = false }) => {
           /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
             background: colors.blue,
             color: colors.white,
-            padding: "16px 48px",
+            padding: isVertical ? "16px 32px" : "16px 48px",
             borderRadius: 14,
             fontWeight: 700,
-            fontSize: 20,
+            fontSize: isVertical ? 18 : 20,
             boxShadow: `0 15px 30px ${colors.blue}44`,
             transform: `scale(${buttonScale})`,
             display: "flex",
             alignItems: "center",
+            justifyContent: "center",
             gap: 10
           }, children: [
             "Validate ",
@@ -783,7 +815,7 @@ const DashboardInputScene = ({ withInteractions = false }) => {
       zIndex: 100,
       pointerEvents: "none",
       opacity: (0,esm.interpolate)(mouseProg, [0, 0.1, 0.9, 1], [0, 1, 1, 0.2])
-    }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)("svg", { width: "32", height: "32", viewBox: "0 0 32 32", fill: "none", children: /* @__PURE__ */ (0,jsx_runtime.jsx)("path", { d: "M7 26L5 5L22 17L13.5 19.5L7 26Z", fill: "black", stroke: "white", strokeWidth: "2", strokeLinejoin: "round" }) }) })
+    }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)("svg", { width: "32", height: "32", viewBox: "0 0 32 32", fill: "none", children: /* @__PURE__ */ (0,jsx_runtime.jsx)("path", { d: "M7 26L5 5L22 17L13.5 19.5L7 26Z", fill: isLight ? "white" : "black", stroke: isLight ? "black" : "white", strokeWidth: "2", strokeLinejoin: "round" }) }) })
   ] });
 };
 
@@ -792,8 +824,15 @@ const DashboardInputScene = ({ withInteractions = false }) => {
 
 
 
-const MetricRow = ({ label, val, color, delay }) => {
+const MetricRow = ({
+  label,
+  val,
+  color,
+  delay,
+  theme = "dark"
+}) => {
   const frame = (0,esm.useCurrentFrame)();
+  const isLight = theme === "light";
   const entrance = (0,esm.interpolate)(frame, [delay, delay + 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const x = (0,esm.interpolate)(entrance, [0, 1], [30, 0]);
   return /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
@@ -801,123 +840,119 @@ const MetricRow = ({ label, val, color, delay }) => {
     justifyContent: "space-between",
     alignItems: "center",
     padding: "14px 18px",
-    background: colors.bgCard,
+    background: isLight ? "rgba(241, 245, 249, 0.4)" : "rgba(30, 41, 59, 0.4)",
+    backdropFilter: "blur(10px)",
     borderRadius: 12,
-    border: `1px solid ${colors.border}`,
+    border: `1px solid ${isLight ? "rgba(226, 232, 240, 0.5)" : "rgba(45, 63, 94, 0.5)"}`,
     opacity: entrance,
     transform: `translateX(${x}px)`
   }, children: [
-    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { fontSize: 14, color: colors.muted, fontWeight: 500 }, children: label }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { fontSize: 14, color: isLight ? colors.lightMuted : colors.muted, fontWeight: 500 }, children: label }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { fontSize: 14, fontWeight: 800, color }, children: val })
   ] });
 };
-const BlueprintScoreScene = () => {
+const BlueprintScoreScene = ({
+  theme = "dark",
+  targetScore = 87,
+  metrics: customMetrics,
+  cardWidth = "100%"
+}) => {
   const frame = (0,esm.useCurrentFrame)();
-  const { fps } = (0,esm.useVideoConfig)();
+  const { fps, width, height } = (0,esm.useVideoConfig)();
+  const isLight = theme === "light";
+  const isVertical = height > width;
   const radius = 90;
   const circumference = 2 * Math.PI * radius;
   const labelEntrance = (0,esm.interpolate)(frame, [0, 20], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const ringEntrance = (0,esm.interpolate)(frame, [5, 25], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const ringScale = (0,esm.interpolate)(ringEntrance, [0, 1], [0.85, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const ringProgress = (0,esm.interpolate)(frame, [20, 90], [0, 0.87], {
+  const ringProgress = (0,esm.interpolate)(frame, [20, 90], [0, targetScore / 100], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: esm.Easing.bezier(0.4, 0, 0.2, 1)
   });
   const offset = circumference * (1 - ringProgress);
-  const scoreVal = Math.floor((0,esm.interpolate)(frame, [20, 90], [0, 87], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }));
+  const scoreVal = Math.floor((0,esm.interpolate)(frame, [20, 90], [0, targetScore], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }));
   const showCalculating = frame < 20;
-  const badgeEntrance = (0,esm.spring)({ frame: frame - 90, fps, config: { damping: 14, stiffness: 160 } });
-  const glintAngle = ringProgress * 0.87 * 360 - 90;
-  const glintX = 110 + radius * Math.cos(glintAngle * Math.PI / 180);
-  const glintY = 110 + radius * Math.sin(glintAngle * Math.PI / 180);
-  const glintOpacity = (0,esm.interpolate)(frame, [20, 30, 90, 100], [0, 1, 1, 0]);
+  const badgeEntrance = (0,esm.spring)({
+    frame: frame - 90,
+    fps,
+    config: theme === "light" ? { damping: 10, stiffness: 100 } : { damping: 14, stiffness: 160 }
+  });
   const bloom = (0,esm.interpolate)(frame, [90, 95, 105], [0, 1, 0], { extrapolateRight: "clamp" });
   const btnEntrance = (0,esm.interpolate)(frame, [130, 150], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const btnY = (0,esm.interpolate)(btnEntrance, [0, 1], [10, 0]);
-  const metrics = [
+  const finalMetrics = customMetrics || [
     { label: "Problem Signal", val: "STRONG", color: colors.green, delay: 60 },
     { label: "Market Size", val: "$2.4B TAM", color: colors.blue, delay: 75 },
     { label: "Competition", val: "FRAGMENTED", color: colors.orange, delay: 90 },
-    { label: "Time to MVP", val: "6\u201310 weeks", color: colors.white, delay: 105 }
+    { label: "Time to MVP", val: "6\u201310 weeks", color: isLight ? colors.lightText : colors.white, delay: 105 }
   ];
   return /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.AbsoluteFill, { style: {
-    background: colors.bg,
+    background: isLight ? colors.lightBgProduct : colors.bg,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    padding: 40
+    padding: isVertical ? 20 : 40
   }, children: /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
-    background: colors.bg,
-    border: `1px solid ${colors.border}`,
+    background: isLight ? colors.lightBg : colors.bg,
+    border: `1px solid ${isLight ? colors.lightBorder : colors.border}`,
     borderRadius: 24,
-    padding: "48px",
-    width: "100%",
-    height: "100%",
+    padding: isVertical ? "40px 24px" : "48px",
+    width: cardWidth,
+    height: cardWidth === "100%" ? "100%" : "auto",
     boxSizing: "border-box",
-    boxShadow: "0 40px 100px rgba(0,0,0,0.6)",
+    boxShadow: isLight ? "0 20px 60px rgba(0,0,0,0.08)" : "0 40px 100px rgba(0,0,0,0.6)",
     fontFamily: fonts.base,
     display: "flex",
-    gap: 60,
+    flexDirection: isVertical ? "column" : "row",
+    gap: isVertical ? 40 : 60,
     alignItems: "center",
     position: "relative",
     overflow: "hidden"
   }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.AbsoluteFill, { style: {
-      background: `radial-gradient(circle at center, ${colors.green}44 0%, transparent 70%)`,
+      background: `radial-gradient(circle at center, ${colors.green}22 0%, transparent 70%)`,
       opacity: bloom,
       pointerEvents: "none",
       zIndex: 10
     } }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { textAlign: "center", flexShrink: 0, width: 300, zIndex: 1 }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { textAlign: "center", flexShrink: 0, width: isVertical ? "100%" : 300, zIndex: 1 }, children: [
       /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
         fontSize: 11,
         fontWeight: 700,
-        color: colors.muted,
+        color: isLight ? colors.lightMuted : colors.muted,
         textTransform: "uppercase",
         letterSpacing: "0.15em",
-        marginBottom: 24,
+        marginBottom: isVertical ? 16 : 24,
         opacity: labelEntrance
       }, children: "Blueprint Score" }),
       /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
         position: "relative",
-        width: 220,
-        height: 220,
+        width: isVertical ? 180 : 220,
+        height: isVertical ? 180 : 220,
         margin: "0 auto",
         opacity: ringEntrance,
         transform: `scale(${ringScale})`
       }, children: [
-        /* @__PURE__ */ (0,jsx_runtime.jsxs)("svg", { width: 220, height: 220, viewBox: "0 0 220 220", children: [
-          /* @__PURE__ */ (0,jsx_runtime.jsx)("circle", { cx: 110, cy: 110, r: radius, fill: "none", stroke: colors.bgCard, strokeWidth: 14 }),
+        /* @__PURE__ */ (0,jsx_runtime.jsxs)("svg", { width: isVertical ? 180 : 220, height: isVertical ? 180 : 220, viewBox: isVertical ? "0 0 180 180" : "0 0 220 220", children: [
+          /* @__PURE__ */ (0,jsx_runtime.jsx)("circle", { cx: isVertical ? 90 : 110, cy: isVertical ? 90 : 110, r: isVertical ? 75 : radius, fill: "none", stroke: isLight ? "#f1f5f9" : colors.bgCard, strokeWidth: isVertical ? 12 : 14 }),
           /* @__PURE__ */ (0,jsx_runtime.jsx)(
             "circle",
             {
-              cx: 110,
-              cy: 110,
-              r: radius,
+              cx: isVertical ? 90 : 110,
+              cy: isVertical ? 90 : 110,
+              r: isVertical ? 75 : radius,
               fill: "none",
-              stroke: colors.green,
-              strokeWidth: 14,
+              stroke: isLight ? colors.orange : colors.green,
+              strokeWidth: isVertical ? 12 : 14,
               strokeLinecap: "round",
-              strokeDasharray: circumference,
-              strokeDashoffset: offset,
-              transform: "rotate(-90 110 110)",
+              strokeDasharray: isVertical ? 2 * Math.PI * 75 : circumference,
+              strokeDashoffset: isVertical ? 2 * Math.PI * 75 * (1 - ringProgress) : offset,
+              transform: isVertical ? "rotate(-90 90 90)" : "rotate(-90 110 110)",
               style: {
-                filter: `drop-shadow(0 0 ${(0,esm.interpolate)(frame, [90, 110], [12, 24], { extrapolateRight: "clamp" })}px rgba(34,197,94,0.6))`,
+                filter: isLight ? "none" : `drop-shadow(0 0 12px rgba(34,197,94,0.4))`,
                 transition: "stroke-dashoffset 0.1s linear"
-              }
-            }
-          ),
-          /* @__PURE__ */ (0,jsx_runtime.jsx)(
-            "circle",
-            {
-              cx: glintX,
-              cy: glintY,
-              r: 6,
-              fill: "white",
-              style: {
-                opacity: glintOpacity,
-                filter: "blur(4px) drop-shadow(0 0 10px white)"
               }
             }
           )
@@ -929,50 +964,56 @@ const BlueprintScoreScene = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center"
-        }, children: showCalculating ? /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { fontSize: 16, color: colors.muted, fontWeight: 600 }, children: "Calculating..." }) : /* @__PURE__ */ (0,jsx_runtime.jsxs)(jsx_runtime.Fragment, { children: [
+        }, children: showCalculating ? /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { fontSize: 14, color: isLight ? colors.lightMuted : colors.muted, fontWeight: 600 }, children: "Calculating..." }) : /* @__PURE__ */ (0,jsx_runtime.jsxs)(jsx_runtime.Fragment, { children: [
           /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
-            fontSize: 72,
+            fontSize: isVertical ? 56 : 72,
             fontWeight: 900,
-            color: colors.white,
+            color: isLight ? colors.lightText : colors.white,
             letterSpacing: "-2px",
             lineHeight: 1,
             transform: `scale(${1 + bloom * 0.1})`,
             transition: "transform 0.1s ease-out"
           }, children: scoreVal }),
-          /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { fontSize: 16, color: colors.muted, fontWeight: 500 }, children: "/100" })
+          /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { fontSize: 14, color: isLight ? colors.lightMuted : colors.muted, fontWeight: 500 }, children: "/100" })
         ] }) })
       ] }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
-        background: "rgba(34,197,94,0.15)",
+        background: isLight ? `${colors.green}11` : "rgba(34,197,94,0.15)",
         border: `2px solid ${colors.green}`,
         borderRadius: 12,
-        padding: "12px 40px",
-        fontSize: 28,
+        padding: isVertical ? "8px 32px" : "12px 40px",
+        fontSize: isVertical ? 22 : 28,
         fontWeight: 900,
         color: colors.green,
-        marginTop: 32,
+        marginTop: isVertical ? 20 : 32,
         letterSpacing: "0.12em",
         display: "inline-block",
         opacity: badgeEntrance,
         transform: `scale(${badgeEntrance})`,
-        boxShadow: `0 10px 40px ${colors.green}55`
+        boxShadow: isLight ? "none" : `0 10px 40px ${colors.green}55`
       }, children: "BUILD \u2713" })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { flex: 1, zIndex: 1 }, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { fontSize: 24, fontWeight: 900, color: colors.white, marginBottom: 28, letterSpacing: "-1.2px" }, children: "Startup Blueprint" }),
-      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { display: "flex", flexDirection: "column", gap: 14, marginBottom: 40 }, children: metrics.map((m, i) => /* @__PURE__ */ (0,jsx_runtime.jsx)(MetricRow, { ...m }, i)) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { flex: 1, zIndex: 1, width: isVertical ? "100%" : "auto" }, children: [
       /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
-        background: `linear-gradient(135deg, ${colors.blue}, #1d4ed8)`,
+        fontSize: isVertical ? 20 : 24,
+        fontWeight: 900,
+        color: isLight ? colors.lightText : colors.white,
+        marginBottom: 20,
+        letterSpacing: "-1.2px",
+        textAlign: isVertical ? "center" : "left"
+      }, children: "Startup Blueprint" }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { display: "flex", flexDirection: "column", gap: 10, marginBottom: isVertical ? 30 : 40 }, children: finalMetrics.map((m, i) => /* @__PURE__ */ (0,jsx_runtime.jsx)(MetricRow, { ...m, theme }, i)) }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+        background: isLight ? colors.lightText : `linear-gradient(135deg, ${colors.blue}, #1d4ed8)`,
         borderRadius: 14,
-        padding: "18px",
+        padding: "16px",
         textAlign: "center",
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 900,
         color: colors.white,
         opacity: btnEntrance,
         transform: `translateY(${btnY}px)`,
-        boxShadow: `0 15px 35px ${colors.blue}66`,
-        cursor: "none"
+        boxShadow: isLight ? "0 10px 30px rgba(0,0,0,0.1)" : `0 15px 35px ${colors.blue}66`
       }, children: "Explore Full Blueprint \u2192" })
     ] })
   ] }) });
@@ -1083,11 +1124,16 @@ const SceneAudio = ({
     }
   );
 };
-const BackgroundMusic = ({ volume = 0.05 }) => {
+const BackgroundMusic = ({
+  volume = 0.05,
+  filename = "percussion.wav"
+}) => {
+  const hasExt = filename.includes(".");
+  const src = (0,esm.staticFile)(`audio/${hasExt ? filename : filename + ".mp3"}`);
   return /* @__PURE__ */ (0,jsx_runtime.jsx)(
     esm.Audio,
     {
-      src: (0,esm.staticFile)("audio/percussion.wav"),
+      src,
       volume,
       loop: true
     }
@@ -1115,44 +1161,43 @@ const Transition = ({ duration, children }) => {
 const Video1Social = () => {
   return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: colors.bg }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)(BackgroundMusic, {}),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { durationInFrames: 123, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { durationInFrames: 114, children: [
       /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene1Hook, {}),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v1_s1_hook" }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_whoosh_clean.mp3"), volume: 0.15 })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 123, durationInFrames: 237, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(Transition, { duration: 237, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene2Problem, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 114, durationInFrames: 258, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(Transition, { duration: 258, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene2Problem, {}) }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v1_s2_problem" }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 10, durationInFrames: 180, children: [0, 15, 30, 45, 60, 75, 90, 105, 120, 135].map((d, i) => /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: d, durationInFrames: 15, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_ui_pop.mp3"), volume: 0.15 }) }, i)) })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 360, durationInFrames: 205, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(Transition, { duration: 205, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene2bBridge, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 372, durationInFrames: 178, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(Transition, { duration: 178, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene2bBridge, {}) }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v1_s2b_bridge" }),
       [90, 110, 130, 150].map((d, i) => /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: d, durationInFrames: 15, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_ui_pop.mp3"), volume: 0.2 }) }, i)),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_whoosh_clean.mp3"), volume: 0.1 })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 565, durationInFrames: 179, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(Transition, { duration: 179, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(DashboardInputScene, { withInteractions: true }) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 550, durationInFrames: 160, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(Transition, { duration: 160, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(DashboardInputScene, { withInteractions: true }) }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v1_s3_input" }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 15, durationInFrames: 100, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_typing.mp3"), volume: 0.15 }) }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 154, durationInFrames: 20, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_click.mp3"), volume: 0.4 }) })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 744, durationInFrames: 293, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(Transition, { duration: 293, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene4Agents, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 710, durationInFrames: 215, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(Transition, { duration: 215, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene4Agents, {}) }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v1_s4_agents" }),
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 40, durationInFrames: 120, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_data_scan.mp3"), volume: 0.25 }) })
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 40, durationInFrames: 100, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_data_scan.mp3"), volume: 0.25 }) })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 1037, durationInFrames: 208, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(Transition, { duration: 208, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(BlueprintScoreScene, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 925, durationInFrames: 121, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(Transition, { duration: 121, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(BlueprintScoreScene, {}) }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v1_s5_verdict" }),
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 90, durationInFrames: 30, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_success_chime.mp3"), volume: 0.3 }) })
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 60, durationInFrames: 30, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_success_chime.mp3"), volume: 0.3 }) })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 1245, durationInFrames: 205, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 1046, durationInFrames: 170, children: [
       /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene6CTA, {}),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v1_s6_cta" }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 10, durationInFrames: 60, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_whoosh_clean.mp3"), volume: 0.2 }) })
-    ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.AbsoluteFill, { style: { pointerEvents: "none" }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", inset: 0, boxShadow: "inset 0 0 200px rgba(0,0,0,0.3)", zIndex: 10 } }) })
+    ] })
   ] });
 };
 
@@ -1239,7 +1284,6 @@ const ScreenEvidence_RedditCard = ({ post, cardDelay }) => {
 };
 const EvidenceCardsScene = () => {
   const frame = (0,esm.useCurrentFrame)();
-  const { fps } = (0,esm.useVideoConfig)();
   const posts = [
     { sub: "r/startups", upvotes: "2.4k", pain: "HIGH", text: "Spent $40k and 8 months building. Got 3 users. I should have validated first.", tags: ["validation", "failure"] },
     { sub: "r/entrepreneur", upvotes: "1.2k", pain: "HIGH", text: "How do you validate without spending money? I keep building things nobody uses.", tags: ["validation", "mvp"] },
@@ -1305,7 +1349,6 @@ const EvidenceCardsScene = () => {
 
 const DocRow = ({ doc, delay }) => {
   const frame = (0,esm.useCurrentFrame)();
-  const { fps } = (0,esm.useVideoConfig)();
   const entrance = (0,esm.interpolate)(frame, [delay, delay + 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const y = (0,esm.interpolate)(entrance, [0, 1], [15, 0]);
   const pulse = (0,esm.interpolate)(
@@ -1350,7 +1393,6 @@ const DocRow = ({ doc, delay }) => {
 };
 const DataRoomScene = () => {
   const frame = (0,esm.useCurrentFrame)();
-  const { fps } = (0,esm.useVideoConfig)();
   const docs = [
     { icon: "\u{1F4CA}", title: "Market Analysis Report", type: "PDF", size: "2.4 MB", date: "Today", badge: "AI Generated", badgeColor: colors.blue, delay: 20 },
     { icon: "\u{1F3AF}", title: "Problem Validation", type: "DOC", size: "840 KB", date: "Today", badge: "AI Generated", badgeColor: colors.blue, delay: 32 },
@@ -1663,7 +1705,6 @@ const AgentCard = ({
   ] });
 };
 const SceneEAgents = () => {
-  const frame = (0,esm.useCurrentFrame)();
   return /* @__PURE__ */ (0,jsx_runtime.jsxs)(SceneContainer, { children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.AbsoluteFill, { style: { background: `radial-gradient(ellipse at 50% 40%, rgba(45,129,224,0.15) 0%, transparent 80%)` } }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)(Vignette, {}),
@@ -1851,44 +1892,44 @@ const SceneG = () => {
 const Video2Walkthrough = () => {
   return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: colors.bg }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)(BackgroundMusic, { volume: 0.06 }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { durationInFrames: 156, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { durationInFrames: 246, children: [
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneA, {}),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v2_sa_hero" }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_whoosh_clean.mp3"), volume: 0.15 })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 156, durationInFrames: 277, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(Video2Walkthrough_Transition, { duration: 277, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneB, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 246, durationInFrames: 308, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(Video2Walkthrough_Transition, { duration: 308, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneB, {}) }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v2_sb_problem" }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 60, durationInFrames: 160, children: [0, 15, 30, 45, 60, 75].map((d, i) => /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: d, durationInFrames: 15, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_ui_pop.mp3"), volume: 0.15 }) }, i)) })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 433, durationInFrames: 288, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(Video2Walkthrough_Transition, { duration: 288, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(DashboardInputScene, { withInteractions: true }) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 554, durationInFrames: 246, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(Video2Walkthrough_Transition, { duration: 246, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(DashboardInputScene, { withInteractions: true }) }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v2_sc_input" }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 20, durationInFrames: 120, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_typing.mp3"), volume: 0.15 }) }),
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 258, durationInFrames: 20, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_click.mp3"), volume: 0.4 }) })
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 154, durationInFrames: 20, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_click.mp3"), volume: 0.4 }) })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 721, durationInFrames: 345, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(Video2Walkthrough_Transition, { duration: 345, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(EvidenceCardsScene, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 800, durationInFrames: 298, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(Video2Walkthrough_Transition, { duration: 298, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(EvidenceCardsScene, {}) }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v2_sd_evidence" }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 25, durationInFrames: 60, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_whoosh_clean.mp3"), volume: 0.2 }) }),
       [40, 55, 70].map((d, i) => /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: d, durationInFrames: 30, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_ui_pop.mp3"), volume: 0.15 }) }, i))
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 1066, durationInFrames: 257, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 1098, durationInFrames: 318, children: [
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneEAgents, {}),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v2_se_agents", volume: 1 })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 1323, durationInFrames: 328, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 1416, durationInFrames: 295, children: [
       /* @__PURE__ */ (0,jsx_runtime.jsx)(BlueprintScoreScene, {}),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v2_sf_blueprint" }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 20, durationInFrames: 70, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_power_up.mp3"), volume: 0.2 }) }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 90, durationInFrames: 30, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_success_chime.mp3"), volume: 0.3 }) })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 1651, durationInFrames: 283, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 1711, durationInFrames: 289, children: [
       /* @__PURE__ */ (0,jsx_runtime.jsx)(DataRoomScene, {}),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v2_sh_dataroom" }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 20, durationInFrames: 60, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_ui_glitch.mp3"), volume: 0.1 }) })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 1934, durationInFrames: 266, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 2e3, durationInFrames: 213, children: [
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneG, {}),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v2_sg_cta" }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 15, durationInFrames: 60, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_whoosh_clean.mp3"), volume: 0.25 }) })
@@ -2081,7 +2122,6 @@ const Video3Shorts_Scene2Problem = () => {
 };
 const Scene3Input = () => {
   const frame = (0,esm.useCurrentFrame)();
-  const { fps } = (0,esm.useVideoConfig)();
   const text = "An AI tool that helps founders validate their ideas...";
   const charsShown = Math.floor((0,esm.interpolate)(frame, [20, 70], [0, text.length], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }));
   const pulse = Math.sin(frame / 6) * 0.04 + 1;
@@ -2339,19 +2379,19 @@ const Scene5CTA = () => {
 const Video3Shorts = () => {
   return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { background: colors.bg }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)(BackgroundMusic, { volume: 0.12 }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { durationInFrames: 102, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { durationInFrames: 83, children: [
       /* @__PURE__ */ (0,jsx_runtime.jsx)(Video3Shorts_Scene1Hook, {}),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v3_s1_hook" }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_whoosh_clean.mp3"), volume: 0.2 })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 102, durationInFrames: 176, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(Video3Shorts_Transition, { duration: 176, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Video3Shorts_Scene2Problem, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 83, durationInFrames: 136, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(Video3Shorts_Transition, { duration: 136, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Video3Shorts_Scene2Problem, {}) }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v3_s2_problem" }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_whoosh_clean.mp3"), volume: 0.1 }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 10, durationInFrames: 30, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_glitch.mp3"), volume: 0.15 }) })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 278, durationInFrames: 176, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(Video3Shorts_Transition, { duration: 176, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene3Input, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 219, durationInFrames: 164, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(Video3Shorts_Transition, { duration: 164, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene3Input, {}) }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v3_s3_solution" }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_whoosh_clean.mp3"), volume: 0.15 }),
       /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 10, durationInFrames: 150, children: [
@@ -2359,17 +2399,60 @@ const Video3Shorts = () => {
         /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_typing.mp3"), volume: 0.2 })
       ] })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 454, durationInFrames: 155, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(Video3Shorts_Transition, { duration: 155, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene4Score, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 383, durationInFrames: 102, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(Video3Shorts_Transition, { duration: 102, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene4Score, {}) }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v3_s4_result" }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 15, durationInFrames: 70, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_power_up.mp3"), volume: 0.25 }) }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 80, durationInFrames: 30, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_success_chime.mp3"), volume: 0.4 }) })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 609, durationInFrames: 191, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 485, durationInFrames: 147, children: [
       /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene5CTA, {}),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "v3_s5_cta" }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 15, durationInFrames: 60, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_whoosh_clean.mp3"), volume: 0.3 }) })
     ] })
+  ] });
+};
+
+;// ./src/compositions/Video4Product/components/DotGridBackground.tsx
+
+
+
+const DotGridBackground = () => {
+  const frame = (0,esm.useCurrentFrame)();
+  const scrollY = frame * 0.2 % 24;
+  const scrollX = frame * 0.1 % 24;
+  const bloomA = Math.sin(frame / 80) * 40;
+  const bloomB = Math.cos(frame / 100) * 30;
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#0F172A", overflow: "hidden" }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      inset: -100,
+      // Overscan for scrolling
+      backgroundImage: "radial-gradient(rgba(255, 255, 255, 0.08) 1.5px, transparent 1.5px)",
+      backgroundSize: "24px 24px",
+      backgroundPosition: `${scrollX}px ${scrollY}px`,
+      opacity: 0.8
+    } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      top: "-15%",
+      left: "-10%",
+      width: "70%",
+      height: "70%",
+      background: "radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 70%)",
+      filter: "blur(120px)",
+      transform: `translate(${bloomA}px, ${bloomB}px)`
+    } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      bottom: "-25%",
+      right: "-15%",
+      width: "80%",
+      height: "80%",
+      background: "radial-gradient(circle, rgba(236, 117, 36, 0.1) 0%, transparent 70%)",
+      filter: "blur(120px)",
+      transform: `translate(${-bloomB}px, ${-bloomA}px)`
+    } })
   ] });
 };
 
@@ -2380,15 +2463,8 @@ const Video3Shorts = () => {
 const SceneAudio_BackgroundMusic = ({
   volume = 0.1
 }) => {
-  const frame = (0,esm.useCurrentFrame)();
-  const speakingIntervals = [
-    [20, 5800]
-    // Generic ducking for the whole video
-  ];
-  const isSpeaking = speakingIntervals.some(([start, end]) => frame >= start && frame <= end);
-  const targetVolume = isSpeaking ? volume * 0.4 : volume;
   const src = (0,esm.staticFile)("audio/v1_music.wav");
-  return /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src, volume: targetVolume, loop: true });
+  return /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src, volume, loop: true });
 };
 const SceneAudio_SceneAudio = ({
   filename,
@@ -2399,82 +2475,6 @@ const SceneAudio_SceneAudio = ({
     return /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: startFrom, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src }) });
   }
   return /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src });
-};
-
-;// ./src/compositions/Video4Product/constants/colors.ts
-
-const colors_colors = {
-  bgVoid: "#000000",
-  bgDark: "#050505",
-  bgSurface: "#12121F",
-  bgSurfaceDeep: "#0F0F1E",
-  bgDot: "#0D0D16",
-  dotColor: "#1E1E35",
-  borderDefault: "#2D2D50",
-  borderSubtle: "rgba(255,255,255,0.04)",
-  bgLight: "#F8FAFC",
-  bgLightCard: "#FFFFFF",
-  bgLightSurface: "#F1F5F9",
-  borderLight: "#E2E8F0",
-  orange: "#F97316",
-  orangeSoft: "#FB923C",
-  orangeGlow: "rgba(249,115,22,0.20)",
-  violet: "#818CF8",
-  cyan: "#38BDF8",
-  cyanDeep: "#22D3EE",
-  greenBuild: "#22C55E",
-  greenBuildGlow: "rgba(34,197,94,0.30)",
-  yellowRefine: "#EAB308",
-  redPivot: "#EF4444",
-  textWhite: "#FFFFFF",
-  textMuted: "#64748B",
-  textSecondary: "#94A3B8",
-  textDark: "#0F172A",
-  textDarkMuted: "#64748B",
-  gradLogo: "linear-gradient(90deg, #F97316, #FB923C)",
-  gradAccent: "linear-gradient(90deg, #F97316, #818CF8)",
-  gradCyan: "linear-gradient(90deg, #38BDF8, #22D3EE)",
-  gradViolet: "linear-gradient(90deg, #818CF8, #C084FC)",
-  gradScore: "linear-gradient(90deg, #F97316, #FB923C)"
-};
-
-;// ./src/compositions/Video4Product/components/BrandBackground.tsx
-
-
-
-
-const BrandBackground = ({
-  glowOpacity = 0.35
-}) => {
-  const frame = (0,esm.useCurrentFrame)();
-  const driftX = Math.sin(frame / 60) * 20;
-  const driftY = Math.cos(frame / 75) * 15;
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: colors_colors.bgDark }, children: [
-    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
-      position: "absolute",
-      width: 1e3,
-      height: 1e3,
-      borderRadius: "50%",
-      background: "radial-gradient(circle, rgba(249,115,22,0.18), transparent 70%)",
-      top: "40%",
-      left: "60%",
-      transform: `translate(-50%, -50%) translate(${driftX}px, ${driftY}px)`,
-      filter: "blur(140px)",
-      opacity: glowOpacity
-    } }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
-      position: "absolute",
-      width: 1200,
-      height: 1200,
-      borderRadius: "50%",
-      background: "radial-gradient(circle, rgba(12,20,69,0.5), transparent 70%)",
-      bottom: "10%",
-      left: "-10%",
-      transform: `translate(0, 0)`,
-      filter: "blur(160px)",
-      opacity: 0.6
-    } })
-  ] });
 };
 
 ;// ./src/compositions/Video4Product/constants/copy.ts
@@ -2499,14 +2499,14 @@ const COPY = {
       color: "#ffffffff",
       holdFrames: 30
     },
-    userCaption: '"uff, ok... friday night panic. who watches the kids?"'
+    userCaption: '"uff, okay... who watches the kids? there has to be a better way than this."'
   },
   c03: {
-    label: "describe your problem \u2192",
-    typewriter: "Parents in my neighbourhood waste hours every week trying to find a trusted babysitter. There's no easy way to find vetted, available sitters nearby \u2014 especially last minute.",
+    label: "Describe, Link or Upload \u2192",
+    typewriter: "Parents in my neighbourhood waste hours every week trying to find a trusted babysitter. There's no easy way to find vetted, available sitters nearby, especially last minute.",
     pills: ["\u{1F4DD} Free text", "\u{1F517} Reddit link", "\u{1F4C4} Document"],
     badge: "Painstack Pro",
-    userCaption: '"so I just... describe it. parents waste hours finding a sitter."'
+    userCaption: '"so i just... describe it. like parents in my area wasting hours finding a sitter."'
   },
   c04: {
     steps: [
@@ -2521,27 +2521,27 @@ const COPY = {
       { label: "Web", count: "18,400+ results", delay: 36 }
     ],
     footer: "This takes 30\u201360 seconds \u2014 real evidence takes time to gather.",
-    userCaption: `"it's scanning reddit. actual complaints."`,
-    productCaption: "analyzing 3,241 local conversations..."
+    userCaption: `"it's scanning everywhere. finding signals i didn't even see."`,
+    productCaption: "analyzing local conversations..."
   },
   c05: {
-    label: "BLUEPRINT GENERATED IN 52 SECONDS",
+    label: "NOT MOTIVATIONAL. JUST THE TRUTH.",
     score: 81,
     verdict: "BUILD",
-    userCaptionPre: '"81."',
-    userCaptionPost: '"this is real."',
-    productCaption: "the market wants this. move forward.",
+    userCaptionPre: `"score 81? okay, this isn't just hype."`,
+    userCaptionPost: '"this is buildable."',
+    productCaption: "the market data is clear.",
     bullets: [
-      "real problem: 74% of parents struggle to find trusted sitters on short notice",
-      "market: $4.8B globally, growing 22%/year",
-      "no neighbourhood-first mobile solution exists",
-      "validated model: subscription \u20AC19/month + booking fee"
+      "Real problem: 74% of parents struggle with short-notice care",
+      "Honest Truth: The market is $4.8B but fragmented",
+      "Risk: Background check trust is the #1 killer of competitors",
+      "Advantage: Neighbourhood-first model has 0 direct rivals"
     ]
   },
   c06: {
     line1: "verdict: build.",
-    line2: "your team enters now.",
-    productCaption: "your team is ready.",
+    line2: "the ai team enters now.",
+    productCaption: "the ai team is ready.",
     agents: [
       { label: "Market", border: "#94A3B8" },
       { label: "CEO", border: "#F97316" },
@@ -2576,7 +2576,7 @@ const COPY = {
         { text: "North star: 50 paying families in 90 days" }
       ]
     },
-    userCaption: '"no one is doing this locally."'
+    userCaption: `"my market agent confirms it: nobody is doing this locally. i'm first."`
   },
   c08: {
     cmo: {
@@ -2598,7 +2598,7 @@ const COPY = {
       cta: "Join the waitlist",
       social: "84 parents already on the list \xB7 Porto"
     },
-    userCaption: '"i can send this today."'
+    userCaption: '"my cmo built the whole campaign. i could literally send this today."'
   },
   c09: {
     cto: {
@@ -2625,7 +2625,7 @@ const COPY = {
         { name: "Carla T.", sub: "1.1km \xB7 Busy today \xB7 \u26055.0", dot: "amber" }
       ]
     },
-    userCaption: `"i don't know how to code. i can do this."`
+    userCaption: `"i'm not a coder, but my cto says i don't need to be."`
   },
   c10: {
     line1: "the agents built the plan.",
@@ -2636,7 +2636,7 @@ const COPY = {
     header: "Roadmap \u2014 90 days",
     progress: "Week 3 of 13 \xB7 23% complete",
     progressPct: 23,
-    userCaption: '"i know exactly what to do tomorrow."',
+    userCaption: '"week three. i know exactly what to do tomorrow morning."',
     weeks: [
       {
         label: "Week 1",
@@ -2661,26 +2661,27 @@ const COPY = {
     ]
   },
   c12: {
-    line1: "when the time comes",
+    line1: "and when the time comes",
     line2: "to talk to investors",
-    line3: "you're ready.",
-    productCaption: "you're ready."
+    line3: "i'm ready.",
+    productCaption: "i'm ready."
   },
   c13: {
-    topLabel: "EXECUTIVE SUMMARY",
+    topLabel: "PROFESSIONAL DATAROOM",
     topPreview: "Problem: Parents in PT/ES spend 3+ hours per week searching for trusted babysitters. No neighbourhood-first mobile solution exists. 74% report this as a weekly frustration...",
-    topBadge: "1 page \xB7 Ready to share",
+    topBadge: "8 docs \xB7 Ready to share",
     stackLabels: [
       "PITCH DECK OUTLINE",
-      "MARKET ANALYSIS",
-      "FINANCIAL PROJECTIONS 3 YEARS",
-      "BUSINESS MODEL CANVAS",
-      "SWOT ANALYSIS",
+      "FINANCIAL PROJECTIONS (3Y)",
       "GO-TO-MARKET OVERVIEW",
-      "PROBLEM STATEMENT"
+      "BUSINESS MODEL CANVAS",
+      "MARKET ANALYSIS (TAM/SAM)",
+      "SWOT ANALYSIS",
+      "PROBLEM STATEMENT",
+      "EXECUTIVE SUMMARY (1-PAGE)"
     ],
-    footer: "8 documents \xB7 Auto-generated \xB7 Any language",
-    userCaption: `"eight documents. i didn't write a single one."`
+    footer: "Everything a professional founder needs \u2014 auto-generated.",
+    userCaption: `"eight documents. i didn't write a single one, but they're all here."`
   },
   c14: {
     nodes: [
@@ -2691,7 +2692,7 @@ const COPY = {
       { label: "Dataroom \xB7 8 documents", color: "#C084FC" },
       { label: "Business with paying customers", color: "#F97316" }
     ],
-    userCaption: '"from a friday panic. a real startup."'
+    userCaption: '"from a friday panic... to a real startup."'
   },
   c15: {
     stats: [
@@ -2699,7 +2700,7 @@ const COPY = {
       { value: "90 days", label: "from zero to first paying customers", color: "#818CF8" },
       { value: "0", label: "lines of code required to build your MVP", color: "#38BDF8" }
     ],
-    userCaption: `"it's real. we have a clear path."`
+    userCaption: '"an honest verdict in under a minute."'
   },
   c16: {
     line1: "you don't need a team.",
@@ -2711,7 +2712,7 @@ const COPY = {
       // White to very light orange
     },
     userCaption: '"from idea..."',
-    productCaption: "to business."
+    productCaption: "Painstack AI"
   },
   c17: {
     tagline: "from idea to business.",
@@ -2725,39 +2726,77 @@ const COPY = {
 
 
 
+
 const Scene01_BrandOpen = () => {
   const frame = (0,esm.useCurrentFrame)();
   const { fps } = (0,esm.useVideoConfig)();
   const { badge } = COPY.c01;
-  const logoSpring = (0,esm.spring)({ frame: frame - 20, fps, config: { stiffness: 80, damping: 12, mass: 1 } });
-  const logoScale = (0,esm.interpolate)(logoSpring, [0, 1], [0.85, 1]);
-  const logoOpacity = (0,esm.interpolate)(logoSpring, [0, 0.15], [0, 1]);
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { children: [
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(BrandBackground, { glowOpacity: 0.25 }),
+  const START_FRAME = 45;
+  const auroraOpacity = (0,esm.interpolate)(frame, [START_FRAME, START_FRAME + 20], [0, 0.6], { extrapolateLeft: "clamp" });
+  const auroraSway = Math.sin(frame / 60) * 10;
+  const popSpring = (0,esm.spring)({
+    frame: frame - START_FRAME,
+    fps,
+    config: { stiffness: 300, damping: 25, mass: 0.5 }
+  });
+  const logoBlur = (0,esm.interpolate)(frame, [START_FRAME, START_FRAME + 6], [60, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const logoScale = (0,esm.interpolate)(popSpring, [0, 1], [1.3, 1]);
+  const logoOpacity = (0,esm.interpolate)(frame, [START_FRAME, START_FRAME + 4], [0, 1], { extrapolateLeft: "clamp" });
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#0F172A" }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s1_open" }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { opacity: 0.05 }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(DotGridBackground, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      top: "-20%",
+      left: "30%",
+      width: "25%",
+      height: "140%",
+      background: "linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.12), transparent)",
+      filter: "blur(100px)",
+      transform: `translateX(${auroraSway}px) rotate(-10deg)`,
+      opacity: auroraOpacity
+    } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      top: "-10%",
+      right: "25%",
+      width: "30%",
+      height: "120%",
+      background: "linear-gradient(to bottom, transparent, rgba(236, 117, 36, 0.1), transparent)",
+      filter: "blur(120px)",
+      transform: `translateX(${-auroraSway}px) rotate(8deg)`,
+      opacity: auroraOpacity
+    } }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
       position: "absolute",
       top: "46%",
       left: "50%",
-      transform: "translate(-50%, -50%) scale(" + logoScale + ")",
-      opacity: logoOpacity
+      transform: `translate(-50%, -50%) scale(${logoScale})`,
+      opacity: logoOpacity,
+      filter: `blur(${logoBlur}px)`,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
     }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Img, { src: (0,esm.staticFile)("shared/Painstack.ai_logo2.png"), style: { width: 520, height: "auto" } }) }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
       position: "absolute",
       top: "58%",
       left: "50%",
       transform: "translateX(-50%)",
-      opacity: (0,esm.interpolate)(frame, [45, 60], [0, 1], { extrapolateLeft: "clamp" })
+      opacity: (0,esm.interpolate)(frame, [START_FRAME + 25, START_FRAME + 45], [0, 1], { extrapolateLeft: "clamp" })
     }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
       padding: "12px 32px",
       borderRadius: 99,
-      border: "1px solid rgba(255,255,255,0.2)",
-      backgroundColor: "rgba(255,255,255,0.05)",
-      color: "white",
+      border: "1px solid rgba(255,255,255,0.1)",
+      backgroundColor: "rgba(255,255,255,0.02)",
+      backdropFilter: "blur(20px)",
+      color: "rgba(255,255,255,0.8)",
       fontSize: 16,
       fontWeight: 700,
       letterSpacing: "0.15em",
       fontFamily: "Inter, sans-serif"
-    }, children: badge }) })
+    }, children: badge }) }),
+    frame < START_FRAME && /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.AbsoluteFill, { style: { backgroundColor: "#0F172A", zIndex: 100 } })
   ] });
 };
 
@@ -2768,14 +2807,16 @@ const Scene01_BrandOpen = () => {
 const WordReveal = ({
   text,
   startFrame = 0,
-  staggerFrames = 12,
+  staggerFrames = 10,
   fontSize = 64,
   fontWeight = 400,
   gradient,
   color = "#FFFFFF",
   italic = false,
   textAlign = "center",
-  style = {}
+  style = {},
+  highlights,
+  mode = "pop"
 }) => {
   const frame = (0,esm.useCurrentFrame)();
   const { fps } = (0,esm.useVideoConfig)();
@@ -2788,34 +2829,98 @@ const WordReveal = ({
     ...style
   }, children: words.map((word, i) => {
     const wordStart = startFrame + i * staggerFrames;
-    const prog = (0,esm.spring)({
+    const popSpring = (0,esm.spring)({
       frame: frame - wordStart,
       fps,
-      config: { stiffness: 80, damping: 12, mass: 1 }
+      config: { stiffness: 180, damping: 18, mass: 0.8 }
     });
-    const opacity = (0,esm.interpolate)(frame, [wordStart, wordStart + 10], [0, 1], {
+    const opacity = (0,esm.interpolate)(frame, [wordStart, wordStart + 5], [0, 1], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp"
     });
-    const translateY = (0,esm.interpolate)(prog, [0, 1], [-15, 0]);
+    const blur = mode === "pop" ? (0,esm.interpolate)(frame, [wordStart, wordStart + 10], [15, 0], { extrapolateRight: "clamp" }) : 0;
+    const scale = mode === "pop" ? (0,esm.interpolate)(popSpring, [0, 1], [0.85, 1]) : 1;
+    const translateY = mode === "pop" ? 0 : (0,esm.interpolate)(popSpring, [0, 1], [-15, 0]);
+    let finalColor = color;
+    let isHighlighted = false;
+    if (highlights) {
+      const match = Object.keys(highlights).find((k) => word.toLowerCase().includes(k.toLowerCase()));
+      if (match) {
+        finalColor = highlights[match];
+        isHighlighted = true;
+      }
+    }
+    const pulseScale = isHighlighted ? (0,esm.interpolate)(Math.sin((frame - wordStart) / 5), [-1, 1], [1, 1.05], { extrapolateLeft: "clamp" }) : 1;
     const textStyle = gradient ? {
       background: gradient,
       WebkitBackgroundClip: "text",
       WebkitTextFillColor: "transparent"
-    } : { color };
+    } : {
+      color: finalColor,
+      textShadow: isHighlighted ? `0 0 20px ${finalColor}80` : "none"
+    };
     return /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: {
       opacity,
-      transform: `translateY(${translateY}px)`,
+      transform: `scale(${scale * pulseScale}) translateY(${translateY}px)`,
+      filter: `blur(${blur}px)`,
       fontSize,
       fontWeight,
       fontStyle: italic ? "italic" : "normal",
       fontFamily: "Inter, sans-serif",
       lineHeight: 1.1,
-      letterSpacing: "-0.02em",
+      letterSpacing: "0px",
       display: "inline-block",
       ...textStyle
     }, children: word }, i);
   }) });
+};
+
+;// ./src/compositions/Video4Product/scenes/Scene01B_Teaser.tsx
+
+
+
+
+
+const Scene01B_Teaser = () => {
+  const frame = (0,esm.useCurrentFrame)();
+  const line1 = "For entrepreneurs with too many ideas.";
+  const line2 = "Painstack is your AI validation engine.";
+  const line3 = "Real evidence. Zero guessing.";
+  const lineStarts = [10, 75, 150];
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "transparent" }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s1b_teaser" }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      inset: 0,
+      background: "radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 70%)",
+      opacity: (0,esm.interpolate)(frame, [0, 20], [0, 1])
+    } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: 32,
+      width: "90%"
+    }, children: [line1, line2, line3].map((line, i) => {
+      const start = lineStarts[i];
+      const opacity = (0,esm.interpolate)(frame, [start - 5, start, 220, 241], [0, 1, 1, 0], { extrapolateLeft: "clamp" });
+      return /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { opacity }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        WordReveal,
+        {
+          text: line,
+          startFrame: start,
+          fontSize: i === 2 ? 52 : 42,
+          fontWeight: i === 2 ? 800 : 400,
+          color: i === 2 ? "#F97316" : "#FFFFFF",
+          mode: "pop"
+        }
+      ) }, i);
+    }) })
+  ] });
 };
 
 ;// ./src/compositions/Video4Product/components/UserCaption.tsx
@@ -2873,7 +2978,7 @@ const UserCaption = ({
 const Scene02_Pain = () => {
   const frame = (0,esm.useCurrentFrame)();
   const { memories, decision, userCaption } = COPY.c02;
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#08080F" }, children: [
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "transparent" }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s2_pain" }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", inset: 0, opacity: 0.15, background: "radial-gradient(circle at 70% 30%, #F97316 0%, transparent 70%)" } }),
     /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
@@ -2888,62 +2993,12 @@ const Scene02_Pain = () => {
       width: "85%"
     }, children: [
       memories.map((memo, i) => {
-        const startFrame = i === 0 ? 0 : memories[i - 1].holdFrames + (i === 1 ? 60 : 120);
-        return /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { opacity: (0,esm.interpolate)(frame, [startFrame + 200, startFrame + 220], [1, 0.3], { extrapolateLeft: "clamp" }) }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: memo.text, startFrame, fontSize: memo.size + 4, fontWeight: memo.weight, color: memo.color, gradient: memo.gradient, italic: memo.italic }) }, i);
+        const startFrame = i === 0 ? 15 : i === 1 ? 50 : 85;
+        return /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { opacity: (0,esm.interpolate)(frame, [startFrame + 50, startFrame + 70], [1, 0.4], { extrapolateLeft: "clamp" }) }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: memo.text, startFrame, fontSize: memo.size + 4, fontWeight: memo.weight, color: memo.color, gradient: memo.gradient, italic: memo.italic, mode: "pop" }) }, i);
       }),
-      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { marginTop: 50 }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: decision.text, startFrame: 220, fontSize: 64, fontWeight: 800, color: decision.color }) })
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { marginTop: 50 }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: decision.text, startFrame: 130, fontSize: 64, fontWeight: 800, color: decision.color, mode: "pop" }) })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 20 })
-  ] });
-};
-
-;// ./src/compositions/Video4Product/components/MouseCursor.tsx
-
-
-
-const MouseCursor = ({
-  startFrame,
-  startX,
-  startY,
-  endX,
-  endY,
-  clickFrame
-}) => {
-  const frame = (0,esm.useCurrentFrame)();
-  const { fps } = (0,esm.useVideoConfig)();
-  const move = (0,esm.spring)({
-    frame: frame - startFrame,
-    fps,
-    config: { stiffness: 45, damping: 15 }
-  });
-  const curX = (0,esm.interpolate)(move, [0, 1], [startX, endX]);
-  const curY = (0,esm.interpolate)(move, [0, 1], [startY, endY]);
-  const clickScale = (0,esm.spring)({
-    frame: frame - clickFrame,
-    fps,
-    config: { stiffness: 200, damping: 10 }
-  });
-  const scale = (0,esm.interpolate)(clickScale, [0, 0.5, 1], [1, 0.8, 1]);
-  const rippleOpacity = (0,esm.interpolate)(frame, [clickFrame, clickFrame + 20], [0.6, 0], { extrapolateLeft: "clamp" });
-  const rippleScale = (0,esm.interpolate)(frame, [clickFrame, clickFrame + 20], [0, 2.5], { extrapolateLeft: "clamp" });
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
-    position: "absolute",
-    left: curX,
-    top: curY,
-    transform: `scale(${scale})`,
-    zIndex: 1e3,
-    pointerEvents: "none"
-  }, children: [
-    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
-      position: "absolute",
-      width: 30,
-      height: 30,
-      borderRadius: "50%",
-      border: "2px solid rgba(249,115,22,0.8)",
-      opacity: rippleOpacity,
-      transform: `translate(-50%, -50%) scale(${rippleScale})`
-    } }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)("svg", { width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ (0,jsx_runtime.jsx)("path", { d: "M5.66202 19.4678L9.2081 12.0298L5.20456 12.0001L17.7071 4.29289C18.1133 4.0436 18.6321 4.1751 18.8829 4.5828C18.9619 4.71123 19 4.85871 19 5.00898V17.0001C19 17.5524 18.5523 18.0001 18 18.0001C17.7971 18.0001 17.5997 17.9387 17.4335 17.8241L12.5526 14.4601L9.21557 19.9678C8.92484 20.4475 8.29828 20.6 7.81858 20.3093C7.68345 20.2273 7.57011 20.1135 7.48866 19.978L5.66202 19.4678Z", fill: "white", stroke: "black", strokeWidth: "1.5" }) })
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 15, exitFrame: 219 })
   ] });
 };
 
@@ -2966,16 +3021,15 @@ const TypewriterTextV2 = ({
   while (charIndex < text.length && frameTicker <= currentFrame) {
     const char = text[charIndex];
     currentText += char;
-    let delay = 1.2;
+    let delay = 1;
     if (char === "." || char === "?" || char === "!") {
-      delay = pauseAfterPunctuation;
+      delay = 30;
     } else if (char === ",") {
-      delay = Math.floor(pauseAfterPunctuation / 2);
+      delay = 10;
     }
     frameTicker += delay;
     charIndex++;
   }
-  const cursorOpacity = Math.floor(frame / 6) % 2 === 0 ? 1 : 0;
   const isFinished = charIndex >= text.length;
   return /* @__PURE__ */ (0,jsx_runtime.jsxs)("span", { children: [
     currentText,
@@ -2991,23 +3045,37 @@ const TypewriterTextV2 = ({
   ] });
 };
 
+;// ./src/shared/Painstack.ai_logo1.png
+const Painstack_ai_logo1_namespaceObject = __webpack_require__.p + "35e6e6670a4cdf8b.png";
 ;// ./src/compositions/Video4Product/components/LandingHero.tsx
 
 
 
 
-const LandingHero = ({ isTyping }) => {
+
+const LandingHero = ({
+  isTyping,
+  typingStart = 140,
+  clickFrame = 550,
+  mouseStart = 480
+}) => {
   const frame = (0,esm.useCurrentFrame)();
-  const typingStart = 140;
+  const T_MOUSE_START = mouseStart;
+  const T_MOUSE_END = clickFrame - 10;
+  const T_CLICK = clickFrame;
+  const mouseX = (0,esm.interpolate)(frame, [T_MOUSE_START, T_MOUSE_END], [900, 780], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  const mouseY = (0,esm.interpolate)(frame, [T_MOUSE_START, T_MOUSE_END], [400, 275], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  const mouseScale = (0,esm.interpolate)(frame, [T_MOUSE_END, T_CLICK, T_CLICK + 10], [0.8, 0.65, 0.8], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  const clickedColor = frame > T_CLICK ? "#2563EB" : "#3B82F6";
   return /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#F8FAFC",
-    backgroundImage: "radial-gradient(circle at 10% 10%, rgba(59, 130, 246, 0.03) 0%, transparent 40%)",
+    // backgroundColor: '#F8FAFC',
     display: "flex",
     flexDirection: "column",
     fontFamily: "Inter, sans-serif",
-    color: "#0F172A",
+    color: "#FFFFFF",
+    // Changed text color default to white
     position: "relative"
   }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
@@ -3015,21 +3083,20 @@ const LandingHero = ({ isTyping }) => {
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
-      borderBottom: "1px solid rgba(226, 232, 240, 0.8)",
-      backgroundColor: "rgba(255, 255, 255, 0.8)",
-      backdropFilter: "blur(10px)",
+      borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+      backgroundColor: "rgba(15, 23, 42, 0)",
       zIndex: 50
     }, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { display: "flex", alignItems: "center", gap: 14 }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Img, { src: (0,esm.staticFile)("shared/Painstack.ai_logo1.png"), style: { height: 40 } }) }),
-      /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { display: "flex", gap: 48, fontSize: 15, fontWeight: 600, color: "#64748B" }, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { display: "flex", alignItems: "center", gap: 14 }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Img, { src: Painstack_ai_logo1_namespaceObject, style: { height: 40 } }) }),
+      /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { display: "flex", gap: 48, fontSize: 15, fontWeight: 600, color: "#94A3B8" }, children: [
         /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { children: "Product" }),
         /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { children: "Pricing" }),
         /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { children: "Docs" }),
         /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { children: "Resources" })
       ] }),
       /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { display: "flex", gap: 24, fontSize: 15, fontWeight: 700 }, children: [
-        /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: { color: "#3B82F6", border: "2px solid #3B82F6", padding: "12px 30px", borderRadius: 12 }, children: "Sign In" }),
-        /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: { backgroundColor: "#0F172A", color: "white", padding: "14px 30px", borderRadius: 12, boxShadow: "0 4px 14px rgba(15, 23, 42, 0.2)" }, children: "Start Free" })
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: { color: "#3B82F6", border: "2px solid rgba(59, 130, 246, 0.5)", padding: "12px 30px", borderRadius: 12 }, children: "Sign In" }),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: { backgroundColor: "white", color: "#0F172A", padding: "14px 30px", borderRadius: 12, boxShadow: "0 4px 14px rgba(255,255,255, 0.2)" }, children: "Start Free" })
       ] })
     ] }),
     /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
@@ -3045,7 +3112,7 @@ const LandingHero = ({ isTyping }) => {
       /* @__PURE__ */ (0,jsx_runtime.jsxs)("h1", { style: {
         fontSize: 84,
         fontWeight: 900,
-        color: "#0F172A",
+        color: "#1b1b1bea",
         lineHeight: 1.05,
         marginBottom: 28,
         letterSpacing: "-0.04em"
@@ -3058,7 +3125,7 @@ const LandingHero = ({ isTyping }) => {
           display: "inline-block"
         }, children: " Business " })
       ] }),
-      /* @__PURE__ */ (0,jsx_runtime.jsxs)("p", { style: { fontSize: 24, color: "#64748B", maxWidth: 880, lineHeight: 1.6, marginBottom: 70, fontWeight: 500 }, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsxs)("p", { style: { fontSize: 24, color: "#94A3B8", maxWidth: 880, lineHeight: 1.6, marginBottom: 70, fontWeight: 500 }, children: [
         "Describe a problem. We validate it against market data, build the GTM plan,",
         /* @__PURE__ */ (0,jsx_runtime.jsx)("br", {}),
         "and generate the foundation for your next big thing."
@@ -3066,10 +3133,11 @@ const LandingHero = ({ isTyping }) => {
       /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { id: "hero-input-target", style: {
         width: 860,
         minHeight: 320,
-        backgroundColor: "white",
+        backgroundColor: "rgba(15, 23, 42, 0.4)",
+        backdropFilter: "blur(20px)",
         borderRadius: 32,
-        border: "1px solid #E2E8F0",
-        boxShadow: "0 40px 100px rgba(0,0,10,0.08)",
+        border: "1px solid rgba(255, 255, 255, 0.08)",
+        boxShadow: "0 40px 100px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)",
         padding: 48,
         display: "flex",
         flexDirection: "column",
@@ -3078,37 +3146,60 @@ const LandingHero = ({ isTyping }) => {
         position: "relative",
         overflow: "hidden"
       }, children: [
-        !isTyping ? /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { color: "#94A3B8", fontSize: 22, fontWeight: 400 }, children: "What problem are you solving? Type it here..." }) : /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
-          color: "#334155",
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+          position: "absolute",
+          bottom: 0,
+          left: "10%",
+          right: "10%",
+          height: 40,
+          background: "linear-gradient(90deg, transparent, rgba(59,130,246,0.3), rgba(236,117,36,0.2), transparent)",
+          filter: "blur(20px)"
+        } }),
+        !isTyping ? /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { color: "rgba(255,255,255,0.4)", fontSize: 22, fontWeight: 400 }, children: "What problem are you solving? Type it here..." }) : /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+          color: "white",
           fontSize: 22,
           lineHeight: 1.5,
           position: "relative",
           zIndex: 1,
-          fontWeight: 500
+          fontWeight: 400
         }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
           TypewriterTextV2,
           {
-            text: "Parents in my neighbourhood waste hours every week trying to find a trusted babysitter. There's no easy way to find vetted, available sitters nearby \u2014 especially last minute.",
+            text: "Parents in my neighbourhood waste hours every week trying to find a trusted babysitter. There's no easy way to find vetted, available sitters nearby, especially last minute.",
             startFrame: typingStart
           }
         ) }),
         /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "center", zIndex: 2 }, children: [
           /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { display: "flex", gap: 20 }, children: [
-            /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { border: "1px solid #E2E8F0", padding: "10px 20px", borderRadius: 10, fontSize: 14, color: "#64748B", backgroundColor: "#F8FAFC", fontWeight: 600 }, children: "Upload docs" }),
-            /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { border: "1px solid #E2E8F0", padding: "10px 20px", borderRadius: 10, fontSize: 14, color: "#ec7524", backgroundColor: "#F8FAFC", fontWeight: 600 }, children: "I have a Reddit post" }),
-            /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { border: "1px solid #E2E8F0", padding: "10px 20px", borderRadius: 10, fontSize: 14, color: "#64748B", backgroundColor: "#F8FAFC", fontWeight: 600 }, children: "Guide me " })
+            /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { border: "1px solid rgba(255,255,255,0.15)", padding: "10px 24px", borderRadius: 12, fontSize: 14, color: "#dbdbdbff", backgroundColor: "rgba(255,255,255,0.06)", fontWeight: 600 }, children: "Upload" }),
+            /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { border: "1px solid rgba(59,130,246,0.3)", padding: "10px 24px", borderRadius: 12, fontSize: 14, color: "#f6763bff", backgroundColor: "rgba(59,130,246,0.08)", fontWeight: 600 }, children: "I have a Reddit post" }),
+            /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { border: "1px solid rgba(255,255,255,0.1)", padding: "10px 20px", borderRadius: 12, fontSize: 14, color: "#dbdbdbff", backgroundColor: "rgba(255,255,255,0.03)", fontWeight: 500 }, children: "Guide-me" })
           ] }),
           /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
-            backgroundColor: "#3B82F6",
+            backgroundColor: clickedColor,
             color: "white",
             padding: "16px 40px",
             borderRadius: 14,
             fontWeight: 800,
             fontSize: 18,
-            boxShadow: "0 8px 24px rgba(59, 130, 246, 0.4)",
-            cursor: "pointer"
-          }, children: "Validate \u2192" })
-        ] })
+            boxShadow: frame > T_CLICK ? "0 0px 0px transparent" : "0 8px 32px rgba(59, 130, 246, 0.5)",
+            transform: frame > T_CLICK ? "scale(0.95)" : "scale(1)",
+            transition: "transform 0.1s, background-color 0.1s",
+            cursor: "pointer",
+            letterSpacing: 0.5
+          }, children: "VALIDATE" })
+        ] }),
+        frame > T_MOUSE_START && /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+          position: "absolute",
+          top: mouseY,
+          left: mouseX,
+          transform: `scale(${mouseScale})`,
+          zIndex: 100,
+          pointerEvents: "none",
+          filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))"
+        }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)("svg", { width: "36", height: "36", viewBox: "0 0 24 24", fill: "none", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ (0,jsx_runtime.jsx)("path", { d: "M5.5 2.5L20.5 10.5L12.5 13.5L9.5 21.5L5.5 2.5Z", fill: "white", stroke: "#0F172A", strokeWidth: "1.5", strokeLinejoin: "round" }) }) }),
+        isTyping && frame < 430 && /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: typingStart, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_typing.mp3"), volume: 0.8 }) }),
+        frame >= T_CLICK && /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: T_CLICK, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_click.mp3"), volume: 1 }) })
       ] })
     ] })
   ] });
@@ -3121,19 +3212,19 @@ const LandingHero = ({ isTyping }) => {
 
 
 
+
 const Scene03_Input = () => {
   const frame = (0,esm.useCurrentFrame)();
   const { fps } = (0,esm.useVideoConfig)();
-  const T_ZOOM_START = 60;
-  const T_TYPE_START = 140;
-  const T_TYPE_END = T_TYPE_START + 280;
-  const T_MOUSE_START = T_TYPE_END + 20;
-  const T_MOUSE_MOVE_DUR = 90;
-  const T_CLICK = T_MOUSE_START + T_MOUSE_MOVE_DUR;
+  const { userCaption } = COPY.c03;
+  const T_ZOOM_START = 20;
+  const T_TYPE_START = 30;
+  const T_CLICK = 250;
+  const T_MOUSE_START = 220;
   const zoomSpring = (0,esm.spring)({
     frame: frame - T_ZOOM_START,
     fps,
-    config: { stiffness: 45, damping: 14 }
+    config: { stiffness: 60, damping: 14 }
   });
   const scale = (0,esm.interpolate)(zoomSpring, [0, 1], [1, 1.8]);
   const translateY = (0,esm.interpolate)(zoomSpring, [0, 1], [0, -180]);
@@ -3141,30 +3232,70 @@ const Scene03_Input = () => {
   return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#F8FAFC", overflow: "hidden" }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s3_input" }),
     isClickFrame && /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_click.mp3"), volume: 1 }),
-    isClickFrame && /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_ding.mp3"), volume: 0.4 }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
+    isClickFrame && /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_success_chime.mp3"), volume: 0.4 }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
       width: "100%",
       height: "100%",
       transform: `scale(${scale}) translateY(${translateY}px)`,
       transformOrigin: "50% 50%"
-    }, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(LandingHero, { isTyping: frame >= T_TYPE_START }),
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(
-        MouseCursor,
-        {
-          startFrame: T_MOUSE_START,
-          startX: 1500,
-          startY: 1e3,
-          endX: 1180,
-          endY: 820,
-          clickFrame: T_CLICK
-        }
-      )
-    ] })
+    }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      LandingHero,
+      {
+        isTyping: frame >= T_TYPE_START,
+        typingStart: T_TYPE_START,
+        clickFrame: T_CLICK,
+        mouseStart: T_MOUSE_START
+      }
+    ) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 10, exitFrame: 267, dark: true })
   ] });
 };
 
+;// ./src/compositions/Video4Product/components/ProductCaption.tsx
+
+
+
+const ProductCaption = ({
+  text,
+  startFrame = 0,
+  exitFrame,
+  dark = false
+}) => {
+  const frame = (0,esm.useCurrentFrame)();
+  const { fps } = (0,esm.useVideoConfig)();
+  const s = (0,esm.spring)({
+    frame: frame - startFrame,
+    fps,
+    config: { stiffness: 60, damping: 14, mass: 1 }
+  });
+  const enterOpacity = (0,esm.interpolate)(s, [0, 1], [0, 1]);
+  const exitOpacity = exitFrame ? (0,esm.interpolate)(frame, [exitFrame, exitFrame + 15], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) : 1;
+  const opacity = Math.min(enterOpacity, exitOpacity);
+  const translateY = (0,esm.interpolate)(s, [0, 1], [8, 0]);
+  return /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+    position: "absolute",
+    bottom: 40,
+    left: "50%",
+    transform: `translateX(-50%) translateY(${translateY}px)`,
+    opacity,
+    fontFamily: "Inter, sans-serif",
+    fontSize: 20,
+    fontWeight: 400,
+    fontStyle: "normal",
+    color: dark ? "#475569" : "#F1F5F9",
+    letterSpacing: "0.04em",
+    whiteSpace: "nowrap",
+    textAlign: "center",
+    textShadow: dark ? "none" : "0 2px 8px rgba(0,0,0,0.3)",
+    pointerEvents: "none",
+    zIndex: 100
+  }, children: text });
+};
+
 ;// ./src/compositions/Video4Product/scenes/Scene04_Wait.tsx
+
+
+
 
 
 
@@ -3180,7 +3311,7 @@ const StatusItem = ({ icon, label, delay, active }) => {
     marginBottom: 32,
     fontFamily: "Inter, sans-serif",
     fontSize: 18,
-    color: "#64748B",
+    color: "#E2E8F0",
     fontWeight: 500
   }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { opacity: 0.5 }, children: icon }),
@@ -3189,16 +3320,15 @@ const StatusItem = ({ icon, label, delay, active }) => {
 };
 const Scene04_Wait = () => {
   const frame = (0,esm.useCurrentFrame)();
-  const { fps } = (0,esm.useVideoConfig)();
+  const { productCaption, userCaption } = COPY.c04;
   const T_SWEEP = 30;
   const ringScale = (i) => (0,esm.interpolate)(Math.sin(frame / 20 + i * 0.5), [-1, 1], [1, 1.1]);
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#FFFFFF" }, children: [
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "transparent" }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s4_wait_s" }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_hum.mp3"), volume: 0.2, loop: true }),
     frame === T_SWEEP && /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_sweep.mp3"), volume: 0.4 }),
     /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
       position: "absolute",
-      top: "50%",
+      top: "45%",
       left: "50%",
       transform: "translate(-50%, -50%)",
       display: "flex",
@@ -3207,8 +3337,8 @@ const Scene04_Wait = () => {
       width: 800
     }, children: [
       /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { position: "relative", marginBottom: 60, width: 120, height: 120, display: "flex", alignItems: "center", justifyContent: "center" }, children: [
-        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", width: 140, height: 140, borderRadius: "50%", backgroundColor: "#EFF6FF", transform: `scale(${ringScale(0)})` } }),
-        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", width: 110, height: 110, borderRadius: "50%", border: "4px solid #DBEAFE", opacity: 0.5, transform: `scale(${ringScale(1)})` } }),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", width: 140, height: 140, borderRadius: "50%", backgroundColor: "rgba(59, 130, 246, 0.1)", transform: `scale(${ringScale(0)})` } }),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", width: 110, height: 110, borderRadius: "50%", border: "4px solid rgba(59, 130, 246, 0.2)", opacity: 0.5, transform: `scale(${ringScale(1)})` } }),
         /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
           width: 80,
           height: 80,
@@ -3227,8 +3357,9 @@ const Scene04_Wait = () => {
       /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
         width: 560,
         height: 64,
-        backgroundColor: "#F0F7FF",
-        border: "2px solid #DBEAFE",
+        backgroundColor: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(255,255,255,0.1)",
+        backdropFilter: "blur(10px)",
         borderRadius: 16,
         padding: "0 24px",
         display: "flex",
@@ -3236,11 +3367,11 @@ const Scene04_Wait = () => {
         gap: 16,
         marginBottom: 60
       }, children: [
-        /* @__PURE__ */ (0,jsx_runtime.jsxs)("svg", { width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "#2563EB", strokeWidth: "2.5", children: [
+        /* @__PURE__ */ (0,jsx_runtime.jsxs)("svg", { width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "#3B82F6", strokeWidth: "2.5", children: [
           /* @__PURE__ */ (0,jsx_runtime.jsx)("circle", { cx: "11", cy: "11", r: "8" }),
           /* @__PURE__ */ (0,jsx_runtime.jsx)("path", { d: "m21 21-4.3-4.3" })
         ] }),
-        /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: { color: "#1E293B", fontSize: 20, fontWeight: 500, fontFamily: "Inter, sans-serif" }, children: "Searching Reddit, Hacker News & web..." }),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: { color: "#F8FAFC", fontSize: 20, fontWeight: 500, fontFamily: "Inter, sans-serif" }, children: "Searching Reddit, Hacker News & web..." }),
         /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
           marginLeft: "auto",
           width: 12,
@@ -3254,8 +3385,8 @@ const Scene04_Wait = () => {
         /* @__PURE__ */ (0,jsx_runtime.jsx)(
           StatusItem,
           {
-            delay: 30,
-            active: frame < 100,
+            delay: 15,
+            active: frame < 50,
             icon: /* @__PURE__ */ (0,jsx_runtime.jsxs)("svg", { width: "24", height: "24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
               /* @__PURE__ */ (0,jsx_runtime.jsx)("path", { d: "M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" }),
               /* @__PURE__ */ (0,jsx_runtime.jsx)("path", { d: "M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" })
@@ -3266,8 +3397,8 @@ const Scene04_Wait = () => {
         /* @__PURE__ */ (0,jsx_runtime.jsx)(
           StatusItem,
           {
-            delay: 90,
-            active: frame >= 80 && frame < 180,
+            delay: 45,
+            active: frame >= 45 && frame < 90,
             icon: /* @__PURE__ */ (0,jsx_runtime.jsx)("svg", { width: "24", height: "24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ (0,jsx_runtime.jsx)("path", { d: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" }) }),
             label: "Generating blueprint with real evidence..."
           }
@@ -3275,8 +3406,8 @@ const Scene04_Wait = () => {
         /* @__PURE__ */ (0,jsx_runtime.jsx)(
           StatusItem,
           {
-            delay: 150,
-            active: frame >= 160 && frame < 260,
+            delay: 85,
+            active: frame >= 85 && frame < 130,
             icon: /* @__PURE__ */ (0,jsx_runtime.jsxs)("svg", { width: "24", height: "24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
               /* @__PURE__ */ (0,jsx_runtime.jsx)("circle", { cx: "12", cy: "12", r: "10" }),
               /* @__PURE__ */ (0,jsx_runtime.jsx)("path", { d: "m9 12 2 2 4-4" })
@@ -3287,8 +3418,8 @@ const Scene04_Wait = () => {
         /* @__PURE__ */ (0,jsx_runtime.jsx)(
           StatusItem,
           {
-            delay: 210,
-            active: frame >= 240,
+            delay: 125,
+            active: frame >= 125,
             icon: /* @__PURE__ */ (0,jsx_runtime.jsxs)("svg", { width: "24", height: "24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
               /* @__PURE__ */ (0,jsx_runtime.jsx)("path", { d: "M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" }),
               /* @__PURE__ */ (0,jsx_runtime.jsx)("polyline", { points: "17 21 17 13 7 13 7 21" }),
@@ -3301,15 +3432,58 @@ const Scene04_Wait = () => {
     ] }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
       position: "absolute",
-      bottom: 60,
+      bottom: 120,
       left: "50%",
       transform: "translateX(-50%)",
       fontSize: 16,
-      color: "#94A3B8",
+      color: "#64748B",
       fontFamily: "Inter, sans-serif",
-      fontWeight: 500
-    }, children: "This takes 30-60 seconds \u2014 real evidence takes time to gather." })
+      fontWeight: 500,
+      opacity: (0,esm.interpolate)(frame, [0, 20], [0, 1])
+    }, children: "This takes 30-60 seconds \u2014 real evidence takes time to gather." }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 10, exitFrame: 130 }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 135, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s4_wait_p" }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(ProductCaption, { text: productCaption, startFrame: 0 })
+    ] })
   ] });
+};
+
+;// ./src/compositions/Video4Product/constants/colors.ts
+
+const colors_colors = {
+  bgVoid: "#000000",
+  bgDark: "#050505",
+  bgSurface: "#12121F",
+  bgSurfaceDeep: "#0F0F1E",
+  bgDot: "#0D0D16",
+  dotColor: "#1E1E35",
+  borderDefault: "#2D2D50",
+  borderSubtle: "rgba(255,255,255,0.04)",
+  bgLight: "#F8FAFC",
+  bgLightCard: "#FFFFFF",
+  bgLightSurface: "#F1F5F9",
+  borderLight: "#E2E8F0",
+  orange: "#F97316",
+  orangeSoft: "#FB923C",
+  orangeGlow: "rgba(249,115,22,0.20)",
+  violet: "#818CF8",
+  cyan: "#38BDF8",
+  cyanDeep: "#22D3EE",
+  greenBuild: "#22C55E",
+  greenBuildGlow: "rgba(34,197,94,0.30)",
+  yellowRefine: "#EAB308",
+  redPivot: "#EF4444",
+  textWhite: "#FFFFFF",
+  textMuted: "#64748B",
+  textSecondary: "#94A3B8",
+  textDark: "#0F172A",
+  textDarkMuted: "#64748B",
+  gradLogo: "linear-gradient(90deg, #F97316, #FB923C)",
+  gradAccent: "linear-gradient(90deg, #F97316, #818CF8)",
+  gradCyan: "linear-gradient(90deg, #38BDF8, #22D3EE)",
+  gradViolet: "linear-gradient(90deg, #818CF8, #C084FC)",
+  gradScore: "linear-gradient(90deg, #F97316, #FB923C)"
 };
 
 ;// ./src/compositions/Video4Product/components/BlueprintCard.tsx
@@ -3402,7 +3576,7 @@ const BlueprintCard = ({
           background: colors_colors.gradScore,
           transition: "width 0.1s ease"
         } }) }),
-        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { fontSize: 14, fontWeight: 400, color: colors_colors.textDarkMuted, letterSpacing: "0.02em" }, children: "validation score based on real evidence" })
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { fontSize: 14, fontWeight: 400, color: colors_colors.textDarkMuted, letterSpacing: "0.02em" }, children: "validation score calibrated with real evidence \u2014 not an opinion" })
       ] })
     ] }),
     /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
@@ -3455,44 +3629,6 @@ const BlueprintCard = ({
       }, children: bullet }, i);
     }) })
   ] });
-};
-
-;// ./src/compositions/Video4Product/components/ProductCaption.tsx
-
-
-
-const ProductCaption = ({
-  text,
-  startFrame = 0,
-  dark = false
-}) => {
-  const frame = (0,esm.useCurrentFrame)();
-  const { fps } = (0,esm.useVideoConfig)();
-  const s = (0,esm.spring)({
-    frame: frame - startFrame,
-    fps,
-    config: { stiffness: 60, damping: 14, mass: 1 }
-  });
-  const opacity = (0,esm.interpolate)(s, [0, 1], [0, 1]);
-  const translateY = (0,esm.interpolate)(s, [0, 1], [8, 0]);
-  return /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
-    position: "absolute",
-    bottom: 40,
-    left: "50%",
-    transform: `translateX(-50%) translateY(${translateY}px)`,
-    opacity,
-    fontFamily: "Inter, sans-serif",
-    fontSize: 20,
-    fontWeight: 400,
-    fontStyle: "normal",
-    color: dark ? "#475569" : "#F1F5F9",
-    letterSpacing: "0.04em",
-    whiteSpace: "nowrap",
-    textAlign: "center",
-    textShadow: dark ? "none" : "0 2px 8px rgba(0,0,0,0.3)",
-    pointerEvents: "none",
-    zIndex: 100
-  }, children: text });
 };
 
 ;// ./src/compositions/Video4Product/components/FeatureLabel.tsx
@@ -3549,33 +3685,20 @@ const FeatureLabel = ({
 
 const Scene05_Blueprint = () => {
   const { label, score, verdict, bullets, userCaptionPre, userCaptionPost, productCaption } = COPY.c05;
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#08080F" }, children: [
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "transparent" }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 90, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_success_chime.mp3"), volume: 0.5 }) }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s5_blue_s" }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", width: 800, height: 500, background: "radial-gradient(circle, rgba(249,115,22,0.1), transparent 70%)", top: "10%", right: "5%" } }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)(FeatureLabel, { text: "Market Blueprint", startFrame: 0, position: "top-left" }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(BlueprintCard, { label, score, verdict, bullets, startFrame: 0 }) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaptionPre, startFrame: 20, exitFrame: 120 }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaptionPost, startFrame: 130 }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(ProductCaption, { text: productCaption, startFrame: 200 })
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaptionPre, startFrame: 10, exitFrame: 110 }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaptionPost, startFrame: 115, exitFrame: 150 }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 151, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s5_blue_p" }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(ProductCaption, { text: productCaption, startFrame: 0 })
+    ] })
   ] });
 };
-
-;// ./src/compositions/Video4Product/constants/motion.ts
-
-const SPRING_DEFAULT = { stiffness: 80, damping: 12, mass: 1 };
-const SPRING_BOUNCY = { stiffness: 120, damping: 8, mass: 0.8 };
-const SPRING_GENTLE = { stiffness: 50, damping: 14, mass: 1.2 };
-const SPRING_CAPTION = { stiffness: 60, damping: 14, mass: 1 };
-const EASE_OUT = (/* unused pure expression or super */ null && ([0.16, 1, 0.3, 1]));
-const STAGGER_WORD = 8;
-const STAGGER_SLOW = 12;
-const STAGGER_EL = 12;
-const TYPEWRITER = 2.3;
-const HOLD_IMPACT = 75;
-const HOLD_VERDICT = 90;
-const CAPTION_OUT = 15;
-const CAPTION_PAUSE = 10;
-const CAPTION_IN = 15;
 
 ;// ./src/compositions/Video4Product/scenes/Scene06_Transition1.tsx
 
@@ -3585,17 +3708,60 @@ const CAPTION_IN = 15;
 
 
 
-
 const Scene06_Transition1 = () => {
   const { line1, line2, productCaption } = COPY.c06;
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#060609" }, children: [
+  const frame = (0,esm.useCurrentFrame)();
+  const blobX = 50 + Math.sin(frame / 40) * 20;
+  const blobY = 50 + Math.cos(frame / 35) * 20;
+  const blob2X = 50 + Math.cos(frame / 45) * 15;
+  const blob2Y = 50 + Math.sin(frame / 50) * 15;
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "transparent" }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_whoosh_clean.mp3"), volume: 0.6 }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s6_t1" }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", width: 800, height: 800, background: "radial-gradient(circle, rgba(249,115,22,0.1), transparent 70%)", bottom: "10%", right: "10%" } }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 24, width: "80%" }, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: line1, startFrame: 0, staggerFrames: STAGGER_SLOW, fontSize: 56, fontWeight: 600, color: "#FFFFFF" }),
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: line2, startFrame: 60, staggerFrames: STAGGER_SLOW, fontSize: 56, fontWeight: 600, color: "#FFFFFF" })
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      width: "150%",
+      height: "150%",
+      top: "-25%",
+      left: "-25%",
+      background: `
+            radial-gradient(circle at ${blobX}% ${blobY}%, rgba(249,115,22,0.35) 0%, transparent 40%),
+            radial-gradient(circle at ${blob2X}% ${blob2Y}%, rgba(59,130,246,0.25) 0%, transparent 40%)
+          `,
+      filter: "blur(80px)",
+      opacity: 0.9
+    } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", inset: 0, boxShadow: "inset 0 0 250px rgba(0,0,0,0.9)", pointerEvents: "none", zIndex: 5 } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      height: 4,
+      width: `${(0,esm.interpolate)(frame, [0, 60], [0, 100], { extrapolateRight: "clamp" })}%`,
+      background: "linear-gradient(90deg, #F97316, #3B82F6)",
+      boxShadow: "0 0 20px rgba(59,130,246,0.8)",
+      zIndex: 50
+    } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 24, width: "80%", zIndex: 10 }, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        WordReveal,
+        {
+          text: line1,
+          startFrame: 10,
+          staggerFrames: 2,
+          fontSize: 56,
+          fontWeight: 600,
+          color: "#FFFFFF",
+          highlights: { "build.": "#11cc00d0", "build": "#11cc00d0" },
+          mode: "pop"
+        }
+      ),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: line2, startFrame: 60, staggerFrames: 2, fontSize: 56, fontWeight: 600, color: "#FFFFFF", mode: "pop" })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(ProductCaption, { text: productCaption, startFrame: 130 })
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 110, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s6_t1_p" }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(ProductCaption, { text: productCaption, startFrame: 0 })
+    ] })
   ] });
 };
 
@@ -3607,12 +3773,13 @@ const StreamingText = ({
   lines,
   startFrame = 0,
   lineDelayFrames = 17,
-  fontSize = 15,
+  fontSize = 18,
+  // Upscaled from 15
   color = "#E2E8F0",
   accentColor = "#F97316"
 }) => {
   const frame = (0,esm.useCurrentFrame)();
-  return /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { display: "flex", flexDirection: "column", gap: 10 }, children: lines.map((line, i) => {
+  return /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { display: "flex", flexDirection: "column", gap: 14 }, children: lines.map((line, i) => {
     const lineStart = startFrame + i * lineDelayFrames;
     const opacity = (0,esm.interpolate)(frame, [lineStart, lineStart + 10], [0, 1], {
       extrapolateLeft: "clamp",
@@ -3664,27 +3831,29 @@ const AgentCard_AgentCard = ({
   return /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
     opacity,
     transform: `scale(${pulse})`,
-    backgroundColor: lightTheme ? "#FFFFFF" : "#0F0F1E",
-    border: `1px solid ${lightTheme ? "#E2E8F0" : "#2D2D50"}`,
+    backgroundColor: lightTheme ? "rgba(255,255,255,0.8)" : "rgba(15, 23, 42, 0.4)",
+    backdropFilter: "blur(16px)",
+    border: `1px solid ${lightTheme ? "rgba(226,232,240,0.8)" : "rgba(255,255,255,0.08)"}`,
     borderLeft: `4px solid ${accentColor}`,
-    borderRadius: 14,
-    padding: 28,
+    borderRadius: 16,
+    padding: 36,
     display: "flex",
     flexDirection: "column",
-    gap: 16,
+    gap: 20,
     boxShadow: lightTheme ? "0 20px 50px rgba(0,0,0,0.12)" : "0 0 40px rgba(0,0,0,0.4)",
-    minWidth: 420,
-    // Garante que o card preencha espaço suficiente em layouts lado a lado
+    minWidth: 500,
+    // Increased for uniform visibility limit
     ...style
   }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
-      fontSize: 11,
+      fontSize: 14,
       fontWeight: 700,
+      // Upscaled from 11
       fontFamily: "Inter, sans-serif",
       color: accentColor,
       letterSpacing: "0.08em",
       textTransform: "uppercase",
-      marginBottom: 4
+      marginBottom: 6
     }, children: agentLabel }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)(
       StreamingText,
@@ -3710,9 +3879,9 @@ const AgentCard_AgentCard = ({
 
 const Scene07_MarketCEO = () => {
   const data = COPY.c07;
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#F8FAFC" }, children: [
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "transparent" }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s7_market" }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", inset: 0, background: "radial-gradient(circle at 15% 15%, rgba(249,115,22,0.05), transparent 60%)" } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", inset: 0, background: "radial-gradient(circle at 15% 15%, rgba(249,115,22,0.1), transparent 60%)" } }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)(FeatureLabel, { text: "Strategic Alignment", startFrame: 0, position: "top-left" }),
     /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
       position: "absolute",
@@ -3724,10 +3893,10 @@ const Scene07_MarketCEO = () => {
       width: "90%",
       justifyContent: "center"
     }, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(AgentCard_AgentCard, { agentLabel: data.market.label, accentColor: data.market.accentColor, lines: data.market.lines, startFrame: 0, lightTheme: true }),
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(AgentCard_AgentCard, { agentLabel: data.ceo.label, accentColor: data.ceo.accentColor, lines: data.ceo.lines, startFrame: 20, lightTheme: true })
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(AgentCard_AgentCard, { agentLabel: data.market.label, accentColor: data.market.accentColor, lines: data.market.lines, startFrame: 10 }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(AgentCard_AgentCard, { agentLabel: data.ceo.label, accentColor: data.ceo.accentColor, lines: data.ceo.lines, startFrame: 60 })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: data.userCaption, startFrame: 130, dark: true })
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: data.userCaption, startFrame: 10, exitFrame: 165 })
   ] });
 };
 
@@ -3815,11 +3984,11 @@ const BrowserMockup = ({
 
 
 const Scene08_CMO = () => {
-  const { cmo, landing, userCaption } = COPY.c08;
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#F8FAFC" }, children: [
-    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", inset: 0, background: "radial-gradient(circle at 85% 15%, rgba(129,140,248,0.05), transparent 60%)" } }),
+  const { cmo, userCaption } = COPY.c08;
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "transparent" }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", inset: 0, background: "radial-gradient(circle at 85% 15%, rgba(129,140,248,0.1), transparent 60%)" } }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s8_cmo" }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(FeatureLabel, { text: "Growth Engine", startFrame: 0, position: "top-left", dark: true }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(FeatureLabel, { text: "Growth Engine", startFrame: 0, position: "top-left" }),
     /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
       position: "absolute",
       top: "50%",
@@ -3827,31 +3996,25 @@ const Scene08_CMO = () => {
       transform: "translate(-50%, -50%)",
       display: "flex",
       gap: 40,
-      width: "90%",
+      width: "100%",
       justifyContent: "center",
       alignItems: "center"
     }, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(AgentCard_AgentCard, { agentLabel: cmo.label, accentColor: cmo.accentColor, lines: cmo.lines, startFrame: 0, lightTheme: true, style: { flex: 1 } }),
-      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { flex: 1.2 }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(BrowserMockup, { url: "waitlist.painstack.ai", startFrame: 30, width: 680, height: 420, light: true, children: /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { padding: 40, backgroundColor: "#FFFFFF", height: "100%", display: "flex", flexDirection: "column", gap: 16 }, children: [
-        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { color: "#0F172A", fontSize: 28, fontWeight: 800, lineHeight: 1.2 }, children: landing.headline }),
-        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { color: "#475569", fontSize: 16, fontWeight: 400 }, children: landing.sub }),
-        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
-          background: "linear-gradient(90deg, #F97316, #FB923C)",
-          color: "#FFFFFF",
-          padding: "14px 28px",
-          borderRadius: 100,
-          alignSelf: "flex-start",
-          fontWeight: 700,
-          marginTop: 10,
-          boxShadow: "0 10px 20px rgba(249,115,22,0.2)"
-        }, children: landing.cta }),
-        /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { marginTop: "auto", color: "#94A3B8", fontSize: 13, borderTop: "1px solid #F1F5F9", paddingTop: 16 }, children: [
-          "\u2705 ",
-          landing.social
-        ] })
-      ] }) }) })
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(AgentCard_AgentCard, { agentLabel: cmo.label, accentColor: cmo.accentColor, lines: cmo.lines, startFrame: 10, style: { flex: 1 } }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { flex: 1.2 }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(BrowserMockup, { url: "babysitterconnect.com", startFrame: 45, width: 720, height: 460, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        esm.Img,
+        {
+          src: (0,esm.staticFile)("shared/bcare_landing.png"),
+          style: {
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "top center"
+          }
+        }
+      ) }) })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 120, dark: true })
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 10, exitFrame: 154 })
   ] });
 };
 
@@ -3866,17 +4029,24 @@ const Scene08_CMO = () => {
 
 
 const Scene09_CTO = () => {
+  const frame = (0,esm.useCurrentFrame)();
   const { cto, userCaption } = COPY.c09;
-  const stack = [
-    { name: "Lovable", status: "Available", color: "#22C55E" },
-    { name: "Cursor", status: "Coming Soon", color: "#94A3B8" },
-    { name: "Base44", status: "Coming Soon", color: "#94A3B8" },
-    { name: "Bolt.new", status: "Coming Soon", color: "#94A3B8" }
+  const images = [
+    "images/tools/media__1774625675290.png",
+    // Assuming lovable is this one
+    "images/tools/media__1774625675273.png",
+    "images/tools/media__1774625675332.png",
+    "images/tools/media__1774625675350.png",
+    "images/tools/media__1774625675353.png"
   ];
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#F8FAFC" }, children: [
-    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", inset: 0, background: "radial-gradient(circle at 15% 85%, rgba(56,189,248,0.05), transparent 60%)" } }),
+  const imageIndex = Math.floor(frame / 12) % images.length;
+  const currentImage = images[imageIndex];
+  const urls = ["lovable.dev", "bolt.new", "sunbird.ai", "v0.dev", "cursor.sh"];
+  const currentUrl = urls[imageIndex];
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "transparent" }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", inset: 0, background: "radial-gradient(circle at 15% 85%, rgba(56,189,248,0.1), transparent 60%)" } }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s9_cto" }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(FeatureLabel, { text: "Technical Infrastructure", startFrame: 0, position: "top-left", dark: true }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(FeatureLabel, { text: "Technical Infrastructure", startFrame: 0, position: "top-left" }),
     /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
       position: "absolute",
       top: "50%",
@@ -3884,21 +4054,33 @@ const Scene09_CTO = () => {
       transform: "translate(-50%, -50%)",
       display: "flex",
       gap: 40,
-      width: "90%",
+      width: "100%",
       justifyContent: "center",
       alignItems: "center"
     }, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(AgentCard_AgentCard, { agentLabel: cto.label, accentColor: cto.accentColor, lines: cto.lines, startFrame: 0, lightTheme: true, style: { flex: 1 } }),
-      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { flex: 1.2 }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(BrowserMockup, { url: "lovable.dev", startFrame: 30, width: 600, height: 450, light: true, children: /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { padding: 30, backgroundColor: "#FFFFFF", height: "100%", display: "flex", flexDirection: "column", gap: 20 }, children: [
-        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { fontSize: 20, fontWeight: 800, color: "#0F172A", borderBottom: "1px solid #F1F5F9", paddingBottom: 12 }, children: "AI Tech Stack" }),
-        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { display: "flex", flexDirection: "column", gap: 10 }, children: stack.map((s, i) => /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 16px", borderRadius: 10, background: "#F8FAFC", border: "1px solid #F1F5F9" }, children: [
-          /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: { fontWeight: 600, color: "#1E293B" }, children: s.name }),
-          /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: { fontSize: 11, fontWeight: 700, color: s.color, textTransform: "uppercase", letterSpacing: "0.05em" }, children: s.status })
-        ] }, i)) }),
-        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { marginTop: "auto", textAlign: "center", color: "#94A3B8", fontSize: 12, fontStyle: "italic" }, children: "Zero code required. 100% buildable." })
-      ] }) }) })
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(AgentCard_AgentCard, { agentLabel: cto.label, accentColor: cto.accentColor, lines: cto.lines, startFrame: 20, style: { flex: 1 } }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { flex: 1.2 }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(BrowserMockup, { url: currentUrl, startFrame: 60, width: 720, height: 460, children: /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+        width: "100%",
+        height: "100%",
+        backgroundColor: "transparent",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden"
+      }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        esm.Img,
+        {
+          src: (0,esm.staticFile)(currentImage),
+          style: {
+            width: "100%",
+            height: "100%",
+            objectFit: "contain"
+            // Ensures the image fits fully inside without cropping
+          }
+        }
+      ) }) }) })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 120, dark: true })
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 10, exitFrame: 191 })
   ] });
 };
 
@@ -3910,17 +4092,48 @@ const Scene09_CTO = () => {
 
 
 
-
 const Scene10_Transition2 = () => {
   const { line1, line2, productCaption } = COPY.c10;
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#060609" }, children: [
+  const frame = (0,esm.useCurrentFrame)();
+  const blobX = 50 + Math.sin(frame / 40) * 15;
+  const blobY = 50 + Math.cos(frame / 35) * -15;
+  const blob2X = 50 + Math.cos(frame / 45) * -20;
+  const blob2Y = 50 + Math.sin(frame / 50) * 20;
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "transparent" }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_whoosh_clean.mp3"), volume: 0.6 }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s10_t2" }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", width: 800, height: 800, background: "radial-gradient(circle, rgba(56,189,248,0.1), transparent 70%)", top: "10%", left: "10%" } }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 24, width: "80%" }, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: line1, startFrame: 0, staggerFrames: STAGGER_SLOW, fontSize: 56, fontWeight: 600, color: "#FFFFFF" }),
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: line2, startFrame: 60, staggerFrames: STAGGER_SLOW, fontSize: 56, fontWeight: 600, color: "#FFFFFF" })
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      width: "150%",
+      height: "150%",
+      top: "-25%",
+      left: "-25%",
+      background: `
+            radial-gradient(circle at ${blobX}% ${blobY}%, rgba(59,130,246,0.35) 0%, transparent 40%),
+            radial-gradient(circle at ${blob2X}% ${blob2Y}%, rgba(236,117,36,0.25) 0%, transparent 40%)
+          `,
+      filter: "blur(80px)",
+      opacity: 0.9
+    } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", inset: 0, boxShadow: "inset 0 0 250px rgba(0,0,0,0.9)", pointerEvents: "none", zIndex: 5 } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      height: 4,
+      width: `${(0,esm.interpolate)(frame, [0, 60], [0, 100], { extrapolateRight: "clamp" })}%`,
+      background: "linear-gradient(90deg, #3B82F6, #ec7524)",
+      boxShadow: "0 0 20px rgba(59,130,246,0.8)",
+      zIndex: 50
+    } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 24, width: "80%", zIndex: 10 }, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: line1, startFrame: 10, staggerFrames: 2, fontSize: 56, fontWeight: 600, color: "#FFFFFF", mode: "pop" }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: line2, startFrame: 50, staggerFrames: 2, fontSize: 56, fontWeight: 600, color: "#FFFFFF", mode: "pop" })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(ProductCaption, { text: productCaption, startFrame: 130 })
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 105, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s10_t2_p" }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(ProductCaption, { text: productCaption, startFrame: 0 })
+    ] })
   ] });
 };
 
@@ -4070,11 +4283,11 @@ const Scene11_Roadmap = () => {
   const crossfade = (0,esm.interpolate)(frame, [0, 10], [1, 0], { extrapolateLeft: "clamp" });
   return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#F8FAFC" }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s11_road" }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", inset: 0, backgroundColor: "#0A0A0F", opacity: crossfade, zIndex: 10 } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", inset: 0, backgroundColor: "transparent", opacity: crossfade, zIndex: 10 } }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", inset: 0, background: "radial-gradient(circle at 80% 80%, rgba(56,189,248,0.04), transparent 50%)" } }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)(FeatureLabel, { text: "Execution Strategy", startFrame: 0, position: "top-left", dark: true }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(RoadmapBoard, { header, progress, progressPct, weeks, startFrame: 10 }) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 140, dark: true })
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(RoadmapBoard, { header, progress, progressPct, weeks, startFrame: 15 }) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 10, exitFrame: 115, dark: true })
   ] });
 };
 
@@ -4086,18 +4299,46 @@ const Scene11_Roadmap = () => {
 
 
 
-
 const Scene12_Transition3 = () => {
   const { line1, line2, line3, productCaption } = COPY.c12;
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#08080F" }, children: [
+  const frame = (0,esm.useCurrentFrame)();
+  const blobX = 50 + Math.sin(frame / 45) * 25;
+  const blobY = 50 + Math.cos(frame / 40) * 15;
+  const blob2X = 50 + Math.cos(frame / 35) * -20;
+  const blob2Y = 50 + Math.sin(frame / 50) * -15;
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "transparent" }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_whoosh_clean.mp3"), volume: 0.6 }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s12_t3" }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", width: 600, height: 600, background: "radial-gradient(circle, rgba(147,51,234,0.1), transparent 70%)", bottom: "10%", right: "10%" } }),
-    /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 20, width: "80%" }, children: [
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: line1, startFrame: 0, staggerFrames: STAGGER_WORD, fontSize: 42, fontWeight: 200, color: "#94A3B8" }),
-      /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: line2, startFrame: 40, staggerFrames: STAGGER_WORD, fontSize: 42, fontWeight: 200, color: "#94A3B8" }),
-      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { marginTop: 20 }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: line3, startFrame: 90, staggerFrames: STAGGER_WORD, fontSize: 72, fontWeight: 900, color: "#FFFFFF" }) })
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      width: "150%",
+      height: "150%",
+      top: "-25%",
+      left: "-25%",
+      background: `
+            radial-gradient(circle at ${blobX}% ${blobY}%, rgba(59,130,246,0.35) 0%, transparent 45%),
+            radial-gradient(circle at ${blob2X}% ${blob2Y}%, rgba(249,115,22,0.25) 0%, transparent 45%)
+          `,
+      filter: "blur(80px)",
+      opacity: 0.9
+    } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", inset: 0, boxShadow: "inset 0 0 250px rgba(0,0,0,0.9)", pointerEvents: "none", zIndex: 5 } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      height: 4,
+      width: `${(0,esm.interpolate)(frame, [0, 60], [0, 100], { extrapolateRight: "clamp" })}%`,
+      background: "linear-gradient(90deg, #F97316, #3B82F6)",
+      boxShadow: "0 0 20px rgba(59,130,246,0.8)",
+      zIndex: 50
+    } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 20, width: "80%", zIndex: 10 }, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: line1, startFrame: 10, staggerFrames: 2, fontSize: 42, fontWeight: 200, color: "#94A3B8", mode: "pop" }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: line2, startFrame: 50, staggerFrames: 2, fontSize: 42, fontWeight: 200, color: "#94A3B8", mode: "pop" }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { marginTop: 20 }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: line3, startFrame: 95, staggerFrames: 2, fontSize: 72, fontWeight: 900, color: "#FFFFFF", highlights: { "ready.": "#3B82F6", "ready": "#3B82F6" }, mode: "pop" }) })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(ProductCaption, { text: productCaption, startFrame: 140 })
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(ProductCaption, { text: productCaption, startFrame: 95, exitFrame: 150 })
   ] });
 };
 
@@ -4149,20 +4390,19 @@ const DocumentRow = ({ label, delay }) => {
 const DataroomStack = () => {
   const frame = (0,esm.useCurrentFrame)();
   const labels = [
-    "Executive Summary",
+    "Executive Summary (1-Page)",
     "Problem Statement",
-    "GTM Overview",
-    "Market Analysis",
+    "Go-to-Market Overview",
+    "Market Analysis (TAM/SAM)",
+    "Business Model Canvas",
     "SWOT Analysis",
-    "Financial Projections",
-    "Pitch Deck"
+    "Financial Projections (3Y)",
+    "Pitch Deck Outline"
   ];
   return /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#020617",
-    // Deeper Dark Navy
-    backgroundImage: "radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(30, 58, 138, 0.05) 0%, transparent 40%)",
+    backgroundColor: "transparent",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -4173,7 +4413,7 @@ const DataroomStack = () => {
     overflow: "hidden"
   }, children: [
     frame === 10 && /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_sweep.mp3"), volume: 0.5 }),
-    frame === 60 && /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_ding.mp3"), volume: 0.2 }),
+    frame === 60 && /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_success_chime.mp3"), volume: 0.2 }),
     /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
       display: "flex",
       alignItems: "center",
@@ -4293,13 +4533,13 @@ const Scene13_Dataroom = () => {
   const frame = (0,esm.useCurrentFrame)();
   const { userCaption } = COPY.c13;
   const crossfade = (0,esm.interpolate)(frame, [0, 12], [1, 0], { extrapolateLeft: "clamp" });
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#0A0A0F" }, children: [
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "transparent" }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s13_data" }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", width: 600, height: 400, borderRadius: "50%", background: "rgba(129,140,248,0.08)", filter: "blur(100px)", top: "40%", left: "50%", transform: "translate(-50%, -50%)" } }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", inset: 0, backgroundColor: "#F8FAFC", opacity: crossfade, zIndex: 20 } }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)(FeatureLabel, { text: "Investor Dataroom", startFrame: 0, position: "top-left" }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(DataroomStack, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 160 })
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 10, exitFrame: 119 })
   ] });
 };
 
@@ -4418,11 +4658,11 @@ const FlowDiagram = ({
 
 const Scene14_ZoomOut = () => {
   const { nodes, userCaption } = COPY.c14;
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#0A0A0F" }, children: [
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "transparent" }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s14_out" }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)(DotGrid, { opacity: 0.2, bgColor: "transparent" }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(FlowDiagram, { nodes, startFrame: 0 }) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 180 })
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 10, exitFrame: 119 })
   ] });
 };
 
@@ -4527,13 +4767,41 @@ const StatCard = ({
 
 const Scene15_Stats = () => {
   const { stats, userCaption } = COPY.c15;
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#08080F" }, children: [
+  const frame = (0,esm.useCurrentFrame)();
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "transparent" }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s15_stat" }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(AuroraBackground, { baseColor: "#08080F", blobs: [{ x: 30, y: 30, color: "rgba(249,115,22,0.08)", size: 400, speed: 8, phase: 0 }, { x: 70, y: 70, color: "rgba(129,140,248,0.06)", size: 350, speed: 10, phase: 3 }] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(AuroraBackground, { baseColor: "transparent", blobs: [{ x: 30, y: 30, color: "rgba(249,115,22,0.08)", size: 400, speed: 8, phase: 0 }, { x: 70, y: 70, color: "rgba(129,140,248,0.06)", size: 350, speed: 10, phase: 3 }] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      height: 4,
+      width: `${(0,esm.interpolate)(frame, [0, 80], [0, 100], { extrapolateRight: "clamp" })}%`,
+      background: "linear-gradient(90deg, #3B82F6, #ec7524)",
+      boxShadow: "0 0 20px rgba(59,130,246,0.8)",
+      zIndex: 50
+    } }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", gap: 32 }, children: stats.map((stat, i) => /* @__PURE__ */ (0,jsx_runtime.jsx)(StatCard, { value: stat.value, label: stat.label, accentColor: stat.color, startFrame: i * 15 }, i)) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 80 })
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 10, exitFrame: 157 })
   ] });
 };
+
+;// ./src/compositions/Video4Product/constants/motion.ts
+
+const SPRING_DEFAULT = { stiffness: 80, damping: 12, mass: 1 };
+const SPRING_BOUNCY = { stiffness: 120, damping: 8, mass: 0.8 };
+const SPRING_GENTLE = { stiffness: 50, damping: 14, mass: 1.2 };
+const SPRING_CAPTION = { stiffness: 60, damping: 14, mass: 1 };
+const EASE_OUT = (/* unused pure expression or super */ null && ([0.16, 1, 0.3, 1]));
+const STAGGER_WORD = 5;
+const STAGGER_SLOW = 8;
+const STAGGER_EL = 8;
+const TYPEWRITER = 3.5;
+const HOLD_IMPACT = 30;
+const HOLD_VERDICT = 40;
+const CAPTION_OUT = 10;
+const CAPTION_PAUSE = 5;
+const CAPTION_IN = 10;
 
 ;// ./src/compositions/Video4Product/scenes/Scene16_HookFinal.tsx
 
@@ -4549,16 +4817,19 @@ const Scene16_HookFinal = () => {
   const frame = (0,esm.useCurrentFrame)();
   const { line1, line2, line3, punchline, userCaption, productCaption } = COPY.c16;
   const glowOpacity = (0,esm.interpolate)(frame, [200, 240, 300], [0.2, 0.5, 0.3], { extrapolateLeft: "clamp" });
-  const lineStarts = [0, 80, 160];
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#060609" }, children: [
+  const lineStarts = [10, 45, 80];
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "transparent" }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s16_hook_s" }),
     /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { position: "absolute", width: 1e3, height: 1e3, borderRadius: "50%", background: `radial-gradient(circle, rgba(249,115,22,${glowOpacity}), transparent 70%)`, top: "50%", left: "50%", transform: "translate(-50%, -50%)", filter: "blur(150px)", opacity: 0.8 } }),
     /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 24, width: "80%", zIndex: 10 }, children: [
-      [line1, line2, line3].map((line, i) => /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { opacity: (0,esm.interpolate)(frame, [lineStarts[i + 1] || 240, (lineStarts[i + 1] || 240) + 20], [1, 0.3], { extrapolateLeft: "clamp" }) }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: line, startFrame: lineStarts[i], staggerFrames: STAGGER_SLOW, fontSize: i === 2 ? 46 : 38, fontWeight: i === 2 ? 700 : 300, color: "#FFFFFF" }) }, i)),
-      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { marginTop: 40, filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.4))" }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: punchline.text, startFrame: 240, staggerFrames: STAGGER_SLOW, fontSize: 68, fontWeight: 800, gradient: punchline.gradient }) })
+      [line1, line2, line3].map((line, i) => /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { opacity: (0,esm.interpolate)(frame, [lineStarts[i + 1] || 280, (lineStarts[i + 1] || 280) + 20], [1, 0.3], { extrapolateLeft: "clamp" }) }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: line, startFrame: lineStarts[i], staggerFrames: STAGGER_SLOW, fontSize: i === 2 ? 46 : 38, fontWeight: i === 2 ? 700 : 300, color: "#FFFFFF", mode: "pop" }) }, i)),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { marginTop: 40, filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.4))" }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(WordReveal, { text: punchline.text, startFrame: 120, staggerFrames: 2, fontSize: 68, fontWeight: 800, gradient: punchline.gradient, mode: "pop" }) })
     ] }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 40, exitFrame: 220 }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(ProductCaption, { text: productCaption, startFrame: 240 })
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(UserCaption, { text: userCaption, startFrame: 10, exitFrame: 180 }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 185, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s16_hook_p" }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(ProductCaption, { text: productCaption, startFrame: 0 })
+    ] })
   ] });
 };
 
@@ -4573,22 +4844,42 @@ const Scene17_BrandClose = () => {
   const frame = (0,esm.useCurrentFrame)();
   const { fps } = (0,esm.useVideoConfig)();
   const { tagline, url } = COPY.c17;
-  const logoSpring = (0,esm.spring)({ frame, fps, config: { stiffness: 80, damping: 12, mass: 1 } });
-  const logoScale = (0,esm.interpolate)(logoSpring, [0, 1], [0.88, 1]);
-  const logoOpacity = (0,esm.interpolate)(logoSpring, [0, 0.15], [0, 1]);
-  const buttonSpring = (0,esm.spring)({ frame: frame - 60, fps, config: { stiffness: 100, damping: 10 } });
+  const START_FOCUS = 5;
+  const auroraOpacity = (0,esm.interpolate)(frame, [0, 20], [0, 0.4], { extrapolateLeft: "clamp" });
+  const auroraSway = Math.sin(frame / 60) * 8;
+  const popSpring = (0,esm.spring)({
+    frame: frame - START_FOCUS,
+    fps,
+    config: { stiffness: 200, damping: 20, mass: 0.5 }
+  });
+  const logoBlur = (0,esm.interpolate)(frame, [START_FOCUS, START_FOCUS + 8], [30, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const logoScale = (0,esm.interpolate)(popSpring, [0, 1], [0.85, 1]);
+  const logoOpacity = (0,esm.interpolate)(frame, [START_FOCUS, START_FOCUS + 4], [0, 1], { extrapolateLeft: "clamp" });
+  const buttonSpring = (0,esm.spring)({ frame: frame - 40, fps, config: { stiffness: 100, damping: 10 } });
   const buttonScale = (0,esm.interpolate)(buttonSpring, [0, 1], [0, 1], { extrapolateLeft: "clamp" });
-  const pulse = (0,esm.interpolate)(Math.sin(frame / 10), [-1, 1], [1, 1.05]);
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#020617" }, children: [
+  const pulse = (0,esm.interpolate)(Math.sin(frame / 8), [-1, 1], [1, 1.02]);
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#0F172A" }, children: [
     /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_SceneAudio, { filename: "v4_s17_close" }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(BrandBackground, { glowOpacity: 0.4 }),
-    frame === 65 && /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_ding.mp3"), volume: 0.6 }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { opacity: 0.05 }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(DotGridBackground, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      top: "-10%",
+      right: "20%",
+      width: "40%",
+      height: "120%",
+      background: "radial-gradient(ellipse, rgba(236, 117, 36, 0.08) 0%, transparent 70%)",
+      filter: "blur(100px)",
+      transform: `translateX(${auroraSway}px)`,
+      opacity: auroraOpacity
+    } }),
+    frame === 45 && /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_success_chime.mp3"), volume: 0.6 }),
     /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
       position: "absolute",
       top: "50%",
       left: "50%",
       transform: `translate(-50%, -50%) scale(${logoScale})`,
       opacity: logoOpacity,
+      filter: `blur(${logoBlur}px)`,
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -4597,22 +4888,22 @@ const Scene17_BrandClose = () => {
     }, children: [
       /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Img, { src: (0,esm.staticFile)("shared/Painstack.ai_logo2.png"), style: { width: 440, height: "auto", marginBottom: 8 } }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
-        width: 120,
-        height: 2,
-        backgroundColor: "rgba(255,255,255,0.2)",
-        transform: `scaleX(${(0,esm.interpolate)(frame, [30, 52], [0, 1], { extrapolateLeft: "clamp" })})`
+        width: 80,
+        height: 1,
+        backgroundColor: "rgba(255,255,255,0.15)",
+        transform: `scaleX(${(0,esm.interpolate)(frame, [START_FOCUS + 15, START_FOCUS + 35], [0, 1], { extrapolateLeft: "clamp" })})`
       } }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
-        opacity: (0,esm.interpolate)(frame, [42, 60], [0, 1], { extrapolateLeft: "clamp" }),
-        fontSize: 22,
+        opacity: (0,esm.interpolate)(frame, [START_FOCUS + 25, START_FOCUS + 45], [0, 1], { extrapolateLeft: "clamp" }),
+        fontSize: 20,
         fontWeight: 700,
-        color: "rgba(255,255,255,0.9)",
-        letterSpacing: "0.15em",
+        color: "rgba(255,255,255,0.6)",
+        letterSpacing: "0.2em",
         textTransform: "uppercase"
       }, children: tagline }),
       /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
         marginTop: 40,
-        opacity: (0,esm.interpolate)(frame, [60, 80], [0, 1], { extrapolateLeft: "clamp" }),
+        opacity: (0,esm.interpolate)(frame, [40, 60], [0, 1], { extrapolateLeft: "clamp" }),
         transform: `scale(${buttonScale * pulse})`,
         backgroundColor: "#3B82F6",
         padding: "20px 48px",
@@ -4620,7 +4911,7 @@ const Scene17_BrandClose = () => {
         color: "white",
         fontSize: 24,
         fontWeight: 800,
-        boxShadow: "0 0 30px rgba(59,130,246,0.6)",
+        boxShadow: "0 0 40px rgba(59,130,246,0.6)",
         letterSpacing: 1
       }, children: url || "painstack.ai" })
     ] })
@@ -4678,61 +4969,84 @@ const Scene18_FadeOut = () => {
 
 
 
+
+
+const OVERLAP = 12;
+const LiquidSequence = ({ from, durationInFrames, children, isFirst = false }) => {
+  const frame = (0,esm.useCurrentFrame)();
+  const rel = frame - from;
+  const opacityIn = isFirst ? 1 : (0,esm.interpolate)(rel, [0, OVERLAP], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: esm.Easing.inOut(esm.Easing.cubic) });
+  const blurIn = isFirst ? 0 : (0,esm.interpolate)(rel, [0, OVERLAP], [8, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: esm.Easing.inOut(esm.Easing.cubic) });
+  const isOut = rel >= durationInFrames - OVERLAP;
+  const outRel = rel - (durationInFrames - OVERLAP);
+  const opacityOut = (0,esm.interpolate)(outRel, [0, OVERLAP], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: esm.Easing.inOut(esm.Easing.cubic) });
+  const blurOut = (0,esm.interpolate)(outRel, [0, OVERLAP], [0, 8], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: esm.Easing.inOut(esm.Easing.cubic) });
+  const finalOpacity = rel < OVERLAP ? opacityIn : isOut ? opacityOut : 1;
+  const finalBlur = rel < OVERLAP ? blurIn : isOut ? blurOut : 0;
+  return /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from, durationInFrames, style: { opacity: finalOpacity, filter: `blur(${finalBlur}px)` }, children });
+};
 const PainstackVideo = () => {
   var _a, _b;
   const frame = (0,esm.useCurrentFrame)();
   const { fps } = (0,esm.useVideoConfig)();
   const DURS = {
-    S1: 200,
-    S2: 300,
-    S3: 650,
-    S4: 450,
-    S5: 550,
-    S6: 180,
-    S7: 550,
-    S8: 450,
-    S9: 450,
-    S10: 240,
-    S11: 550,
-    S12: 240,
-    S13: 650,
-    S14: 450,
-    S15: 450,
-    S16: 450,
-    S17: 500,
-    S18: 180
+    S1: 170,
+    S1B: 241,
+    S2: 219,
+    S3: 267,
+    S4: 250,
+    S5: 238,
+    S6: 209,
+    S7: 165,
+    S8: 154,
+    S9: 191,
+    S10: 178,
+    S11: 115,
+    S12: 150,
+    S13: 119,
+    S14: 91,
+    S15: 157,
+    S16: 223,
+    S17: 150,
+    S18: 90
   };
-  const F1 = DURS.S1;
-  const F2 = F1 + DURS.S2;
-  const F3 = F2 + DURS.S3;
-  const F4 = F3 + DURS.S4;
-  const F5 = F4 + DURS.S5;
-  const F6 = F5 + DURS.S6;
-  const F7 = F6 + DURS.S7;
-  const F8 = F7 + DURS.S8;
-  const F9 = F8 + DURS.S9;
-  const F10 = F9 + DURS.S10;
-  const F11 = F10 + DURS.S11;
-  const F12 = F11 + DURS.S12;
-  const F13 = F12 + DURS.S13;
-  const F14 = F13 + DURS.S14;
-  const F15 = F14 + DURS.S15;
-  const F16 = F15 + DURS.S16;
-  const F17 = F16 + DURS.S17;
+  const F1 = DURS.S1 - OVERLAP;
+  const F1B = F1 + DURS.S1B - OVERLAP;
+  const F2 = F1B + DURS.S2 - OVERLAP;
+  const F3 = F2 + DURS.S3 - OVERLAP;
+  const F4 = F3 + DURS.S4 - OVERLAP;
+  const F5 = F4 + DURS.S5 - OVERLAP;
+  const F6 = F5 + DURS.S6 - OVERLAP;
+  const F7 = F6 + DURS.S7 - OVERLAP;
+  const F8 = F7 + DURS.S8 - OVERLAP;
+  const F9 = F8 + DURS.S9 - OVERLAP;
+  const F10 = F9 + DURS.S10 - OVERLAP;
+  const F11 = F10 + DURS.S11 - OVERLAP;
+  const F12 = F11 + DURS.S12 - OVERLAP;
+  const F13 = F12 + DURS.S13 - OVERLAP;
+  const F14 = F13 + DURS.S14 - OVERLAP;
+  const F15 = F14 + DURS.S15 - OVERLAP;
+  const F16 = F15 + DURS.S16 - OVERLAP;
+  const F17 = F16 + DURS.S17 - OVERLAP;
   const sIntervals = [
     [20, F1 - 20],
-    [F1 + 20, F2 - 20],
+    [F1 + 20, F1B - 20],
+    [F1B + 20, F2 - 20],
     [F2 + 20, F3 - 20],
     [F3 + 20, F4 - 20],
     [F4 + 20, F5 - 20],
+    [F5 + 10, F6 - 10],
     [F6 + 20, F7 - 20],
     [F7 + 20, F8 - 20],
     [F8 + 20, F9 - 20],
+    [F9 + 10, F10 - 10],
     [F10 + 20, F11 - 20],
+    [F11 + 20, F12 - 20],
     [F12 + 20, F13 - 20],
     [F13 + 20, F14 - 20],
     [F14 + 20, F15 - 20],
-    [F15 + 20, F16 - 20]
+    [F15 + 10, F16 - 10],
+    [F16 + 10, F17 - 10]
   ];
   const isSpeaking = sIntervals.some(([s, e]) => frame >= s && frame <= e);
   const duckSpring = (0,esm.spring)({
@@ -4741,30 +5055,1780 @@ const PainstackVideo = () => {
     config: { stiffness: 60, damping: 20 }
   });
   const duckVolumeFactor = (0,esm.interpolate)(duckSpring, [0, 1], isSpeaking ? [1, 0.4] : [0.4, 1]);
-  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#060609" }, children: [
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_BackgroundMusic, { volume: 0.12 * duckVolumeFactor }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 0, durationInFrames: DURS.S1, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene01_BrandOpen, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: F1, durationInFrames: DURS.S2, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene02_Pain, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: F2, durationInFrames: DURS.S3, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene03_Input, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: F3, durationInFrames: DURS.S4, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene04_Wait, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: F4, durationInFrames: DURS.S5, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene05_Blueprint, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: F5, durationInFrames: DURS.S6, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene06_Transition1, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: F6, durationInFrames: DURS.S7, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene07_MarketCEO, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: F7, durationInFrames: DURS.S8, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene08_CMO, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: F8, durationInFrames: DURS.S9, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene09_CTO, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: F9, durationInFrames: DURS.S10, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene10_Transition2, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: F10, durationInFrames: DURS.S11, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene11_Roadmap, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: F11, durationInFrames: DURS.S12, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene12_Transition3, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: F12, durationInFrames: DURS.S13, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene13_Dataroom, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: F13, durationInFrames: DURS.S14, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene14_ZoomOut, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: F14, durationInFrames: DURS.S15, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene15_Stats, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: F15, durationInFrames: DURS.S16, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene16_HookFinal, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: F16, durationInFrames: DURS.S17, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene17_BrandClose, {}) }),
-    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: F17, durationInFrames: DURS.S18, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene18_FadeOut, {}) })
+  const musicFadeOut = (0,esm.interpolate)(frame, [3100, 3161], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const finalMusicVolume = 0.12 * duckVolumeFactor * musicFadeOut;
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: "#0F172A" }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(DotGridBackground, {}),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio_BackgroundMusic, { volume: finalMusicVolume }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: 0, durationInFrames: DURS.S1, isFirst: true, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene01_BrandOpen, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F1, durationInFrames: DURS.S1B, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene01B_Teaser, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F1B, durationInFrames: DURS.S2, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene02_Pain, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F2, durationInFrames: DURS.S3, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene03_Input, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F3, durationInFrames: DURS.S4, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene04_Wait, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F4, durationInFrames: DURS.S5, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene05_Blueprint, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F5, durationInFrames: DURS.S6, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene06_Transition1, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F6, durationInFrames: DURS.S7, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene07_MarketCEO, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F7, durationInFrames: DURS.S8, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene08_CMO, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F8, durationInFrames: DURS.S9, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene09_CTO, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F9, durationInFrames: DURS.S10, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene10_Transition2, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F10, durationInFrames: DURS.S11, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene11_Roadmap, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F11, durationInFrames: DURS.S12, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene12_Transition3, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F12, durationInFrames: DURS.S13, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene13_Dataroom, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F13, durationInFrames: DURS.S14, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene14_ZoomOut, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F14, durationInFrames: DURS.S15, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene15_Stats, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F15, durationInFrames: DURS.S16, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene16_HookFinal, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F16, durationInFrames: DURS.S17, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene17_BrandClose, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(LiquidSequence, { from: F17, durationInFrames: DURS.S18, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene18_FadeOut, {}) })
+  ] });
+};
+
+;// ./src/compositions/shared/screens/ScreenAgents.tsx
+
+
+
+
+const ScreenAgents_AgentCard = ({
+  icon,
+  name,
+  desc,
+  accent,
+  delay,
+  theme = "dark",
+  isVertical = false
+}) => {
+  const frame = (0,esm.useCurrentFrame)();
+  const isLight = theme === "light";
+  const themeColors = {
+    card: isLight ? colors.lightBg : colors.bg,
+    text: isLight ? colors.lightText : colors.white,
+    muted: isLight ? colors.lightMuted : colors.muted,
+    border: isLight ? colors.lightBorder : colors.border,
+    bgIcon: isLight ? `${accent}15` : `${accent}22`
+  };
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
+    background: themeColors.card,
+    borderRadius: 24,
+    padding: isVertical ? "24px 28px" : "32px",
+    border: `2px solid ${themeColors.border}`,
+    display: "flex",
+    alignItems: "center",
+    gap: isVertical ? 24 : 24,
+    opacity: (0,esm.interpolate)(frame, [delay, delay + 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+    transform: `scale(${(0,esm.interpolate)(frame, [delay, delay + 20], [0.95, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })})`,
+    boxShadow: isLight ? "0 10px 30px rgba(0,0,0,0.04)" : "0 20px 50px rgba(0,0,0,0.2)"
+  }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      width: isVertical ? 64 : 64,
+      height: isVertical ? 64 : 64,
+      borderRadius: 16,
+      background: themeColors.bgIcon,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: isVertical ? 32 : 32,
+      flexShrink: 0
+    }, children: icon }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { fontSize: isVertical ? 24 : 24, fontWeight: 800, color: themeColors.text, marginBottom: 4, lineHeight: 1.2 }, children: name }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { fontSize: isVertical ? 16 : 15, color: themeColors.muted, lineHeight: 1.4 }, children: desc })
+    ] })
+  ] });
+};
+const ExecutiveTeamScene = ({
+  theme = "dark",
+  title = "Your AI Executive Team",
+  cardWidth = "100%"
+}) => {
+  const { width, height } = (0,esm.useVideoConfig)();
+  const isLight = theme === "light";
+  const isVertical = height > width;
+  const agents = [
+    {
+      name: "Strategic Lead",
+      role: "CEO Engine",
+      icon: "\u{1F3AF}",
+      accent: colors.orange,
+      description: "Vision & Market Strategy",
+      delay: 20
+    },
+    {
+      name: "Market Analyst",
+      role: "CMO Engine",
+      icon: "\u{1F4CA}",
+      accent: colors.blue,
+      description: "Data-driven Growth",
+      delay: 35
+    },
+    {
+      name: "System Architect",
+      role: "CTO Engine",
+      icon: "\u2699\uFE0F",
+      accent: colors.purple,
+      description: "Architecture & Tech Stack",
+      delay: 50
+    },
+    {
+      name: "Risk Controller",
+      role: "CFO Engine",
+      icon: "\u{1F6E1}\uFE0F",
+      accent: colors.green,
+      description: "Financial Viability",
+      delay: 65
+    }
+  ];
+  return /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.AbsoluteFill, { style: {
+    backgroundColor: isLight ? colors.lightBgProduct : colors.bg,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: isVertical ? 40 : 40,
+    fontFamily: fonts.base
+  }, children: /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
+    width: cardWidth,
+    maxWidth: isVertical ? "100%" : 1100,
+    display: "flex",
+    flexDirection: "column",
+    gap: isVertical ? 48 : 48
+  }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { textAlign: "center" }, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+        fontSize: isVertical ? 18 : 14,
+        fontWeight: 700,
+        color: colors.orange,
+        textTransform: "uppercase",
+        letterSpacing: "3px",
+        marginBottom: 12
+      }, children: "POWERED BY PAINSTACK" }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("h2", { style: {
+        fontSize: isVertical ? 48 : 56,
+        fontWeight: 900,
+        color: isLight ? colors.lightText : colors.white,
+        letterSpacing: "-2px",
+        lineHeight: 1
+      }, children: title })
+    ] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      display: "grid",
+      gridTemplateColumns: isVertical ? "1fr" : "1fr 1fr",
+      gap: isVertical ? 16 : 32
+    }, children: agents.map((agent, i) => /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      ScreenAgents_AgentCard,
+      {
+        icon: agent.icon,
+        name: agent.name,
+        desc: agent.description,
+        accent: agent.accent,
+        delay: agent.delay,
+        theme,
+        isVertical
+      },
+      i
+    )) })
+  ] }) });
+};
+
+;// ./src/compositions/shared/screens/ScreenRoadmap.tsx
+
+
+
+
+const RoadmapPhase = ({
+  phase,
+  title,
+  weeks,
+  status,
+  items,
+  delay,
+  theme = "dark",
+  isVertical = false
+}) => {
+  const frame = (0,esm.useCurrentFrame)();
+  const { fps } = (0,esm.useVideoConfig)();
+  const isLight = theme === "light";
+  const entrance = (0,esm.interpolate)(frame, [delay[0], delay[1]], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const x = (0,esm.interpolate)(entrance, [0, 1], [isVertical ? 0 : -40, 0]);
+  const y = (0,esm.interpolate)(entrance, [0, 1], [isVertical ? 20 : 0, 0]);
+  const isActive = status === "active";
+  const themeColors = {
+    card: isLight ? colors.lightBg : colors.bgCard,
+    text: isLight ? colors.lightText : colors.white,
+    muted: isLight ? colors.lightMuted : colors.muted,
+    border: isLight ? colors.lightBorder : colors.border
+  };
+  const glowPulse = (0,esm.interpolate)(
+    Math.sin(frame / 25 * Math.PI),
+    [-1, 1],
+    [0.12, 0.22]
+  );
+  const boxShadow = isActive && !isLight ? `0 0 ${(0,esm.interpolate)(glowPulse, [0.12, 0.22], [16, 28])}px rgba(45,129,224,${glowPulse})` : isLight && isActive ? "0 10px 30px rgba(249, 115, 22, 0.15)" : "none";
+  const badgeEntrance = (0,esm.spring)({ frame: frame - delay[0] - 10, fps, config: { damping: 12 } });
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
+    flex: 1,
+    background: themeColors.card,
+    borderRadius: 14,
+    border: `1px solid ${isActive ? (isLight ? colors.orange : colors.blue) + "66" : themeColors.border}`,
+    padding: isVertical ? "16px 20px" : "24px",
+    boxShadow,
+    opacity: entrance,
+    transform: isVertical ? `translateY(${y}px)` : `translateX(${x}px)`,
+    display: "flex",
+    flexDirection: isVertical ? "row" : "column",
+    alignItems: isVertical ? "center" : "stretch",
+    gap: isVertical ? 16 : 0,
+    height: "100%",
+    boxSizing: "border-box"
+  }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
+      display: "flex",
+      flexDirection: isVertical ? "row" : "column",
+      justifyContent: "space-between",
+      alignItems: isVertical ? "center" : "flex-start",
+      marginBottom: isVertical ? 0 : 16,
+      flex: isVertical ? 1 : "none"
+    }, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { children: [
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { fontSize: isVertical ? 10 : 11, fontWeight: 700, color: themeColors.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: isVertical ? 2 : 6 }, children: phase }),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { fontSize: isVertical ? 14 : 16, fontWeight: 800, color: themeColors.text, lineHeight: 1.2 }, children: title })
+      ] }),
+      !isVertical && /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+        fontSize: 11,
+        fontWeight: 700,
+        padding: "4px 10px",
+        borderRadius: 100,
+        background: status === "done" ? "rgba(34,197,94,0.12)" : status === "active" ? isLight ? "rgba(249, 115, 22, 0.12)" : "rgba(45,129,224,0.12)" : "rgba(148,163,184,0.1)",
+        color: status === "done" ? colors.green : status === "active" ? isLight ? colors.orange : colors.blue : themeColors.muted,
+        border: `1px solid ${status === "done" ? colors.green + "44" : status === "active" ? (isLight ? colors.orange : colors.blue) + "44" : themeColors.border}`,
+        opacity: badgeEntrance,
+        transform: `scale(${badgeEntrance})`,
+        marginTop: 8
+      }, children: status === "done" ? "\u2713 Done" : status === "active" ? "\u25CF Active" : "\u25CB Next" })
+    ] }),
+    !isVertical && /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { fontSize: 13, color: colors.orange, marginBottom: 16, fontWeight: 600 }, children: weeks }),
+    !isVertical && /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { display: "flex", flexDirection: "column", gap: 10 }, children: items.slice(0, 3).map((item, j) => {
+      const itemEntrance = (0,esm.spring)({ frame: frame - delay[0] - 15 - j * 8, fps, config: { damping: 15 } });
+      return /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        fontSize: 14,
+        color: status === "done" ? themeColors.muted : themeColors.text,
+        opacity: itemEntrance,
+        transform: `translateX(${(0,esm.interpolate)(itemEntrance, [0, 1], [-10, 0])}px)`
+      }, children: [
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: { color: status === "done" ? colors.green : status === "active" ? isLight ? colors.orange : colors.blue : themeColors.muted, fontSize: 10 }, children: status === "done" ? "\u2713" : status === "active" ? "\u25CF" : "\u25CB" }),
+        item
+      ] }, j);
+    }) }),
+    isVertical && /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      fontSize: 11,
+      fontWeight: 700,
+      padding: "4px 10px",
+      borderRadius: 100,
+      background: status === "done" ? "rgba(34,197,94,0.12)" : status === "active" ? isLight ? "rgba(249, 115, 22, 0.12)" : "rgba(45,129,224,0.12)" : "rgba(148,163,184,0.1)",
+      color: status === "done" ? colors.green : status === "active" ? isLight ? colors.orange : colors.blue : themeColors.muted,
+      border: `1px solid ${status === "done" ? colors.green + "44" : status === "active" ? (isLight ? colors.orange : colors.blue) + "44" : themeColors.border}`,
+      opacity: badgeEntrance,
+      transform: `scale(${badgeEntrance})`
+    }, children: status === "done" ? "DONE" : status === "active" ? "ACTIVE" : "NEXT" })
+  ] });
+};
+const RoadmapScene = ({
+  theme = "dark",
+  title = "Build Roadmap",
+  subtitle = "From MVP to Launch",
+  phases: customPhases,
+  progress,
+  cardWidth = "100%"
+}) => {
+  const frame = (0,esm.useCurrentFrame)();
+  const { width, height } = (0,esm.useVideoConfig)();
+  const isLight = theme === "light";
+  const isVertical = height > width;
+  const defaultPhases = [
+    { phase: "Phase 1", title: "Validation & MVP Scope", weeks: "Weeks 1\u20132", status: "done", items: ["Problem interviews", "Define features", "Tech stack", "Wireframes"], delay: [20, 45] },
+    { phase: "Phase 2", title: "Build Engine", weeks: "Weeks 3\u20138", status: "active", items: ["Auth + onboarding", "Core feature v1", "Basic analytics", "Testing"], delay: [35, 60] },
+    { phase: "Phase 3", title: "Launch & GTM", weeks: "Weeks 9\u201310", status: "upcoming", items: ["Product Hunt launch", "LinkedIn outreach", "First users", "Feedback"], delay: [50, 75] },
+    { phase: "Phase 4", title: "Scale Up", weeks: "Week 12+", status: "upcoming", items: ["Public release", "Growth hack", "Series A prep", "Team expansion"], delay: [65, 90] }
+  ];
+  const phases = customPhases || defaultPhases;
+  const headerEntrance = (0,esm.interpolate)(frame, [0, 20], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const headerY = (0,esm.interpolate)(headerEntrance, [0, 1], [15, 0]);
+  const progressVal = progress !== void 0 ? (0,esm.interpolate)(frame, [0, 60], [0, progress], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) : 0;
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: {
+    background: isLight ? colors.lightBgProduct : colors.bg,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: isVertical ? 40 : 40
+  }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
+      width: cardWidth,
+      maxWidth: isVertical ? "100%" : 1100,
+      marginBottom: isVertical ? 40 : 32,
+      opacity: headerEntrance,
+      transform: `translateY(${headerY}px)`,
+      display: "flex",
+      flexDirection: isVertical ? "column" : "row",
+      justifyContent: "space-between",
+      alignItems: isVertical ? "center" : "flex-end",
+      textAlign: isVertical ? "center" : "left",
+      gap: isVertical ? 24 : 0
+    }, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { children: [
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+          fontSize: isVertical ? 22 : 11,
+          // Significantly increased
+          fontWeight: 800,
+          color: isLight ? colors.orange : colors.purple,
+          textTransform: "uppercase",
+          letterSpacing: "0.2em",
+          marginBottom: 12
+        }, children: title }),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+          fontSize: isVertical ? 42 : 26,
+          // Significantly increased
+          fontWeight: 900,
+          color: isLight ? colors.lightText : colors.white,
+          letterSpacing: "-1px",
+          lineHeight: 1.1
+        }, children: subtitle })
+      ] }),
+      progress !== void 0 && /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { width: isVertical ? "100%" : 300 }, children: [
+        /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { display: "flex", justifyContent: "space-between", fontSize: isVertical ? 14 : 11, fontWeight: 700, color: isLight ? colors.lightMuted : colors.muted, marginBottom: 8 }, children: [
+          /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { children: "PROGRESS" }),
+          /* @__PURE__ */ (0,jsx_runtime.jsxs)("span", { children: [
+            Math.round(progressVal),
+            "%"
+          ] })
+        ] }),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { height: 8, width: "100%", background: isLight ? colors.lightBorder : colors.border, borderRadius: 10, overflow: "hidden" }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { height: "100%", width: `${progressVal}%`, background: colors.orange, borderRadius: 10 } }) })
+      ] })
+    ] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      background: isLight ? colors.lightBg : colors.bg,
+      border: `2px solid ${isLight ? colors.lightBorder : colors.border}`,
+      borderRadius: 24,
+      padding: isVertical ? "32px 24px" : "48px",
+      width: cardWidth,
+      height: cardWidth === "100%" ? "auto" : "auto",
+      boxSizing: "border-box",
+      boxShadow: isLight ? "0 20px 60px rgba(0,0,0,0.08)" : "0 40px 100px rgba(0,0,0,0.5)",
+      fontFamily: fonts.base
+    }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      display: "flex",
+      flexDirection: isVertical ? "column" : "row",
+      gap: isVertical ? 16 : 20
+    }, children: phases.map((phase, i) => /* @__PURE__ */ (0,jsx_runtime.jsx)(RoadmapPhase, { ...phase, theme, isVertical }, i)) }) })
+  ] });
+};
+
+;// ./src/compositions/Video4Social/ImpactText.tsx
+
+
+
+
+const ImpactText_WordReveal = ({
+  text,
+  delay,
+  color = colors.lightText
+}) => {
+  const frame = (0,esm.useCurrentFrame)();
+  const opacity = (0,esm.interpolate)(frame, [delay, delay + 6], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp"
+  });
+  const y = (0,esm.interpolate)(frame, [delay, delay + 6], [10, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp"
+  });
+  const scale = (0,esm.interpolate)(frame, [delay, delay + 6], [0.8, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp"
+  });
+  return /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: {
+    display: "inline-block",
+    opacity,
+    transform: `translateY(${y}px) scale(${scale})`,
+    color,
+    marginRight: "0.25em"
+  }, children: text });
+};
+const ImpactText = ({ lines, stagger = 6 }) => {
+  const { width, height } = (0,esm.useVideoConfig)();
+  const isVertical = height > width;
+  return /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.AbsoluteFill, { style: {
+    backgroundColor: colors.lightBg,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    fontFamily: fonts.base,
+    padding: isVertical ? "0 40px" : "0 100px",
+    textAlign: "center"
+  }, children: lines.map((line, i) => {
+    const words = line.text.split(" ");
+    return /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      fontSize: isVertical ? 100 : 72,
+      fontWeight: 900,
+      lineHeight: 1.1,
+      letterSpacing: "-3px",
+      marginBottom: i === lines.length - 1 ? 0 : isVertical ? 30 : 10,
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "center"
+    }, children: words.map((word, j) => {
+      var _a, _b;
+      const isAccent = ((_a = line.accent) == null ? void 0 : _a.word) === word;
+      const delay = i * stagger + j * 2;
+      return /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        ImpactText_WordReveal,
+        {
+          text: word,
+          delay,
+          color: isAccent ? (_b = line.accent) == null ? void 0 : _b.color : line.color || colors.lightText
+        },
+        j
+      );
+    }) }, i);
+  }) });
+};
+
+;// ./src/compositions/Video4Social/CTAUnderline.tsx
+
+
+
+
+const CTAUnderline = ({ width, delay, duration = 30, color = colors.orange }) => {
+  const frame = (0,esm.useCurrentFrame)();
+  const progress = (0,esm.interpolate)(frame, [delay, delay + duration], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp"
+  });
+  const dashOffset = width * (1 - progress);
+  return /* @__PURE__ */ (0,jsx_runtime.jsx)("svg", { width, height: "4", viewBox: `0 0 ${width} 4`, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+    "path",
+    {
+      d: `M 0 2 L ${width} 2`,
+      stroke: color,
+      strokeWidth: "4",
+      strokeLinecap: "round",
+      strokeDasharray: width,
+      strokeDashoffset: dashOffset,
+      fill: "none"
+    }
+  ) });
+};
+
+;// ./src/compositions/Video4Social/index.tsx
+
+
+
+
+
+
+
+
+
+
+
+const Video4Social_Transition = ({ duration, children }) => {
+  const frame = (0,esm.useCurrentFrame)();
+  const opacity = (0,esm.interpolate)(frame, [duration - 15, duration - 5], [1, 0], { extrapolateRight: "clamp" });
+  return /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.AbsoluteFill, { style: { opacity }, children });
+};
+const Video4Social = () => {
+  const frame = (0,esm.useCurrentFrame)();
+  const { width, height } = (0,esm.useVideoConfig)();
+  const isVertical = height > width;
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: colors.lightBg, overflow: "hidden" }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(BackgroundMusic, { volume: 0.12, filename: "v5_social_beat" }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { durationInFrames: 300, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 40, durationInFrames: 220, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_typing.mp3"), volume: 0.15 }) }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 220, durationInFrames: 40, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_click.mp3"), volume: 0.5 }) }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(Video4Social_Transition, { duration: 300, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        DashboardInputScene,
+        {
+          theme: "light",
+          customText: "Freelance designers spend 4 hours a week building proposals manually. Most of them are never signed.",
+          withInteractions: true
+        }
+      ) })
+    ] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 300, durationInFrames: 300, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 20, durationInFrames: 60, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_success_chime.mp3"), volume: 0.4 }) }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(Video4Social_Transition, { duration: 300, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        BlueprintScoreScene,
+        {
+          theme: "light",
+          targetScore: 84,
+          cardWidth: isVertical ? "95%" : "80%",
+          metrics: [
+            { label: "Inefficient Task", val: "PROPOSALS", color: colors.orange, delay: 60 },
+            { label: "Time Wasted", val: "4H / WEEK", color: colors.orange, delay: 75 },
+            { label: "Market Rejection", val: "92% RATE", color: colors.red, delay: 90 },
+            { label: "Validation Signal", val: "STRONG", color: colors.green, delay: 105 }
+          ]
+        }
+      ) })
+    ] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 600, durationInFrames: 120, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_whoosh_clean.mp3"), volume: 0.15 }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(Video4Social_Transition, { duration: 120, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        ImpactText,
+        {
+          lines: [
+            { text: "Real evidence.", color: colors.lightText },
+            { text: "Not guesses.", color: colors.lightText, accent: { word: "guesses.", color: colors.orange } }
+          ]
+        }
+      ) })
+    ] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 720, durationInFrames: 300, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Video4Social_Transition, { duration: 300, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(ExecutiveTeamScene, { theme: "light" }) }) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 1020, durationInFrames: 120, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_whoosh_clean.mp3"), volume: 0.15 }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(Video4Social_Transition, { duration: 120, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        ImpactText,
+        {
+          lines: [
+            { text: "4 co-founders.", color: colors.lightText },
+            { text: "Zero salary.", color: colors.lightText, accent: { word: "salary.", color: colors.blue } }
+          ]
+        }
+      ) })
+    ] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 1140, durationInFrames: 300, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Video4Social_Transition, { duration: 300, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      RoadmapScene,
+      {
+        theme: "light",
+        title: "Execution Roadmap",
+        subtitle: "90 Days to Market Domination",
+        progress: 31,
+        cardWidth: isVertical ? "95%" : "85%",
+        phases: [
+          { phase: "Week 1-2", title: "Core Scope", weeks: "Active", status: "done", items: ["Proposal automation", "Review loop"], delay: [20, 40] },
+          { phase: "Week 3-8", title: "Build Engine", weeks: "Coming Up", status: "active", items: ["Smart templates", "AI generator"], delay: [35, 55] },
+          { phase: "Week 9-10", title: "Launch High", weeks: "Next", status: "upcoming", items: ["Beta testers", "GTM Strategy"], delay: [50, 70] },
+          { phase: "Week 12+", title: "Scale", weeks: "Future", status: "upcoming", items: ["Public release", "Growth"], delay: [65, 85] }
+        ]
+      }
+    ) }) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 1440, durationInFrames: 120, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Audio, { src: (0,esm.staticFile)("audio/sfx_whoosh_clean.mp3"), volume: 0.15 }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(Video4Social_Transition, { duration: 120, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        ImpactText,
+        {
+          lines: [
+            { text: "Zero code.", color: colors.lightText, accent: { word: "code.", color: colors.green } },
+            { text: "Zero team.", color: colors.lightText }
+          ]
+        }
+      ) })
+    ] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 1560, durationInFrames: 540, children: /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      // Changed for explicit centering
+      paddingTop: 0,
+      // Removed top padding
+      fontFamily: fonts.base,
+      paddingLeft: isVertical ? 60 : 100,
+      paddingRight: isVertical ? 60 : 100
+    }, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+        opacity: (0,esm.interpolate)(frame - 1560, [0, 20], [0, 1]),
+        marginBottom: isVertical ? 80 : 40
+      }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        "img",
+        {
+          src: (0,esm.staticFile)("shared/Painstack.ai_logo1.png"),
+          style: { height: isVertical ? 120 : 60, width: "auto" },
+          alt: "Logo"
+        }
+      ) }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+        opacity: (0,esm.interpolate)(frame - 1560, [10, 30], [0, 1]),
+        color: colors.orange,
+        fontSize: isVertical ? 32 : 16,
+        // Significantly increased
+        fontWeight: 800,
+        textTransform: "uppercase",
+        letterSpacing: "2px",
+        marginBottom: isVertical ? 40 : 20
+      }, children: "Your Startup Journey Starts Here." }),
+      /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
+        color: colors.lightText,
+        fontSize: isVertical ? 60 : 36,
+        // Increased
+        fontWeight: 800,
+        textAlign: "center",
+        marginBottom: isVertical ? 100 : 60,
+        lineHeight: 1.1
+      }, children: [
+        "Validate your idea free at",
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("br", {}),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: { fontSize: isVertical ? 72 : 52, fontWeight: 900, color: colors.lightText, display: "block", marginTop: 20 }, children: "usepainstackai.com" }),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { display: "flex", justifyContent: "center", marginTop: 25 }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(CTAUnderline, { width: isVertical ? 600 : 450, delay: 1560 + 40 }) })
+      ] }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+        display: "flex",
+        flexDirection: isVertical ? "column" : "row",
+        alignItems: "center",
+        gap: isVertical ? 32 : 40,
+        opacity: (0,esm.interpolate)(frame - 1560, [60, 80], [0, 1])
+      }, children: ["No code required", "AI Team from Day 0", "Real Market Data"].map((tag, i) => /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: { color: colors.lightMuted, fontSize: isVertical ? 28 : 14, fontWeight: 700 }, children: [
+        "\u2713 ",
+        tag
+      ] }, i)) })
+    ] }) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.AbsoluteFill, { style: {
+      backgroundColor: "white",
+      opacity: (0,esm.interpolate)(frame, [2080, 2100], [0, 1]),
+      pointerEvents: "none"
+    } })
+  ] });
+};
+
+;// ./src/compositions/VideoLW/lwBrand.ts
+
+const lwColors = {
+  bg: "#0a0a0f",
+  cardBg: "rgba(255,255,255,0.04)",
+  cardBorder: "rgba(255,255,255,0.08)",
+  white: "#FFFFFF",
+  introGray: "#8A8A93",
+  orange: "#f96426",
+  blue: "#2d81e0",
+  pink: "#e040fb",
+  green: "#22c55e",
+  muted: "#6b7280"
+};
+const lwFonts = {
+  // Same as existing videos — Inter
+  base: '"Inter", system-ui, sans-serif'
+};
+const lwGradients = {
+  hub: "linear-gradient(135deg, #f96426 0%, #2d81e0 100%)",
+  agents: "linear-gradient(135deg, #a78bfa 0%, #2d81e0 100%)",
+  cto: "linear-gradient(135deg, #22c55e 0%, #2d81e0 100%)",
+  dataroom: "linear-gradient(135deg, #f96426 0%, #a78bfa 100%)",
+  reddit: "linear-gradient(135deg, #ff4500 0%, #f96426 100%)"
+};
+
+;// ./src/compositions/VideoLW/lwComponents.tsx
+
+
+
+
+const BG = () => {
+  const frame = (0,esm.useCurrentFrame)();
+  const breathe = Math.sin(frame / 90) * 0.05 + 1;
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: lwColors.bg, overflow: "hidden" }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      bottom: "-10%",
+      left: "-5%",
+      width: "65%",
+      height: "65%",
+      background: "radial-gradient(ellipse at center, rgba(249,100,38,0.22) 0%, transparent 70%)",
+      filter: "blur(80px)",
+      transform: `scale(${breathe})`
+    } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      bottom: "-15%",
+      right: "-10%",
+      width: "60%",
+      height: "60%",
+      background: "radial-gradient(ellipse at center, rgba(45,129,224,0.20) 0%, transparent 70%)",
+      filter: "blur(90px)",
+      transform: `scale(${1 / breathe})`
+    } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      bottom: "5%",
+      left: "30%",
+      width: "50%",
+      height: "40%",
+      background: "radial-gradient(ellipse at center, rgba(224,64,251,0.12) 0%, transparent 70%)",
+      filter: "blur(100px)"
+    } })
+  ] });
+};
+const ProgressDots = ({ index }) => {
+  const frame = (0,esm.useCurrentFrame)();
+  const opacity = (0,esm.interpolate)(frame, [0, 15], [0, 1], { extrapolateRight: "clamp" });
+  return /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+    position: "absolute",
+    top: 60,
+    left: 0,
+    right: 0,
+    display: "flex",
+    justifyContent: "center",
+    gap: 10,
+    opacity,
+    zIndex: 10
+  }, children: [1, 2, 3, 4, 5].map((i) => /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+    width: i === index ? 28 : 8,
+    height: 8,
+    borderRadius: 4,
+    background: i === index ? lwColors.orange : "rgba(255,255,255,0.2)"
+  } }, i)) });
+};
+const IntroWord = ({ startFrame = 0 }) => {
+  const frame = (0,esm.useCurrentFrame)();
+  const prog = (0,esm.spring)({ frame: frame - startFrame, fps: 30, config: { damping: 18, stiffness: 120 } });
+  const opacity = (0,esm.interpolate)(prog, [0, 1], [0, 1]);
+  const y = (0,esm.interpolate)(prog, [0, 1], [16, 0]);
+  return /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+    fontFamily: lwFonts.base,
+    fontSize: 22,
+    fontWeight: 600,
+    color: lwColors.introGray,
+    letterSpacing: "0.12em",
+    textTransform: "uppercase",
+    opacity,
+    transform: `translateY(${y}px)`,
+    marginBottom: 16,
+    textAlign: "center"
+  }, children: "Introducing" });
+};
+const FeatureTitle = ({ text, accentWord, gradient = "hub", startFrame = 8 }) => {
+  const frame = (0,esm.useCurrentFrame)();
+  const prog = (0,esm.spring)({ frame: frame - startFrame, fps: 30, config: { damping: 16, stiffness: 100, mass: 0.8 } });
+  const scale = (0,esm.interpolate)(prog, [0, 1], [0.92, 1]);
+  const opacity = (0,esm.interpolate)(prog, [0, 1], [0, 1]);
+  const grad = lwGradients[gradient];
+  if (accentWord) {
+    const parts = text.split(accentWord);
+    return /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
+      fontFamily: lwFonts.base,
+      fontWeight: 900,
+      fontSize: 72,
+      lineHeight: 1.05,
+      letterSpacing: "-2px",
+      textAlign: "center",
+      opacity,
+      transform: `scale(${scale})`
+    }, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: { color: lwColors.white }, children: parts[0] }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: {
+        background: grad,
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text"
+      }, children: accentWord }),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)("span", { style: { color: lwColors.white }, children: parts[1] })
+    ] });
+  }
+  return /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+    fontFamily: lwFonts.base,
+    fontWeight: 900,
+    fontSize: 72,
+    lineHeight: 1.05,
+    letterSpacing: "-2px",
+    textAlign: "center",
+    background: grad,
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    backgroundClip: "text",
+    opacity,
+    transform: `scale(${scale})`
+  }, children: text });
+};
+const Caption = ({ text, startFrame, endFrame }) => {
+  const frame = (0,esm.useCurrentFrame)();
+  const inProg = (0,esm.spring)({ frame: frame - startFrame, fps: 30, config: { damping: 20, stiffness: 150 } });
+  const opacity = endFrame ? (0,esm.interpolate)(frame, [startFrame, startFrame + 8, endFrame - 8, endFrame], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) : (0,esm.interpolate)(frame, [startFrame, startFrame + 8], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const y = (0,esm.interpolate)(inProg, [0, 1], [12, 0]);
+  return /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+    position: "absolute",
+    bottom: 120,
+    left: 40,
+    right: 40,
+    textAlign: "center",
+    opacity,
+    transform: `translateY(${y}px)`,
+    zIndex: 20
+  }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+    display: "inline-block",
+    background: "rgba(0,0,0,0.55)",
+    backdropFilter: "blur(12px)",
+    borderRadius: 12,
+    padding: "14px 24px",
+    fontFamily: lwFonts.base,
+    fontSize: 26,
+    fontWeight: 700,
+    color: lwColors.white,
+    lineHeight: 1.35,
+    maxWidth: 880,
+    letterSpacing: "-0.3px"
+  }, children: text }) });
+};
+const BulletItem = ({ text, icon, startFrame, accent = lwColors.orange }) => {
+  const frame = (0,esm.useCurrentFrame)();
+  const prog = (0,esm.spring)({ frame: frame - startFrame, fps: 30, config: { damping: 18, stiffness: 130 } });
+  const opacity = (0,esm.interpolate)(prog, [0, 1], [0, 1]);
+  const x = (0,esm.interpolate)(prog, [0, 1], [-20, 0]);
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
+    display: "flex",
+    alignItems: "center",
+    gap: 18,
+    opacity,
+    transform: `translateX(${x}px)`
+  }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      width: 48,
+      height: 48,
+      borderRadius: 12,
+      background: "rgba(255,255,255,0.06)",
+      border: `1px solid ${accent}44`,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: 22,
+      flexShrink: 0
+    }, children: icon }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      fontFamily: lwFonts.base,
+      fontSize: 28,
+      fontWeight: 700,
+      color: lwColors.white,
+      lineHeight: 1.3
+    }, children: text })
+  ] });
+};
+const CTACard = ({ tagline, startFrame = 0 }) => {
+  const frame = (0,esm.useCurrentFrame)();
+  const prog = (0,esm.spring)({ frame: frame - startFrame, fps: 30, config: { damping: 18, stiffness: 100 } });
+  const opacity = (0,esm.interpolate)(prog, [0, 1], [0, 1]);
+  const scale = (0,esm.interpolate)(prog, [0, 1], [0.94, 1]);
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 32,
+    opacity,
+    transform: `scale(${scale})`
+  }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      esm.Img,
+      {
+        src: (0,esm.staticFile)("shared/Painstack.ai_logo2.png"),
+        style: { width: 200, height: "auto" }
+      }
+    ),
+    tagline && /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      fontFamily: lwFonts.base,
+      fontSize: 28,
+      fontWeight: 600,
+      color: lwColors.introGray,
+      textAlign: "center",
+      maxWidth: 700,
+      lineHeight: 1.4,
+      letterSpacing: "-0.3px"
+    }, children: tagline }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      fontFamily: lwFonts.base,
+      fontSize: 52,
+      fontWeight: 900,
+      color: lwColors.white,
+      letterSpacing: "-1.5px",
+      textAlign: "center"
+    }, children: "usepainstackai.com" }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      display: "inline-block",
+      padding: "16px 48px",
+      borderRadius: 100,
+      background: "linear-gradient(135deg, #f96426, #2d81e0)",
+      fontFamily: lwFonts.base,
+      fontSize: 22,
+      fontWeight: 800,
+      color: "#fff",
+      letterSpacing: "0.04em"
+    }, children: "Try it free \u2192" })
+  ] });
+};
+const UIPlaceholder = ({ title, rows = 4, accentColor = lwColors.orange, startFrame = 0 }) => {
+  const frame = (0,esm.useCurrentFrame)();
+  const prog = (0,esm.spring)({ frame: frame - startFrame, fps: 30, config: { damping: 18, stiffness: 100 } });
+  const opacity = (0,esm.interpolate)(prog, [0, 1], [0, 1]);
+  const scale = (0,esm.interpolate)(prog, [0, 1], [0.96, 1]);
+  const scanPos = (0,esm.interpolate)(frame % 60, [0, 60], [0, 100]);
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)("div", { style: {
+    width: "100%",
+    background: "rgba(255,255,255,0.04)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: 20,
+    padding: 28,
+    opacity,
+    transform: `scale(${scale})`,
+    position: "relative",
+    overflow: "hidden"
+  }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      position: "absolute",
+      top: `${scanPos}%`,
+      left: 0,
+      width: "100%",
+      height: 1,
+      background: `linear-gradient(90deg, transparent, ${accentColor}66, transparent)`,
+      opacity: 0.5
+    } }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+      fontFamily: lwFonts.base,
+      fontSize: 13,
+      fontWeight: 700,
+      color: accentColor,
+      textTransform: "uppercase",
+      letterSpacing: "0.15em",
+      marginBottom: 20
+    }, children: title }),
+    Array.from({ length: rows }).map((_, i) => {
+      const rowProg = (0,esm.spring)({ frame: frame - startFrame - i * 8, fps: 30, config: { damping: 18 } });
+      const rowOpacity = (0,esm.interpolate)(rowProg, [0, 1], [0, 1]);
+      const widths = [85, 70, 90, 60, 75, 80];
+      return /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+        height: 14,
+        borderRadius: 7,
+        background: `rgba(255,255,255,0.08)`,
+        width: `${widths[i % widths.length]}%`,
+        marginBottom: 14,
+        opacity: rowOpacity,
+        position: "relative",
+        overflow: "hidden"
+      }, children: /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+        position: "absolute",
+        top: 0,
+        left: `${(frame * 1.2 + i * 40) % 200 - 50}%`,
+        width: "40%",
+        height: "100%",
+        background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)"
+      } }) }, i);
+    })
+  ] });
+};
+
+;// ./src/compositions/VideoLW/LWEvidence.tsx
+
+
+
+
+
+
+const LWEvidence = () => {
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: lwColors.bg }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(BG, {}),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "lw_v1_evidence" }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(BackgroundMusic, { volume: 0.05 }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { durationInFrames: 120, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(ProgressDots, { index: 1 }),
+      /* @__PURE__ */ (0,jsx_runtime.jsxs)(
+        esm.AbsoluteFill,
+        {
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 12,
+            paddingTop: 0
+          },
+          children: [
+            /* @__PURE__ */ (0,jsx_runtime.jsx)(IntroWord, { startFrame: 0 }),
+            /* @__PURE__ */ (0,jsx_runtime.jsx)(
+              FeatureTitle,
+              {
+                text: "Evidence Hub",
+                accentWord: "Hub",
+                gradient: "hub",
+                startFrame: 15
+              }
+            )
+          ]
+        }
+      )
+    ] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 120, durationInFrames: 300, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        esm.AbsoluteFill,
+        {
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "0 60px",
+            gap: 32
+          },
+          children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+            UIPlaceholder,
+            {
+              title: "Blueprint Score",
+              rows: 5,
+              accentColor: lwColors.orange
+            }
+          )
+        }
+      ),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        Caption,
+        {
+          text: "A score. Based on what?",
+          startFrame: 10,
+          endFrame: 160
+        }
+      ),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        Caption,
+        {
+          text: "Evidence Hub shows the work.",
+          startFrame: 170
+        }
+      )
+    ] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 420, durationInFrames: 210, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        esm.AbsoluteFill,
+        {
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "0 60px",
+            gap: 32
+          },
+          children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+            UIPlaceholder,
+            {
+              title: "Evidence Sources",
+              rows: 6,
+              accentColor: lwColors.blue
+            }
+          )
+        }
+      ),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        Caption,
+        {
+          text: "Click each source. Read the original. See the date.",
+          startFrame: 10
+        }
+      )
+    ] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 630, durationInFrames: 150, children: /* @__PURE__ */ (0,jsx_runtime.jsxs)(
+      esm.AbsoluteFill,
+      {
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          justifyContent: "center",
+          padding: "0 80px",
+          gap: 36
+        },
+        children: [
+          /* @__PURE__ */ (0,jsx_runtime.jsx)(
+            BulletItem,
+            {
+              icon: "\u{1F4C4}",
+              text: "Show evidence to investors",
+              startFrame: 10
+            }
+          ),
+          /* @__PURE__ */ (0,jsx_runtime.jsx)(
+            BulletItem,
+            {
+              icon: "\u{1F4AC}",
+              text: "DM the people with the problem",
+              startFrame: 40
+            }
+          )
+        ]
+      }
+    ) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 780, durationInFrames: 120, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      CTACard,
+      {
+        tagline: "The score isn't the product. The evidence is.",
+        startFrame: 10
+      }
+    ) })
+  ] });
+};
+
+;// ./src/compositions/VideoLW/LWAgents.tsx
+
+
+
+
+
+
+const AgentRow = ({
+  icon,
+  text,
+  placeholderTitle,
+  rows,
+  accentColor,
+  startFrame
+}) => {
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(
+    esm.AbsoluteFill,
+    {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "0 60px",
+        gap: 32
+      },
+      children: [
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(BulletItem, { icon, text, startFrame }),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(
+          UIPlaceholder,
+          {
+            title: placeholderTitle,
+            rows,
+            accentColor,
+            startFrame: startFrame + 10
+          }
+        )
+      ]
+    }
+  );
+};
+const LWAgents = () => {
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: lwColors.bg }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(BG, {}),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "lw_v2_agents" }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(BackgroundMusic, { volume: 0.05 }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { durationInFrames: 120, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(ProgressDots, { index: 2 }),
+      /* @__PURE__ */ (0,jsx_runtime.jsxs)(
+        esm.AbsoluteFill,
+        {
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 12
+          },
+          children: [
+            /* @__PURE__ */ (0,jsx_runtime.jsx)(IntroWord, { startFrame: 0 }),
+            /* @__PURE__ */ (0,jsx_runtime.jsx)(
+              FeatureTitle,
+              {
+                text: "AI Agents",
+                accentWord: "Agents",
+                gradient: "agents",
+                startFrame: 15
+              }
+            )
+          ]
+        }
+      )
+    ] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 120, durationInFrames: 150, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        esm.AbsoluteFill,
+        {
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "0 60px",
+            gap: 32
+          },
+          children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+            UIPlaceholder,
+            {
+              title: "Agents Overview",
+              rows: 4,
+              accentColor: "#a78bfa"
+            }
+          )
+        }
+      ),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        Caption,
+        {
+          text: "A validation score doesn't tell you what to do next.",
+          startFrame: 10
+        }
+      )
+    ] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 270, durationInFrames: 480, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      AgentRow,
+      {
+        icon: "\u{1F454}",
+        text: "CEO \u2014 90-day roadmap & business model",
+        placeholderTitle: "CEO Roadmap",
+        rows: 3,
+        accentColor: "#a78bfa",
+        startFrame: 0
+      }
+    ) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 390, durationInFrames: 360, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      AgentRow,
+      {
+        icon: "\u{1F4BB}",
+        text: "CTO \u2014 MVP scope in 12 prompts",
+        placeholderTitle: "CTO Workspace",
+        rows: 3,
+        accentColor: lwColors.green,
+        startFrame: 0
+      }
+    ) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 510, durationInFrames: 240, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      AgentRow,
+      {
+        icon: "\u{1F4E3}",
+        text: "CMO \u2014 ICP, channels, messaging",
+        placeholderTitle: "CMO Strategy",
+        rows: 3,
+        accentColor: lwColors.orange,
+        startFrame: 0
+      }
+    ) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 630, durationInFrames: 120, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      AgentRow,
+      {
+        icon: "\u{1F4CA}",
+        text: "Market \u2014 live competitive analysis",
+        placeholderTitle: "Market Intel",
+        rows: 3,
+        accentColor: lwColors.blue,
+        startFrame: 0
+      }
+    ) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 750, durationInFrames: 120, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.AbsoluteFill, {}),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        Caption,
+        {
+          text: "One workspace. Four perspectives. Decisions in minutes, not weeks.",
+          startFrame: 10
+        }
+      )
+    ] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 870, durationInFrames: 120, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      CTACard,
+      {
+        tagline: "Four perspectives. Minutes, not weeks.",
+        startFrame: 10
+      }
+    ) })
+  ] });
+};
+
+;// ./src/compositions/VideoLW/LWCTOWorkspace.tsx
+
+
+
+
+
+const Scene1 = () => {
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(
+    esm.AbsoluteFill,
+    {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 12
+      },
+      children: [
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(ProgressDots, { index: 3 }),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(IntroWord, { startFrame: 10 }),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(
+          FeatureTitle,
+          {
+            text: "CTO Workspace",
+            accentWord: "Workspace",
+            gradient: "cto",
+            startFrame: 20
+          }
+        )
+      ]
+    }
+  );
+};
+const Scene2 = () => {
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(
+    esm.AbsoluteFill,
+    {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingLeft: 80,
+        paddingRight: 80
+      },
+      children: [
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(
+          UIPlaceholder,
+          {
+            title: "Blank Editor",
+            rows: 2,
+            accentColor: "#22c55e",
+            startFrame: 0
+          }
+        ),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(
+          Caption,
+          {
+            text: "Validated idea \u2192 blank prompt box.",
+            startFrame: 10
+          }
+        )
+      ]
+    }
+  );
+};
+const Scene3 = () => {
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(
+    esm.AbsoluteFill,
+    {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingLeft: 80,
+        paddingRight: 80
+      },
+      children: [
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(
+          UIPlaceholder,
+          {
+            title: "12 PRPs \u2014 Product Requirement Prompts",
+            rows: 6,
+            accentColor: "#22c55e",
+            startFrame: 0
+          }
+        ),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(
+          Caption,
+          {
+            text: "12 PRPs. Copy. Paste into Lovable, Cursor or Claude.",
+            startFrame: 10
+          }
+        )
+      ]
+    }
+  );
+};
+const Scene4 = () => {
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(
+    esm.AbsoluteFill,
+    {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 28,
+        paddingLeft: 140,
+        paddingRight: 140
+      },
+      children: [
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(
+          BulletItem,
+          {
+            icon: "\u{1F5FA}\uFE0F",
+            text: "System design included",
+            startFrame: 5,
+            accent: "#22c55e"
+          }
+        ),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(
+          BulletItem,
+          {
+            icon: "\u{1F4DA}",
+            text: "Knowledge base ready",
+            startFrame: 35,
+            accent: "#22c55e"
+          }
+        ),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(
+          BulletItem,
+          {
+            icon: "\u{1F512}",
+            text: "Security checklist",
+            startFrame: 65,
+            accent: "#22c55e"
+          }
+        )
+      ]
+    }
+  );
+};
+const Scene5 = () => {
+  return /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.AbsoluteFill, { children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+    CTACard,
+    {
+      tagline: "Build the right thing, in the right order.",
+      startFrame: 10
+    }
+  ) });
+};
+const LWCTOWorkspace = () => {
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(BG, {}),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "lw_v3_cto" }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { durationInFrames: 120, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene1, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 120, durationInFrames: 150, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene2, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 270, durationInFrames: 390, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene3, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 660, durationInFrames: 120, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene4, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 780, durationInFrames: 120, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(Scene5, {}) })
+  ] });
+};
+
+;// ./src/compositions/VideoLW/LWDataroom.tsx
+
+
+
+
+
+
+const LWDataroom_Scene1 = () => {
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(
+    esm.AbsoluteFill,
+    {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 12
+      },
+      children: [
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(ProgressDots, { index: 4 }),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(IntroWord, { startFrame: 10 }),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(
+          FeatureTitle,
+          {
+            text: "Dataroom",
+            accentWord: "Dataroom",
+            gradient: "dataroom",
+            startFrame: 20
+          }
+        )
+      ]
+    }
+  );
+};
+const LWDataroom_Scene2 = () => {
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(
+    esm.AbsoluteFill,
+    {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingLeft: 80,
+        paddingRight: 80
+      },
+      children: [
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(
+          UIPlaceholder,
+          {
+            title: "Generating documents...",
+            rows: 3,
+            accentColor: "#f96426",
+            startFrame: 0
+          }
+        ),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(
+          Caption,
+          {
+            text: "8 investor-ready documents from your blueprint.",
+            startFrame: 10
+          }
+        )
+      ]
+    }
+  );
+};
+const DOCS = [
+  "\u{1F4CA} Pitch Deck",
+  "\u{1F4C4} One-Pager",
+  "\u{1F4DD} Executive Summary",
+  "\u{1F4B0} Financial Model",
+  "\u{1F30D} Market Analysis",
+  "\u2694\uFE0F Competitor Matrix",
+  "\u26A0\uFE0F Risk Register",
+  "\u2753 FAQ"
+];
+const DocTile = ({ label, tileIndex }) => {
+  const frame = (0,esm.useCurrentFrame)();
+  const tileStartFrame = tileIndex * 45;
+  const prog = (0,esm.spring)({
+    frame: frame - tileStartFrame,
+    fps: 30,
+    config: { damping: 18, stiffness: 120, mass: 0.9 }
+  });
+  const opacity = (0,esm.interpolate)(prog, [0, 1], [0, 1], { extrapolateRight: "clamp" });
+  const scale = (0,esm.interpolate)(prog, [0, 1], [0.88, 1], { extrapolateRight: "clamp" });
+  const y = (0,esm.interpolate)(prog, [0, 1], [18, 0], { extrapolateRight: "clamp" });
+  const parts = label.split(" ");
+  const emoji = parts[0];
+  const name = parts.slice(1).join(" ");
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(
+    "div",
+    {
+      style: {
+        background: "rgba(255,255,255,0.04)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        borderRadius: 14,
+        padding: "20px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        gap: 10,
+        opacity,
+        transform: `scale(${scale}) translateY(${y}px)`,
+        minHeight: 90,
+        justifyContent: "center"
+      },
+      children: [
+        /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: { fontSize: 28 }, children: emoji }),
+        /* @__PURE__ */ (0,jsx_runtime.jsx)(
+          "div",
+          {
+            style: {
+              fontFamily: lwFonts.base,
+              fontSize: 18,
+              fontWeight: 700,
+              color: lwColors.white,
+              lineHeight: 1.3,
+              letterSpacing: "-0.3px"
+            },
+            children: name
+          }
+        )
+      ]
+    }
+  );
+};
+const LWDataroom_Scene3 = () => {
+  return /* @__PURE__ */ (0,jsx_runtime.jsx)(
+    esm.AbsoluteFill,
+    {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingLeft: 80,
+        paddingRight: 80
+      },
+      children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        "div",
+        {
+          style: {
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 20,
+            width: "100%",
+            maxWidth: 900
+          },
+          children: DOCS.map((doc, i) => /* @__PURE__ */ (0,jsx_runtime.jsx)(DocTile, { label: doc, tileIndex: i }, doc))
+        }
+      )
+    }
+  );
+};
+const LWDataroom_Scene4 = () => {
+  return /* @__PURE__ */ (0,jsx_runtime.jsx)(
+    esm.AbsoluteFill,
+    {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center"
+      },
+      children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        Caption,
+        {
+          text: "Grounded in your blueprint. Not templates.",
+          startFrame: 10
+        }
+      )
+    }
+  );
+};
+const LWDataroom_Scene5 = () => {
+  return /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.AbsoluteFill, { children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+    CTACard,
+    {
+      tagline: "8 documents. One blueprint.",
+      startFrame: 10
+    }
+  ) });
+};
+const LWDataroom = () => {
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(BG, {}),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "lw_v4_dataroom" }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { durationInFrames: 120, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(LWDataroom_Scene1, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 120, durationInFrames: 180, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(LWDataroom_Scene2, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 300, durationInFrames: 360, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(LWDataroom_Scene3, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 660, durationInFrames: 120, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(LWDataroom_Scene4, {}) }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 780, durationInFrames: 120, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(LWDataroom_Scene5, {}) })
+  ] });
+};
+
+;// ./src/compositions/VideoLW/LWReddit.tsx
+
+
+
+
+
+
+const LWReddit = () => {
+  return /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.AbsoluteFill, { style: { backgroundColor: lwColors.bg }, children: [
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(BG, {}),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(SceneAudio, { filename: "lw_v5_reddit" }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(BackgroundMusic, { volume: 0.05 }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { durationInFrames: 120, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(ProgressDots, { index: 5 }),
+      /* @__PURE__ */ (0,jsx_runtime.jsxs)(
+        esm.AbsoluteFill,
+        {
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 12
+          },
+          children: [
+            /* @__PURE__ */ (0,jsx_runtime.jsx)(IntroWord, { startFrame: 0 }),
+            /* @__PURE__ */ (0,jsx_runtime.jsx)(
+              FeatureTitle,
+              {
+                text: "Reddit \u2192 Blueprint",
+                accentWord: "Blueprint",
+                gradient: "reddit",
+                startFrame: 15
+              }
+            )
+          ]
+        }
+      )
+    ] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 120, durationInFrames: 240, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsxs)(
+        esm.AbsoluteFill,
+        {
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "0 60px",
+            gap: 28
+          },
+          children: [
+            /* @__PURE__ */ (0,jsx_runtime.jsx)(
+              UIPlaceholder,
+              {
+                title: "Paste Reddit URL",
+                rows: 2,
+                accentColor: "#ff4500"
+              }
+            ),
+            /* @__PURE__ */ (0,jsx_runtime.jsx)("div", { style: {
+              width: "100%",
+              background: "rgba(255,255,255,0.06)",
+              borderRadius: 12,
+              padding: "16px 24px",
+              fontFamily: "Inter,sans-serif",
+              fontSize: 18,
+              color: "rgba(255,255,255,0.5)",
+              border: "1px solid rgba(255,69,0,0.3)",
+              boxSizing: "border-box"
+            }, children: "reddit.com/r/startups/comments/..." })
+          ]
+        }
+      ),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        Caption,
+        {
+          text: "Paste any Reddit thread URL into Painstack.",
+          startFrame: 10,
+          endFrame: 230
+        }
+      )
+    ] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsxs)(esm.Sequence, { from: 360, durationInFrames: 360, children: [
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        esm.AbsoluteFill,
+        {
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "0 60px",
+            gap: 32
+          },
+          children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+            UIPlaceholder,
+            {
+              title: "Your Blueprint",
+              rows: 7,
+              accentColor: "#ff4500"
+            }
+          )
+        }
+      ),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        Caption,
+        {
+          text: "Problem analysis. Market sizing. Competitors. MVP. Roadmap.",
+          startFrame: 10,
+          endFrame: 175
+        }
+      ),
+      /* @__PURE__ */ (0,jsx_runtime.jsx)(
+        Caption,
+        {
+          text: "Thread \u2192 validated blueprint. ~30 seconds.",
+          startFrame: 180
+        }
+      )
+    ] }),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(esm.Sequence, { from: 720, durationInFrames: 120, children: /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      CTACard,
+      {
+        tagline: "Try it on the latest thread in your niche.",
+        startFrame: 10
+      }
+    ) })
   ] });
 };
 
 ;// ./src/Root.tsx
+
+
+
+
+
+
 
 
 
@@ -4779,7 +6843,7 @@ const RemotionRoot = () => {
       {
         id: "PainstackV2-Social",
         component: Video1Social,
-        durationInFrames: 1450,
+        durationInFrames: 1216,
         fps: 30,
         width: 1920,
         height: 1080
@@ -4790,7 +6854,7 @@ const RemotionRoot = () => {
       {
         id: "PainstackV2-Walkthrough",
         component: Video2Walkthrough,
-        durationInFrames: 2200,
+        durationInFrames: 2213,
         fps: 30,
         width: 1920,
         height: 1080
@@ -4801,7 +6865,7 @@ const RemotionRoot = () => {
       {
         id: "PainstackV2-Shorts",
         component: Video3Shorts,
-        durationInFrames: 800,
+        durationInFrames: 632,
         fps: 30,
         width: 1080,
         height: 1920
@@ -4812,8 +6876,140 @@ const RemotionRoot = () => {
       {
         id: "PainstackV3-Product",
         component: PainstackVideo,
-        durationInFrames: 5120,
+        durationInFrames: 3180,
+        fps: 30,
+        width: 1920,
+        height: 1080
+      }
+    ),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      esm.Composition,
+      {
+        id: "PainstackV4-Social",
+        component: Video4Social,
+        durationInFrames: 2100,
         fps: 60,
+        width: 1920,
+        height: 1080
+      }
+    ),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      esm.Composition,
+      {
+        id: "PainstackV4-SocialVertical",
+        component: Video4Social,
+        durationInFrames: 2100,
+        fps: 60,
+        width: 1080,
+        height: 1920
+      }
+    ),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      esm.Composition,
+      {
+        id: "PainstackLW-Evidence",
+        component: LWEvidence,
+        durationInFrames: 900,
+        fps: 30,
+        width: 1080,
+        height: 1920
+      }
+    ),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      esm.Composition,
+      {
+        id: "PainstackLW-Evidence-16x9",
+        component: LWEvidence,
+        durationInFrames: 900,
+        fps: 30,
+        width: 1920,
+        height: 1080
+      }
+    ),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      esm.Composition,
+      {
+        id: "PainstackLW-Agents",
+        component: LWAgents,
+        durationInFrames: 990,
+        fps: 30,
+        width: 1080,
+        height: 1920
+      }
+    ),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      esm.Composition,
+      {
+        id: "PainstackLW-Agents-16x9",
+        component: LWAgents,
+        durationInFrames: 990,
+        fps: 30,
+        width: 1920,
+        height: 1080
+      }
+    ),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      esm.Composition,
+      {
+        id: "PainstackLW-CTOWorkspace",
+        component: LWCTOWorkspace,
+        durationInFrames: 900,
+        fps: 30,
+        width: 1080,
+        height: 1920
+      }
+    ),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      esm.Composition,
+      {
+        id: "PainstackLW-CTOWorkspace-16x9",
+        component: LWCTOWorkspace,
+        durationInFrames: 900,
+        fps: 30,
+        width: 1920,
+        height: 1080
+      }
+    ),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      esm.Composition,
+      {
+        id: "PainstackLW-Dataroom",
+        component: LWDataroom,
+        durationInFrames: 900,
+        fps: 30,
+        width: 1080,
+        height: 1920
+      }
+    ),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      esm.Composition,
+      {
+        id: "PainstackLW-Dataroom-16x9",
+        component: LWDataroom,
+        durationInFrames: 900,
+        fps: 30,
+        width: 1920,
+        height: 1080
+      }
+    ),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      esm.Composition,
+      {
+        id: "PainstackLW-Reddit",
+        component: LWReddit,
+        durationInFrames: 840,
+        fps: 30,
+        width: 1080,
+        height: 1920
+      }
+    ),
+    /* @__PURE__ */ (0,jsx_runtime.jsx)(
+      esm.Composition,
+      {
+        id: "PainstackLW-Reddit-16x9",
+        component: LWReddit,
+        durationInFrames: 840,
+        fps: 30,
         width: 1920,
         height: 1080
       }
@@ -32264,7 +34460,7 @@ var NoReactInternals = {
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
 /******/ 	__webpack_require__(6507);
-/******/ 	__webpack_require__(968);
+/******/ 	__webpack_require__(90);
 /******/ 	__webpack_require__(3610);
 /******/ 	var __webpack_exports__ = __webpack_require__(3482);
 /******/ 	

@@ -1,5 +1,5 @@
 
-import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate, spring } from 'remotion';
+import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
 import { colors, fonts } from '../../../shared/brand';
 
 const AgentCard = ({ 
