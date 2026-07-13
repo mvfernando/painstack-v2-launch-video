@@ -1,10 +1,13 @@
 /**
  * Launch Week — Shared Components
- * BG, IntroWord, FeatureTitle, Caption, BulletItem, CTACard, ProgressDots
+ * BG, IntroWord, FeatureTitle, Caption, BulletItem, CTACard, ProgressDots, UIPlaceholder
+ *
+ * All components are responsive: they detect vertical (9:16) vs horizontal (16:9)
+ * via useVideoConfig() and scale fonts, padding, and spacing accordingly.
  */
 
 import React from 'react';
-import { AbsoluteFill, useCurrentFrame, interpolate, spring, Img, staticFile } from 'remotion';
+import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate, spring, Img, staticFile } from 'remotion';
 import { lwColors, lwFonts, lwGradients } from './lwBrand';
 
 // ─────────────────────────────────────────────
@@ -58,25 +61,27 @@ export const BG: React.FC = () => {
 // ─────────────────────────────────────────────
 export const ProgressDots: React.FC<{ index: number }> = ({ index }) => {
   const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  const isVertical = height > width;
   const opacity = interpolate(frame, [0, 15], [0, 1], { extrapolateRight: 'clamp' });
 
   return (
     <div style={{
       position: 'absolute',
-      top: 60,
+      top: isVertical ? 100 : 60,
       left: 0,
       right: 0,
       display: 'flex',
       justifyContent: 'center',
-      gap: 10,
+      gap: isVertical ? 14 : 10,
       opacity,
       zIndex: 10,
     }}>
       {[1, 2, 3, 4, 5].map((i) => (
         <div key={i} style={{
-          width: i === index ? 28 : 8,
-          height: 8,
-          borderRadius: 4,
+          width: i === index ? (isVertical ? 40 : 28) : (isVertical ? 12 : 8),
+          height: isVertical ? 12 : 8,
+          borderRadius: isVertical ? 6 : 4,
           background: i === index ? lwColors.orange : 'rgba(255,255,255,0.2)',
         }} />
       ))}
@@ -89,6 +94,8 @@ export const ProgressDots: React.FC<{ index: number }> = ({ index }) => {
 // ─────────────────────────────────────────────
 export const IntroWord: React.FC<{ startFrame?: number }> = ({ startFrame = 0 }) => {
   const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  const isVertical = height > width;
   const prog = spring({ frame: frame - startFrame, fps: 30, config: { damping: 18, stiffness: 120 } });
   const opacity = interpolate(prog, [0, 1], [0, 1]);
   const y = interpolate(prog, [0, 1], [16, 0]);
@@ -96,14 +103,14 @@ export const IntroWord: React.FC<{ startFrame?: number }> = ({ startFrame = 0 })
   return (
     <div style={{
       fontFamily: lwFonts.base,
-      fontSize: 22,
+      fontSize: isVertical ? 30 : 22,
       fontWeight: 600,
       color: lwColors.introGray,
       letterSpacing: '0.12em',
       textTransform: 'uppercase',
       opacity,
       transform: `translateY(${y}px)`,
-      marginBottom: 16,
+      marginBottom: isVertical ? 24 : 16,
       textAlign: 'center',
     }}>
       Introducing
@@ -121,11 +128,14 @@ export const FeatureTitle: React.FC<{
   startFrame?: number;
 }> = ({ text, accentWord, gradient = 'hub', startFrame = 8 }) => {
   const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  const isVertical = height > width;
   const prog = spring({ frame: frame - startFrame, fps: 30, config: { damping: 16, stiffness: 100, mass: 0.8 } });
   const scale = interpolate(prog, [0, 1], [0.92, 1]);
   const opacity = interpolate(prog, [0, 1], [0, 1]);
 
   const grad = lwGradients[gradient];
+  const fontSize = isVertical ? 96 : 72;
 
   if (accentWord) {
     const parts = text.split(accentWord);
@@ -133,7 +143,7 @@ export const FeatureTitle: React.FC<{
       <div style={{
         fontFamily: lwFonts.base,
         fontWeight: 900,
-        fontSize: 72,
+        fontSize,
         lineHeight: 1.05,
         letterSpacing: '-2px',
         textAlign: 'center',
@@ -156,7 +166,7 @@ export const FeatureTitle: React.FC<{
     <div style={{
       fontFamily: lwFonts.base,
       fontWeight: 900,
-      fontSize: 72,
+      fontSize,
       lineHeight: 1.05,
       letterSpacing: '-2px',
       textAlign: 'center',
@@ -181,6 +191,8 @@ export const Caption: React.FC<{
   endFrame?: number;
 }> = ({ text, startFrame, endFrame }) => {
   const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  const isVertical = height > width;
   const inProg = spring({ frame: frame - startFrame, fps: 30, config: { damping: 20, stiffness: 150 } });
   const opacity = endFrame
     ? interpolate(frame, [startFrame, startFrame + 8, endFrame - 8, endFrame], [0, 1, 1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
@@ -190,9 +202,9 @@ export const Caption: React.FC<{
   return (
     <div style={{
       position: 'absolute',
-      bottom: 120,
-      left: 40,
-      right: 40,
+      bottom: isVertical ? 240 : 120,
+      left: isVertical ? 60 : 40,
+      right: isVertical ? 60 : 40,
       textAlign: 'center',
       opacity,
       transform: `translateY(${y}px)`,
@@ -202,14 +214,14 @@ export const Caption: React.FC<{
         display: 'inline-block',
         background: 'rgba(0,0,0,0.55)',
         backdropFilter: 'blur(12px)',
-        borderRadius: 12,
-        padding: '14px 24px',
+        borderRadius: isVertical ? 16 : 12,
+        padding: isVertical ? '24px 36px' : '14px 24px',
         fontFamily: lwFonts.base,
-        fontSize: 26,
+        fontSize: isVertical ? 40 : 26,
         fontWeight: 700,
         color: lwColors.white,
         lineHeight: 1.35,
-        maxWidth: 880,
+        maxWidth: isVertical ? '100%' : 880,
         letterSpacing: '-0.3px',
       }}>
         {text}
@@ -223,40 +235,46 @@ export const Caption: React.FC<{
 // ─────────────────────────────────────────────
 export const BulletItem: React.FC<{
   text: string;
-  icon: string;
+  icon: React.ReactNode;
   startFrame: number;
   accent?: string;
 }> = ({ text, icon, startFrame, accent = lwColors.orange }) => {
   const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  const isVertical = height > width;
   const prog = spring({ frame: frame - startFrame, fps: 30, config: { damping: 18, stiffness: 130 } });
   const opacity = interpolate(prog, [0, 1], [0, 1]);
   const x = interpolate(prog, [0, 1], [-20, 0]);
+
+  const iconSize = isVertical ? 72 : 48;
+  const iconFontSize = isVertical ? 32 : 22;
+  const textFontSize = isVertical ? 38 : 28;
 
   return (
     <div style={{
       display: 'flex',
       alignItems: 'center',
-      gap: 18,
+      gap: isVertical ? 24 : 18,
       opacity,
       transform: `translateX(${x}px)`,
     }}>
       <div style={{
-        width: 48,
-        height: 48,
-        borderRadius: 12,
+        width: iconSize,
+        height: iconSize,
+        borderRadius: isVertical ? 18 : 12,
         background: 'rgba(255,255,255,0.06)',
         border: `1px solid ${accent}44`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: 22,
+        fontSize: iconFontSize,
         flexShrink: 0,
       }}>
         {icon}
       </div>
       <div style={{
         fontFamily: lwFonts.base,
-        fontSize: 28,
+        fontSize: textFontSize,
         fontWeight: 700,
         color: lwColors.white,
         lineHeight: 1.3,
@@ -275,6 +293,8 @@ export const CTACard: React.FC<{
   startFrame?: number;
 }> = ({ tagline, startFrame = 0 }) => {
   const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  const isVertical = height > width;
   const prog = spring({ frame: frame - startFrame, fps: 30, config: { damping: 18, stiffness: 100 } });
   const opacity = interpolate(prog, [0, 1], [0, 1]);
   const scale = interpolate(prog, [0, 1], [0.94, 1]);
@@ -285,22 +305,22 @@ export const CTACard: React.FC<{
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: 32,
+      gap: isVertical ? 48 : 32,
       opacity,
       transform: `scale(${scale})`,
     }}>
       <Img
         src={staticFile('shared/Painstack.ai_logo2.png')}
-        style={{ width: 200, height: 'auto' }}
+        style={{ width: isVertical ? 280 : 200, height: 'auto' }}
       />
       {tagline && (
         <div style={{
           fontFamily: lwFonts.base,
-          fontSize: 28,
+          fontSize: isVertical ? 36 : 28,
           fontWeight: 600,
           color: lwColors.introGray,
           textAlign: 'center',
-          maxWidth: 700,
+          maxWidth: isVertical ? 800 : 700,
           lineHeight: 1.4,
           letterSpacing: '-0.3px',
         }}>
@@ -309,7 +329,7 @@ export const CTACard: React.FC<{
       )}
       <div style={{
         fontFamily: lwFonts.base,
-        fontSize: 52,
+        fontSize: isVertical ? 68 : 52,
         fontWeight: 900,
         color: lwColors.white,
         letterSpacing: '-1.5px',
@@ -319,11 +339,11 @@ export const CTACard: React.FC<{
       </div>
       <div style={{
         display: 'inline-block',
-        padding: '16px 48px',
+        padding: isVertical ? '24px 64px' : '16px 48px',
         borderRadius: 100,
         background: 'linear-gradient(135deg, #f96426, #2d81e0)',
         fontFamily: lwFonts.base,
-        fontSize: 22,
+        fontSize: isVertical ? 30 : 22,
         fontWeight: 800,
         color: '#fff',
         letterSpacing: '0.04em',
@@ -344,18 +364,26 @@ export const UIPlaceholder: React.FC<{
   startFrame?: number;
 }> = ({ title, rows = 4, accentColor = lwColors.orange, startFrame = 0 }) => {
   const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  const isVertical = height > width;
   const prog = spring({ frame: frame - startFrame, fps: 30, config: { damping: 18, stiffness: 100 } });
   const opacity = interpolate(prog, [0, 1], [0, 1]);
   const scale = interpolate(prog, [0, 1], [0.96, 1]);
   const scanPos = interpolate(frame % 60, [0, 60], [0, 100]);
+
+  const rowHeight = isVertical ? 28 : 14;
+  const rowGap = isVertical ? 24 : 14;
+  const titleFontSize = isVertical ? 20 : 13;
+  const padding = isVertical ? 40 : 28;
+  const borderRadius = isVertical ? 28 : 20;
 
   return (
     <div style={{
       width: '100%',
       background: 'rgba(255,255,255,0.04)',
       border: '1px solid rgba(255,255,255,0.08)',
-      borderRadius: 20,
-      padding: 28,
+      borderRadius,
+      padding,
       opacity,
       transform: `scale(${scale})`,
       position: 'relative',
@@ -367,7 +395,7 @@ export const UIPlaceholder: React.FC<{
         top: `${scanPos}%`,
         left: 0,
         width: '100%',
-        height: 1,
+        height: isVertical ? 2 : 1,
         background: `linear-gradient(90deg, transparent, ${accentColor}66, transparent)`,
         opacity: 0.5,
       }} />
@@ -375,12 +403,12 @@ export const UIPlaceholder: React.FC<{
       {/* Header */}
       <div style={{
         fontFamily: lwFonts.base,
-        fontSize: 13,
+        fontSize: titleFontSize,
         fontWeight: 700,
         color: accentColor,
         textTransform: 'uppercase',
         letterSpacing: '0.15em',
-        marginBottom: 20,
+        marginBottom: isVertical ? 32 : 20,
       }}>
         {title}
       </div>
@@ -392,11 +420,11 @@ export const UIPlaceholder: React.FC<{
         const widths = [85, 70, 90, 60, 75, 80];
         return (
           <div key={i} style={{
-            height: 14,
-            borderRadius: 7,
+            height: rowHeight,
+            borderRadius: rowHeight / 2,
             background: `rgba(255,255,255,0.08)`,
             width: `${widths[i % widths.length]}%`,
-            marginBottom: 14,
+            marginBottom: rowGap,
             opacity: rowOpacity,
             position: 'relative',
             overflow: 'hidden',

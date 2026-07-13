@@ -1,6 +1,7 @@
 
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
 import { colors, fonts } from '../../../shared/brand';
+import { Briefcase, TrendingUp, Code2, ShieldCheck } from 'lucide-react';
 
 const AgentCard = ({ 
   icon, 
@@ -11,7 +12,7 @@ const AgentCard = ({
   theme = 'dark',
   isVertical = false
 }: { 
-  icon: string; 
+  icon: React.ReactNode; 
   name: string; 
   desc: string; 
   accent: string; 
@@ -23,25 +24,41 @@ const AgentCard = ({
   const isLight = theme === 'light';
   
   const themeColors = {
-    card: isLight ? colors.lightBg : colors.bg,
+    card: isLight ? colors.lightBg : colors.bgCard,
     text: isLight ? colors.lightText : colors.white,
     muted: isLight ? colors.lightMuted : colors.muted,
     border: isLight ? colors.lightBorder : colors.border,
     bgIcon: isLight ? `${accent}15` : `${accent}22`,
   };
 
+  // Micro-animation: soft floating effect based on delay
+  const float = interpolate(
+    Math.sin((frame - delay) / 15),
+    [-1, 1],
+    [-2, 2]
+  );
+  
+  // Icon pulse effect
+  const pulse = interpolate(
+    Math.sin((frame - delay) / 20),
+    [-1, 1],
+    [0.9, 1.1]
+  );
+
   return (
     <div style={{
-      background: themeColors.card,
+      background: 'rgba(255, 255, 255, 0.02)',
+      backdropFilter: 'blur(20px)',
       borderRadius: 24,
       padding: isVertical ? "24px 28px" : "32px",
-      border: `2px solid ${themeColors.border}`,
+      border: `1px solid rgba(255, 255, 255, 0.06)`,
+      borderTop: `1px solid rgba(255, 255, 255, 0.12)`,
       display: "flex",
       alignItems: "center",
       gap: isVertical ? 24 : 24,
       opacity: interpolate(frame, [delay, delay + 15], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }),
-      transform: `scale(${interpolate(frame, [delay, delay + 20], [0.95, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })})`,
-      boxShadow: isLight ? "0 10px 30px rgba(0,0,0,0.04)" : "0 20px 50px rgba(0,0,0,0.2)"
+      transform: `scale(${interpolate(frame, [delay, delay + 20], [0.95, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })}) translateY(${float}px)`,
+      boxShadow: isLight ? "0 10px 30px rgba(0,0,0,0.04)" : "0 20px 50px rgba(0,0,0,0.4)"
     }}>
       <div style={{ 
         width: isVertical ? 64 : 64, 
@@ -51,8 +68,11 @@ const AgentCard = ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: isVertical ? 32 : 32,
-        flexShrink: 0
+        color: accent, // Pass accent color to Lucide icon
+        flexShrink: 0,
+        transform: `scale(${pulse})`,
+        border: `1px solid ${accent}44`,
+        boxShadow: `0 0 15px ${accent}22 inset`
       }}>
         {icon}
       </div>
@@ -78,11 +98,13 @@ export const ExecutiveTeamScene = ({
   const isLight = theme === 'light';
   const isVertical = height > width;
 
+  const iconSize = isVertical ? 32 : 32;
+
   const agents = [
     { 
       name: "Strategic Lead", 
       role: "CEO Engine", 
-      icon: "🎯", 
+      icon: <Briefcase size={iconSize} strokeWidth={2.5} />, 
       accent: colors.orange,
       description: "Vision & Market Strategy",
       delay: 20 
@@ -90,7 +112,7 @@ export const ExecutiveTeamScene = ({
     { 
       name: "Market Analyst", 
       role: "CMO Engine", 
-      icon: "📊", 
+      icon: <TrendingUp size={iconSize} strokeWidth={2.5} />, 
       accent: colors.blue,
       description: "Data-driven Growth",
       delay: 35 
@@ -98,7 +120,7 @@ export const ExecutiveTeamScene = ({
     { 
       name: "System Architect", 
       role: "CTO Engine", 
-      icon: "⚙️", 
+      icon: <Code2 size={iconSize} strokeWidth={2.5} />, 
       accent: colors.purple,
       description: "Architecture & Tech Stack",
       delay: 50 
@@ -106,7 +128,7 @@ export const ExecutiveTeamScene = ({
     { 
       name: "Risk Controller", 
       role: "CFO Engine", 
-      icon: "🛡️", 
+      icon: <ShieldCheck size={iconSize} strokeWidth={2.5} />, 
       accent: colors.green,
       description: "Financial Viability",
       delay: 65 

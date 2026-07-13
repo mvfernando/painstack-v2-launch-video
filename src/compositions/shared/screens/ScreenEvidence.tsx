@@ -2,13 +2,13 @@
 import { 
   AbsoluteFill, 
   useCurrentFrame, 
-  useVideoConfig, 
+  useVideoConfig,
   interpolate, 
   spring, 
 } from 'remotion';
 import { colors, fonts } from '../../../shared/brand';
 
-const RedditCard = ({ post, cardDelay }: { post: any; cardDelay: [number, number] }) => {
+const RedditCard = ({ post, cardDelay, isVertical }: { post: any; cardDelay: [number, number]; isVertical: boolean }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   
@@ -21,15 +21,11 @@ const RedditCard = ({ post, cardDelay }: { post: any; cardDelay: [number, number
   
   const y = interpolate(entrance, [0, 1], [25, 0]);
 
-  // Inside each card, the elements entram sequencialmente:
-  // - Subreddit + upvotes + badge: com o card (entrance)
-  // - Texto da quote: 5 frames depois do card
+  // Inside each card, the elements enter sequentially:
   const quoteEntrance = spring({ frame: frame - cardDelay[0] - 5, fps, config: { damping: 15 } });
-  
-  // - Tags (#validation etc): 10 frames depois do card
   const tagsEntrance = spring({ frame: frame - cardDelay[0] - 10, fps, config: { damping: 15 } });
 
-  // Border pulse for HIGH pain: opacity alterna entre 0.25 e 0.6 a cada 20 frames
+  // Border pulse for HIGH pain
   const pulse = interpolate(
     Math.sin((frame / 20) * Math.PI),
     [-1, 1],
@@ -38,40 +34,42 @@ const RedditCard = ({ post, cardDelay }: { post: any; cardDelay: [number, number
   
   const borderColor = post.pain === "HIGH" 
     ? `rgba(249,100,38,${pulse})` 
-    : colors.border;
+    : 'rgba(255,255,255,0.08)';
 
   return (
     <div style={{ 
-      background: colors.bgCard, 
-      border: `1px solid ${borderColor}`, 
-      borderRadius: 14, 
-      padding: "16px 18px",
+      background: 'rgba(255, 255, 255, 0.02)',
+      backdropFilter: 'blur(12px)', 
+      border: `1px solid ${borderColor}`,
+      borderTop: `1px solid ${post.pain === "HIGH" ? borderColor : 'rgba(255,255,255,0.12)'}`, 
+      borderRadius: isVertical ? 18 : 14, 
+      padding: isVertical ? "20px 22px" : "16px 18px",
       opacity: entrance,
       transform: `translateY(${y}px)`,
-      boxShadow: post.pain === "HIGH" ? "0 10px 30px rgba(249,100,38,0.1)" : "none",
+      boxShadow: post.pain === "HIGH" ? `0 0 25px rgba(249,100,38,${interpolate(pulse, [0.25, 0.6], [0.1, 0.3])})` : "0 10px 30px rgba(0,0,0,0.2)",
       height: "100%",
-      boxSizing: "border-box"
+      boxSizing: "border-box" as const
     }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: colors.orange }}>{post.sub}</div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: isVertical ? 14 : 10 }}>
+        <div style={{ fontSize: isVertical ? 20 : 13, fontWeight: 700, color: colors.orange }}>{post.sub}</div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <div style={{ fontSize: 11, color: colors.muted }}>▲ {post.upvotes}</div>
+          <div style={{ fontSize: isVertical ? 16 : 11, color: colors.muted }}>▲ {post.upvotes}</div>
           <div style={{ 
-            fontSize: 10, 
+            fontSize: isVertical ? 14 : 10, 
             fontWeight: 800, 
             color: post.pain === "HIGH" ? colors.orange : colors.muted, 
             border: `1px solid ${post.pain === "HIGH" ? colors.orange : colors.border}`, 
             borderRadius: 4, 
-            padding: "2px 6px" 
+            padding: isVertical ? "4px 8px" : "2px 6px" 
           }}>{post.pain}</div>
         </div>
       </div>
       
       <div style={{ 
-        fontSize: 15, 
+        fontSize: isVertical ? 24 : 15, 
         color: colors.white, 
         lineHeight: 1.5, 
-        marginBottom: 12, 
+        marginBottom: isVertical ? 16 : 12, 
         fontWeight: 400,
         opacity: quoteEntrance,
         transform: `translateY(${interpolate(quoteEntrance, [0, 1], [5, 0])}px)`
@@ -87,12 +85,12 @@ const RedditCard = ({ post, cardDelay }: { post: any; cardDelay: [number, number
       }}>
         {post.tags.map((tag: string, j: number) => (
           <div key={j} style={{ 
-            fontSize: 11, 
+            fontSize: isVertical ? 14 : 11, 
             color: colors.muted, 
             background: "rgba(45,129,224,0.08)", 
             border: `1px solid rgba(45,129,224,0.15)`, 
             borderRadius: 4, 
-            padding: "2px 8px" 
+            padding: isVertical ? "4px 10px" : "2px 8px" 
           }}>#{tag}</div>
         ))}
       </div>
@@ -102,6 +100,8 @@ const RedditCard = ({ post, cardDelay }: { post: any; cardDelay: [number, number
 
 export const EvidenceCardsScene = () => {
   const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  const isVertical = height > width;
 
   const posts = [
     { sub: "r/startups", upvotes: "2.4k", pain: "HIGH", text: "Spent $40k and 8 months building. Got 3 users. I should have validated first.", tags: ["validation", "failure"] },
@@ -127,38 +127,41 @@ export const EvidenceCardsScene = () => {
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center',
-      padding: 40
+      padding: isVertical ? 30 : 40
     }}>
       <div style={{ 
         background: colors.bg, 
-        borderRadius: 20, 
-        padding: "32px", 
+        borderRadius: isVertical ? 24 : 20, 
+        padding: isVertical ? "28px" : "32px", 
         width: "100%", 
         height: "100%",
-        boxSizing: "border-box",
+        boxSizing: "border-box" as const,
         border: `1px solid ${colors.border}`,
         boxShadow: "0 40px 100px rgba(0,0,0,0.5)",
-        fontFamily: fonts.base
+        fontFamily: fonts.base,
+        overflow: 'hidden',
       }}>
         <div style={{ 
           display: "flex", 
+          flexDirection: isVertical ? "column" : "row",
           justifyContent: "space-between", 
-          alignItems: "center", 
-          marginBottom: 32,
+          alignItems: isVertical ? "flex-start" : "center", 
+          marginBottom: isVertical ? 24 : 32,
+          gap: isVertical ? 12 : 0,
           opacity: headerEntrance,
           transform: `translateY(${headerY}px)`
         }}>
           <div>
-            <div style={{ fontSize: 11, fontWeight: 700, color: colors.orange, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 6 }}>Evidence Hub</div>
-            <div style={{ fontSize: 26, fontWeight: 800, color: colors.white, letterSpacing: "-0.5px" }}>Real pain. Real people. Real data.</div>
+            <div style={{ fontSize: isVertical ? 16 : 11, fontWeight: 700, color: colors.orange, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 6 }}>Evidence Hub</div>
+            <div style={{ fontSize: isVertical ? 32 : 26, fontWeight: 800, color: colors.white, letterSpacing: "-0.5px" }}>Real pain. Real people. Real data.</div>
           </div>
           <div style={{ 
-            fontSize: 14, 
+            fontSize: isVertical ? 16 : 14, 
             color: colors.muted, 
             background: colors.bgCard, 
             border: `1px solid ${colors.border}`, 
             borderRadius: 100, 
-            padding: "8px 20px",
+            padding: isVertical ? "10px 22px" : "8px 20px",
             opacity: pillEntrance,
             transform: `translateX(${pillX}px)`
           }}>
@@ -166,9 +169,9 @@ export const EvidenceCardsScene = () => {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isVertical ? "1fr" : "1fr 1fr", gap: isVertical ? 12 : 16 }}>
           {posts.map((post, i) => (
-            <RedditCard key={i} post={post} cardDelay={cardDelays[i]} />
+            <RedditCard key={i} post={post} cardDelay={cardDelays[i]} isVertical={isVertical} />
           ))}
         </div>
       </div>

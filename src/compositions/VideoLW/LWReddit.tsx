@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { AbsoluteFill, Sequence } from 'remotion';
+import { AbsoluteFill, Sequence, Audio, staticFile } from 'remotion';
 import {
   BG,
   ProgressDots,
@@ -12,10 +12,11 @@ import {
   FeatureTitle,
   Caption,
   CTACard,
-  UIPlaceholder,
 } from './lwComponents';
 import { SceneAudio, BackgroundMusic } from '../../shared/SceneAudio';
 import { lwColors } from './lwBrand';
+import { DashboardInputScene } from '../shared/screens/ScreenDashboard';
+import { BlueprintScoreScene } from '../shared/screens/ScreenBlueprintScore';
 
 export const LWReddit: React.FC = () => {
 
@@ -32,6 +33,7 @@ export const LWReddit: React.FC = () => {
           Scene 1 (0–120): Intro
       ────────────────────────────────────────── */}
       <Sequence durationInFrames={120}>
+        <Audio src={staticFile('audio/sfx_whoosh_clean.mp3')} volume={0.2} />
         <ProgressDots index={5} />
         <AbsoluteFill
           style={{
@@ -53,39 +55,21 @@ export const LWReddit: React.FC = () => {
       </Sequence>
 
       {/* ──────────────────────────────────────────
-          Scene 2 (120–360): Paste Reddit URL
+          Scene 2 (120–360): Dashboard Input with typing (real screen)
       ────────────────────────────────────────── */}
       <Sequence from={120} durationInFrames={240}>
-        <AbsoluteFill
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '0 60px',
-            gap: 28,
-          }}
-        >
-          <UIPlaceholder
-            title="Paste Reddit URL"
-            rows={2}
-            accentColor="#ff4500"
-          />
-          {/* Fake URL input field below the skeleton */}
-          <div style={{
-            width: '100%',
-            background: 'rgba(255,255,255,0.06)',
-            borderRadius: 12,
-            padding: '16px 24px',
-            fontFamily: 'Inter,sans-serif',
-            fontSize: 18,
-            color: 'rgba(255,255,255,0.5)',
-            border: '1px solid rgba(255,69,0,0.3)',
-            boxSizing: 'border-box',
-          }}>
-            reddit.com/r/startups/comments/...
-          </div>
-        </AbsoluteFill>
+        <Audio src={staticFile('audio/sfx_whoosh_clean.mp3')} volume={0.15} />
+        <Sequence from={20}>
+          <Audio src={staticFile('audio/sfx_typing.mp3')} volume={0.15} />
+        </Sequence>
+        <Sequence from={140}>
+          <Audio src={staticFile('audio/sfx_click.mp3')} volume={0.4} />
+        </Sequence>
+        <DashboardInputScene
+          theme="dark"
+          withInteractions
+          customText="reddit.com/r/startups/comments/abc123 — 'I spent $40k building something nobody wanted...'"
+        />
         {/* Caption: "Paste any Reddit thread URL into Painstack." */}
         <Caption
           text="Paste any Reddit thread URL into Painstack."
@@ -95,25 +79,17 @@ export const LWReddit: React.FC = () => {
       </Sequence>
 
       {/* ──────────────────────────────────────────
-          Scene 3 (360–720): Your Blueprint (generated)
+          Scene 3 (360–720): Blueprint Score result (real screen)
       ────────────────────────────────────────── */}
       <Sequence from={360} durationInFrames={360}>
-        <AbsoluteFill
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '0 60px',
-            gap: 32,
-          }}
-        >
-          <UIPlaceholder
-            title="Your Blueprint"
-            rows={7}
-            accentColor="#ff4500"
-          />
-        </AbsoluteFill>
+        <Audio src={staticFile('audio/sfx_sweep.mp3')} volume={0.25} />
+        <Sequence from={15}>
+          <Audio src={staticFile('audio/sfx_power_up.mp3')} volume={0.2} />
+        </Sequence>
+        <Sequence from={90}>
+          <Audio src={staticFile('audio/sfx_success_chime.mp3')} volume={0.3} />
+        </Sequence>
+        <BlueprintScoreScene theme="dark" targetScore={82} />
         {/* Caption 1: "Problem analysis. Market sizing. Competitors. MVP. Roadmap." */}
         <Caption
           text="Problem analysis. Market sizing. Competitors. MVP. Roadmap."
@@ -131,6 +107,7 @@ export const LWReddit: React.FC = () => {
           Scene 4 (720–840): CTA Card
       ────────────────────────────────────────── */}
       <Sequence from={720} durationInFrames={120}>
+        <Audio src={staticFile('audio/sfx_success_chime.mp3')} volume={0.3} />
         <CTACard
           tagline="Try it on the latest thread in your niche."
           startFrame={10}
